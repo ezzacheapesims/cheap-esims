@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { ArrowLeft, MapPin, ArrowDownUp, ChevronDown } from "lucide-react";
 import { PlanCard, Plan } from "@/components/PlanCard";
 import { Button } from "@/components/ui/button";
 import { FlagIcon } from "@/components/FlagIcon";
@@ -172,14 +172,12 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
           />
         ) : (
           <>
-            {/* Sort Filter - Matching PlanListWithFilters style */}
+            {/* Sort Filter - Matching PlanListWithFilters style exactly */}
             <div className="bg-white border-2 border-black rounded-none p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-hard">
               <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                 {/* Sort Control */}
                 <div className="flex items-center gap-2 min-w-fit">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
-                    <path d="M4 6L8 2L12 6M4 10L8 14L12 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <ArrowDownUp className="h-4 w-4 text-black" />
                   <span className="text-sm font-bold uppercase hidden sm:inline">Sort by:</span>
                   <div className="relative">
                     <select
@@ -192,9 +190,7 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
                       <option value="days">Duration: Short to Long</option>
                       <option value="name">Plan Name</option>
                     </select>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <path d="M4 6L8 10L12 6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-black pointer-events-none" />
                   </div>
                 </div>
               </div>
