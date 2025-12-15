@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogOverlay,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -88,7 +89,8 @@ export function InstallStepsDialog({
       <DialogTrigger asChild>
         {trigger || defaultTrigger}
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white border-2 border-black rounded-none shadow-hard p-0 [&>button]:text-black [&>button]:hover:bg-black [&>button]:hover:text-white [&>button]:border-2 [&>button]:border-black">
+      <DialogOverlay className="bg-black/60" />
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white border-2 border-black rounded-none shadow-hard p-0 [&>button]:text-black [&>button]:hover:bg-black [&>button]:hover:text-white [&>button]:border-2 [&>button]:border-black [&>button]:rounded-none">
         <DialogHeader className="p-6 border-b-2 border-black">
           <DialogTitle className="text-3xl font-black uppercase text-black">eSIM Installation Guide</DialogTitle>
           <DialogDescription className="text-gray-600 font-mono font-bold uppercase text-sm mt-2">
