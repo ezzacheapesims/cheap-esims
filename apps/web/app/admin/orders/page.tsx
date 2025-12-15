@@ -35,6 +35,9 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [planNames, setPlanNames] = useState<Map<string, string>>(new Map());
+  const [recreatePaymentRef, setRecreatePaymentRef] = useState("");
+  const [recreating, setRecreating] = useState(false);
+  const [recreateResult, setRecreateResult] = useState<{ success: boolean; message: string } | null>(null);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
   useEffect(() => {
@@ -66,6 +69,43 @@ export default function AdminOrdersPage() {
       fetchOrders();
     }
   }, [user, apiUrl]);
+
+  const handleRecreateOrder = async () => {
+    if (!recreatePaymentRef.trim()) {
+      setRecreateResult({ success: false, message: "Please enter a payment reference" });
+      return;
+    }
+
+    setRecreating(true);
+    setRecreateResult(null);
+
+    try {
+      const res = await fetch(`${apiUrl}/admin/orders/recreate-from-payment/${recreatePaymentRef.trim()}`, {
+        method: "POST",
+        headers: {
+          "x-admin-email": user?.primaryEmailAddress?.emailAddress || "",
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setRecreateResult({ success: true, message: `Order recreated! Order ID: ${data.orderId || "N/A"}` });
+        setRecreatePaymentRef("");
+        // Refresh orders list
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        setRecreateResult({ success: false, message: data.error || "Failed to recreate order" });
+      }
+    } catch (error: any) {
+      setRecreateResult({ success: false, message: error.message || "Failed to recreate order" });
+    } finally {
+      setRecreating(false);
+    }
+  };
 
   const columns = useMemo(() => [
     {
@@ -159,6 +199,41 @@ export default function AdminOrdersPage() {
           </p>
         </div>
       </div>
+
+      {/* Recreate Order from Payment Reference */}
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard p-4">
+        <div className="space-y-3">
+          <h2 className="text-lg font-black uppercase text-black">Recreate Order from Payment</h2>
+          <p className="text-sm text-gray-600 font-mono">
+            Use this if an order failed to create due to database issues. Enter the Stripe payment intent ID (pi_...) or checkout session ID (cs_...).
+          </p>
+          <div className="flex gap-3 items-start">
+            <input
+              type="text"
+              value={recreatePaymentRef}
+              onChange={(e) => setRecreatePaymentRef(e.target.value)}
+              placeholder="pi_3SedGWD9WFcdUeJB1QMbi6F6 or cs_live_..."
+              className="flex-1 px-4 py-2 bg-white border-2 border-black text-sm font-mono focus:outline-none focus:ring-0 focus:shadow-hard-sm"
+            />
+            <button
+              onClick={handleRecreateOrder}
+              disabled={recreating || !recreatePaymentRef.trim()}
+              className="px-6 py-2 bg-primary text-black border-2 border-black font-black uppercase text-sm hover:shadow-hard-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {recreating ? "Creating..." : "Recreate"}
+            </button>
+          </div>
+          {recreateResult && (
+            <div className={`px-4 py-2 border-2 border-black font-mono text-sm ${
+              recreateResult.success 
+                ? "bg-green-100 text-black" 
+                : "bg-red-100 text-black"
+            }`}>
+              {recreateResult.message}
+            </div>
+          )}
+        </div>
+      </Card>
 
       <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
         <CardContent className="p-0">
