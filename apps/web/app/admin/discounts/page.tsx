@@ -307,13 +307,19 @@ export default function AdminDiscountsPage() {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {[1, 3, 5, 10, 20, 30, 50, 100].map((gbSize) => {
+          {[0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 20, 30, 50, 100].map((gbSize) => {
             const gbKey = gbSize.toString();
             const globalDiscount = globalDiscounts[gbKey] || 0;
+            // Format label: show as MB for values < 1GB, otherwise show as GB
+            const label = gbSize < 1 
+              ? `${gbSize * 1000} MB` 
+              : gbSize % 1 === 0 
+                ? `${gbSize} GB` 
+                : `${gbSize} GB`;
             return (
               <div key={gbSize} className="space-y-2">
                 <Label htmlFor={`global-${gbSize}`} className="text-sm text-black font-black uppercase">
-                  {gbSize} GB
+                  {label}
                 </Label>
                 <div className="flex items-center gap-2">
                   <Input
