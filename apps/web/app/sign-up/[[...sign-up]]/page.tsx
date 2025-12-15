@@ -2,46 +2,56 @@ import { SignUp } from "@clerk/nextjs";
 
 export default function SignUpPage() {
   return (
-    <div className="flex items-center justify-center min-h-[80vh] relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--voyage-accent)]/10 rounded-full blur-[100px] -z-10" />
-
-      <SignUp
-        appearance={{
-          variables: {
-            colorPrimary: "#3B82F6", // Lighter blue
-            colorBackground: "#112240", // Slightly lighter dark background
-            colorInputBackground: "#FFFFFF", // White input background
-            colorInputText: "#0F172A", // Dark text for inputs
-            colorText: "#E9F1FF",
-            colorTextSecondary: "#94A3B8",
-            borderRadius: "0.75rem",
-            fontFamily: "inherit",
-          },
-          elements: {
-            rootBox: "mx-auto w-full max-w-md",
-            // Lighter modal background
-            card: "bg-[#162C4E] border border-[var(--voyage-border)] shadow-2xl ring-1 ring-white/10",
-            headerTitle: "text-2xl font-bold text-white",
-            headerSubtitle: "text-gray-300 text-base",
-            socialButtonsBlockButton: "bg-[#1E3A5F] border border-white/10 text-white hover:bg-[#2A4D7A] transition-all duration-200",
-            socialButtonsBlockButtonText: "text-white font-medium",
-            // Light gradient button
-            formButtonPrimary: "bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white shadow-lg shadow-blue-500/25 transition-all duration-200 font-semibold",
-            // White inputs with dark text
-            formFieldInput: "bg-white border border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-            formFieldLabel: "text-gray-300 font-medium",
-            dividerLine: "bg-white/10",
-            dividerText: "text-gray-400 uppercase text-xs tracking-wider",
-            footerActionLink: "text-cyan-400 hover:text-cyan-300 font-medium underline-offset-4 hover:underline",
-            identityPreviewText: "text-gray-300",
-            identityPreviewEditButton: "text-cyan-400 hover:text-cyan-300",
-            formResendCodeLink: "text-cyan-400 hover:text-cyan-300",
-            alert: "bg-red-500/10 border border-red-500/20 text-red-200",
-            alertText: "text-red-200",
-          },
-        }}
-      />
+    <div className="flex items-center justify-center min-h-[80vh] bg-primary/10 px-4 py-10">
+      <div className="w-full max-w-md">
+        <SignUp
+          appearance={{
+            variables: {
+              colorPrimary: "#000000",
+              colorBackground: "#ffffff",
+              colorInputBackground: "#ffffff",
+              colorInputText: "#111827",
+              colorText: "#000000",
+              colorTextSecondary: "#4b5563",
+              borderRadius: "0.5rem",
+              fontFamily:
+                "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+            },
+            elements: {
+              rootBox: "w-full",
+              card: "bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] px-6 py-8",
+              headerTitle:
+                "text-3xl font-black uppercase tracking-tight text-black mb-2",
+              headerSubtitle:
+                "text-gray-700 font-mono text-xs uppercase tracking-wide mb-4",
+              socialButtonsBlockButton:
+                "bg-white border-2 border-black text-black font-bold uppercase tracking-wide shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all",
+              socialButtonsBlockButtonText: "text-black font-bold",
+              formButtonPrimary:
+                "bg-primary text-black font-black uppercase tracking-wide border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-lime-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all",
+              formFieldInput:
+                "bg-white border-2 border-black text-black placeholder:text-gray-500 rounded-none focus:outline-none focus:ring-0 focus:border-black",
+              formFieldLabel:
+                "font-mono text-xs uppercase tracking-wide text-gray-700 mb-1",
+              dividerLine: "bg-black",
+              dividerText:
+                "font-mono text-[10px] uppercase tracking-[0.15em] text-gray-600",
+              footerAction__signIn:
+                "font-mono text-xs uppercase text-gray-700",
+              footerActionLink:
+                "font-mono text-xs uppercase text-black underline underline-offset-4",
+              identityPreviewText: "text-gray-800",
+              identityPreviewEditButton:
+                "text-black font-mono text-xs uppercase underline",
+              formResendCodeLink:
+                "text-black font-mono text-xs uppercase underline",
+              alert:
+                "bg-red-50 border-2 border-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+              alertText: "text-black text-sm",
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }

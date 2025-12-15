@@ -79,12 +79,12 @@ export default function Home() {
        <div className="bg-primary text-black border-b-4 border-black p-8 md:p-16">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-                <div className="inline-block bg-black text-white px-3 py-1 text-sm font-mono font-bold uppercase tracking-wider">
+               <div className="inline-block bg-black text-white px-3 py-1 text-sm font-mono font-bold uppercase tracking-wider">
                   Price Watch: Live
                 </div>
                 <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9]">
                   Travel Data <br/>
-                  <span className="text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] text-stroke-2">Dirt Cheap.</span>
+                  <span className="text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] text-stroke-2">Cheapest in the World.</span>
                 </h1>
                 <p className="text-xl font-bold max-w-md">
                    Stop overpaying for roaming. Get instant eSIMs at wholesale prices.
