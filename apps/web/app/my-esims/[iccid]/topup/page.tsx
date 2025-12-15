@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { PriceTag } from "@/components/PriceTag";
 import { Wifi, ArrowLeft, Signal, Globe, ArrowRight, RefreshCw } from "lucide-react";
@@ -27,6 +28,7 @@ interface TopUpOption {
 
 export default function TopUpSelectionPage() {
   const { iccid } = useParams();
+  const { user } = useUser();
   const { selectedCurrency, convert, formatCurrency } = useCurrency();
   const [options, setOptions] = useState<TopUpOption[]>([]);
   const [profile, setProfile] = useState<any>(null);
@@ -62,10 +64,19 @@ export default function TopUpSelectionPage() {
   const handleCheckout = async (plan: TopUpOption) => {
     try {
       const priceUSD = plan.price || 0;
+      const userEmail = user?.primaryEmailAddress?.emailAddress;
+      
+      if (!userEmail) {
+        console.error("User email not available");
+        return;
+      }
       
       const data = await safeFetch<{ url?: string }>(`${process.env.NEXT_PUBLIC_API_URL}/topup/checkout`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-user-email": userEmail,
+        },
         body: JSON.stringify({
           iccid,
           planCode: plan.packageCode,
