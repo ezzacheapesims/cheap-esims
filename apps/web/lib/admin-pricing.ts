@@ -10,8 +10,8 @@ export interface PricingMap {
   [planCode: string]: number; // planCode -> price in USD
 }
 
-// Cache for pricing (cleared after updates)
-let pricingCache: PricingMap | null = null;
+// Cache for pricing (cleared after updates). Always a valid map (possibly empty)
+let pricingCache: PricingMap = {};
 let cacheTimestamp = 0;
 const CACHE_TTL = 60000; // 1 minute cache
 
@@ -21,7 +21,7 @@ const CACHE_TTL = 60000; // 1 minute cache
 export async function fetchPricing(): Promise<PricingMap> {
   // Return cached if valid
   const now = Date.now();
-  if (pricingCache && (now - cacheTimestamp) < CACHE_TTL) {
+  if (cacheTimestamp && (now - cacheTimestamp) < CACHE_TTL) {
     return pricingCache;
   }
 
@@ -47,7 +47,7 @@ export async function fetchPricing(): Promise<PricingMap> {
  * Clear pricing cache (call after updating)
  */
 export function clearPricingCache(): void {
-  pricingCache = null;
+  pricingCache = {};
   cacheTimestamp = 0;
 }
 
