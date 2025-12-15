@@ -172,30 +172,34 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
           />
         ) : (
           <>
-            {/* Sort Filter - Neo Brutalist */}
-            <div className="bg-white border-2 border-black p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-hard">
-              <div className="font-mono text-sm font-bold uppercase text-gray-500">
-                {sortedPlans.length} plan{sortedPlans.length !== 1 ? 's' : ''} available
-              </div>
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-black uppercase whitespace-nowrap">Sort by:</label>
-                <div className="relative">
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as "days" | "price" | "dataSize" | "name")}
-                    className="appearance-none bg-white border-2 border-black px-4 py-2 pr-10 text-sm font-bold uppercase focus:outline-none focus:shadow-hard-sm cursor-pointer min-w-[200px]"
-                  >
-                    <option value="price">Price (Low to High)</option>
-                    <option value="dataSize">Data Size</option>
-                    <option value="days">Duration</option>
-                    <option value="name">Plan Name</option>
-                  </select>
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M2 4L6 8L10 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            {/* Sort Filter - Matching PlanListWithFilters style */}
+            <div className="bg-white border-2 border-black rounded-none p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-hard">
+              <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+                {/* Sort Control */}
+                <div className="flex items-center gap-2 min-w-fit">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
+                    <path d="M4 6L8 2L12 6M4 10L8 14L12 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-sm font-bold uppercase hidden sm:inline">Sort by:</span>
+                  <div className="relative">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as "days" | "price" | "dataSize" | "name")}
+                      className="appearance-none bg-white text-black text-sm font-bold uppercase border-2 border-black pl-3 pr-8 py-2 focus:outline-none focus:shadow-hard-sm cursor-pointer"
+                    >
+                      <option value="price">Price: Low to High</option>
+                      <option value="dataSize">Data: Low to High</option>
+                      <option value="days">Duration: Short to Long</option>
+                      <option value="name">Plan Name</option>
+                    </select>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <path d="M4 6L8 10L12 6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
                 </div>
+              </div>
+              <div className="font-mono text-sm font-bold uppercase text-gray-500">
+                {sortedPlans.length} plan{sortedPlans.length !== 1 ? 's' : ''} available
               </div>
             </div>
 

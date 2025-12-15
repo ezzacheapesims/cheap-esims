@@ -77,7 +77,7 @@ export function InstallStepsDialog({
   const displaySmdp = smdpAddress || smdpFromAc || "Not available";
 
   const defaultTrigger = (
-    <Button variant="outline" className="flex items-center gap-2">
+    <Button className="bg-white border-2 border-black text-black font-black uppercase hover:bg-black hover:text-white transition-all rounded-none shadow-hard-sm hover:shadow-none flex items-center gap-2">
       <QrCode className="h-4 w-4" />
       How to Install
     </Button>
@@ -88,28 +88,34 @@ export function InstallStepsDialog({
       <DialogTrigger asChild>
         {trigger || defaultTrigger}
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">eSIM Installation Guide</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white border-2 border-black rounded-none shadow-hard p-0 [&>button]:text-black [&>button]:hover:bg-black [&>button]:hover:text-white [&>button]:border-2 [&>button]:border-black">
+        <DialogHeader className="p-6 border-b-2 border-black">
+          <DialogTitle className="text-3xl font-black uppercase text-black">eSIM Installation Guide</DialogTitle>
+          <DialogDescription className="text-gray-600 font-mono font-bold uppercase text-sm mt-2">
             Follow these step-by-step instructions to install your eSIM on your device.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-6 p-6">
           <div className="flex gap-4">
             <Button
-              variant={activeDevice === "ios" ? "default" : "outline"}
               onClick={() => setActiveDevice("ios")}
-              className="flex-1"
+              className={`flex-1 border-2 border-black font-black uppercase rounded-none shadow-hard-sm hover:shadow-none transition-all ${
+                activeDevice === "ios" 
+                  ? "bg-primary text-black" 
+                  : "bg-white text-black hover:bg-black hover:text-white"
+              }`}
             >
               <Smartphone className="h-4 w-4 mr-2" />
               iPhone
             </Button>
             <Button
-              variant={activeDevice === "android" ? "default" : "outline"}
               onClick={() => setActiveDevice("android")}
-              className="flex-1"
+              className={`flex-1 border-2 border-black font-black uppercase rounded-none shadow-hard-sm hover:shadow-none transition-all ${
+                activeDevice === "android" 
+                  ? "bg-primary text-black" 
+                  : "bg-white text-black hover:bg-black hover:text-white"
+              }`}
             >
               <Smartphone className="h-4 w-4 mr-2" />
               Android
@@ -117,74 +123,74 @@ export function InstallStepsDialog({
           </div>
 
           {(!activeDevice || activeDevice === "ios") && (
-            <Card className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)]">
+            <Card className="bg-white border-2 border-black rounded-none shadow-hard-sm">
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Smartphone className="h-6 w-6 text-[var(--voyage-accent)]" />
-                  <h3 className="text-xl font-bold text-white">iPhone Installation</h3>
+                  <Smartphone className="h-6 w-6 text-primary" />
+                  <h3 className="text-2xl font-black uppercase text-black">iPhone Installation</h3>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       1
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Open Settings</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Open the <strong className="text-white">Settings</strong> app on your iPhone.
+                      <h4 className="text-black font-black uppercase">Open Settings</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Open the <strong className="text-black">Settings</strong> app on your iPhone.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       2
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Navigate to Cellular</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Tap <strong className="text-white">Cellular</strong> or <strong className="text-white">Mobile Data</strong>.
+                      <h4 className="text-black font-black uppercase">Navigate to Cellular</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Tap <strong className="text-black">Cellular</strong> or <strong className="text-black">Mobile Data</strong>.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       3
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Add eSIM</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Tap <strong className="text-white">Add Cellular Plan</strong> or <strong className="text-white">Add eSIM</strong>.
+                      <h4 className="text-black font-black uppercase">Add eSIM</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Tap <strong className="text-black">Add Cellular Plan</strong> or <strong className="text-black">Add eSIM</strong>.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       4
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Scan QR Code</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Point your camera at the QR code shown in your Voyage account. Your iPhone will automatically detect and scan it.
+                      <h4 className="text-black font-black uppercase">Scan QR Code</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Point your camera at the QR code shown in your account. Your iPhone will automatically detect and scan it.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       5
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Manual Entry (Alternative)</h4>
-                      <p className="text-[var(--voyage-muted)] mb-2">
+                      <h4 className="text-black font-black uppercase">Manual Entry (Alternative)</h4>
+                      <p className="text-gray-600 font-mono font-bold mb-2">
                         If QR scanning doesn't work, you can enter details manually:
                       </p>
-                      <ol className="list-decimal list-inside space-y-1 text-[var(--voyage-muted)] ml-2">
-                        <li>Tap <strong className="text-white">Enter Details Manually</strong></li>
-                        <li>Enter the SM-DP+ address: <code className="text-xs bg-[var(--voyage-bg)] px-1 py-0.5 rounded">{displaySmdp}</code></li>
+                      <ol className="list-decimal list-inside space-y-1 text-gray-600 font-mono font-bold ml-2">
+                        <li>Tap <strong className="text-black">Enter Details Manually</strong></li>
+                        <li>Enter the SM-DP+ address: <code className="text-xs bg-gray-100 border border-black px-2 py-1 font-mono font-bold">{displaySmdp}</code></li>
                         {activationCodeOnly && (
                           <li>Enter the activation code when prompted</li>
                         )}
@@ -192,9 +198,8 @@ export function InstallStepsDialog({
                       {displaySmdp !== "Not available" && (
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() => handleCopy(displaySmdp, "smdp")}
-                          className="mt-2"
+                          className="mt-2 bg-white border-2 border-black text-black font-black uppercase rounded-none shadow-hard-sm hover:shadow-none hover:bg-black hover:text-white"
                         >
                           {copied === "smdp" ? (
                             <>
@@ -213,16 +218,16 @@ export function InstallStepsDialog({
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       6
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Complete Setup</h4>
-                      <p className="text-[var(--voyage-muted)]">
+                      <h4 className="text-black font-black uppercase">Complete Setup</h4>
+                      <p className="text-gray-600 font-mono font-bold">
                         Follow the on-screen prompts to complete the installation. You may be asked to:
                       </p>
-                      <ul className="list-disc list-inside space-y-1 text-[var(--voyage-muted)] ml-2">
-                        <li>Label your eSIM (e.g., "Voyage Data")</li>
+                      <ul className="list-disc list-inside space-y-1 text-gray-600 font-mono font-bold ml-2">
+                        <li>Label your eSIM (e.g., "Cheap eSIMs Data")</li>
                         <li>Choose which SIM to use for data</li>
                         <li>Enable or disable the eSIM line</li>
                       </ul>
@@ -234,90 +239,90 @@ export function InstallStepsDialog({
           )}
 
           {(!activeDevice || activeDevice === "android") && (
-            <Card className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)]">
+            <Card className="bg-white border-2 border-black rounded-none shadow-hard-sm">
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Smartphone className="h-6 w-6 text-[var(--voyage-accent)]" />
-                  <h3 className="text-xl font-bold text-white">Android Installation (Samsung / Pixel)</h3>
+                  <Smartphone className="h-6 w-6 text-primary" />
+                  <h3 className="text-2xl font-black uppercase text-black">Android Installation (Samsung / Pixel)</h3>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       1
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Open Settings</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Open the <strong className="text-white">Settings</strong> app on your Android device.
+                      <h4 className="text-black font-black uppercase">Open Settings</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Open the <strong className="text-black">Settings</strong> app on your Android device.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       2
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Navigate to Connections</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Tap <strong className="text-white">Connections</strong> (Samsung) or <strong className="text-white">Network & internet</strong> (Pixel).
+                      <h4 className="text-black font-black uppercase">Navigate to Connections</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Tap <strong className="text-black">Connections</strong> (Samsung) or <strong className="text-black">Network & internet</strong> (Pixel).
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       3
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">SIM Manager</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Tap <strong className="text-white">SIM Manager</strong> or <strong className="text-white">SIMs</strong>.
+                      <h4 className="text-black font-black uppercase">SIM Manager</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Tap <strong className="text-black">SIM Manager</strong> or <strong className="text-black">SIMs</strong>.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       4
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Add eSIM</h4>
-                      <p className="text-[var(--voyage-muted)]">
-                        Tap <strong className="text-white">Add eSIM</strong> or <strong className="text-white">Add mobile plan</strong>.
+                      <h4 className="text-black font-black uppercase">Add eSIM</h4>
+                      <p className="text-gray-600 font-mono font-bold">
+                        Tap <strong className="text-black">Add eSIM</strong> or <strong className="text-black">Add mobile plan</strong>.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       5
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Scan QR Code or Enter Code</h4>
-                      <p className="text-[var(--voyage-muted)] mb-2">
+                      <h4 className="text-black font-black uppercase">Scan QR Code or Enter Code</h4>
+                      <p className="text-gray-600 font-mono font-bold mb-2">
                         Choose one of these options:
                       </p>
-                      <ul className="list-disc list-inside space-y-2 text-[var(--voyage-muted)] ml-2">
+                      <ul className="list-disc list-inside space-y-2 text-gray-600 font-mono font-bold ml-2">
                         <li>
-                          <strong className="text-white">Scan QR Code:</strong> Point your camera at the QR code
+                          <strong className="text-black">Scan QR Code:</strong> Point your camera at the QR code
                         </li>
                         <li>
-                          <strong className="text-white">Enter Activation Code:</strong> Manually enter the activation code
+                          <strong className="text-black">Enter Activation Code:</strong> Manually enter the activation code
                         </li>
                       </ul>
                       {activationCodeOnly && (
                         <div className="mt-3">
-                          <div className="p-3 bg-[var(--voyage-bg)] rounded-lg border border-[var(--voyage-border)]">
+                          <div className="p-3 bg-white border-2 border-black">
                             <div className="flex items-center justify-between gap-2">
-                              <code className="text-xs text-white font-mono break-all flex-1">
+                              <code className="text-sm text-black font-mono break-all flex-1 font-bold">
                                 {activationCodeOnly}
                               </code>
                               <Button
                                 size="sm"
-                                variant="outline"
                                 onClick={() => handleCopy(activationCodeOnly, "ac")}
+                                className="bg-white border-2 border-black text-black font-black uppercase rounded-none shadow-hard-sm hover:shadow-none hover:bg-black hover:text-white"
                               >
                                 {copied === "ac" ? (
                                   <CheckCircle2 className="h-3 w-3" />
@@ -333,12 +338,12 @@ export function InstallStepsDialog({
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--voyage-accent)] text-white flex items-center justify-center font-bold">
+                    <div className="flex-shrink-0 w-10 h-10 border-2 border-black bg-primary text-black flex items-center justify-center font-black text-lg">
                       6
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h4 className="text-white font-semibold">Complete Setup</h4>
-                      <p className="text-[var(--voyage-muted)]">
+                      <h4 className="text-black font-black uppercase">Complete Setup</h4>
+                      <p className="text-gray-600 font-mono font-bold">
                         Follow the on-screen prompts to complete the installation. Your eSIM will be activated once the download is complete.
                       </p>
                     </div>
@@ -348,14 +353,14 @@ export function InstallStepsDialog({
             </Card>
           )}
 
-          <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <p className="text-sm text-blue-400">
-              <strong>Note:</strong> If you encounter any issues during installation, check our{" "}
-              <a href="/support?tab=troubleshooting" className="underline hover:text-blue-300">
+          <div className="p-4 bg-gray-100 border-2 border-black">
+            <p className="text-sm text-black font-mono font-bold">
+              <strong className="uppercase">Note:</strong> If you encounter any issues during installation, check our{" "}
+              <a href="/support?tab=troubleshooting" className="underline hover:text-primary font-black">
                 troubleshooting guide
               </a>{" "}
               or{" "}
-              <a href="/support/contact" className="underline hover:text-blue-300">
+              <a href="/support/contact" className="underline hover:text-primary font-black">
                 contact support
               </a>
               .
