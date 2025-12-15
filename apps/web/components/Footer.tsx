@@ -21,7 +21,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm font-medium text-gray-300">
               <li><Link href="/support" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Help Center</Link></li>
               <li><Link href="/device-check" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Device Check</Link></li>
-              <li><Link href="/contact" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Contact Us</Link></li>
+              <li><Link href="/support/contact" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Contact Us</Link></li>
             </ul>
           </div>
           
@@ -38,9 +38,8 @@ export function Footer() {
            <div>
             <h4 className="font-bold mb-6 text-primary uppercase tracking-wider text-sm border-b border-gray-800 pb-2 inline-block">Legal</h4>
             <ul className="space-y-3 text-sm font-medium text-gray-300">
-              <li><Link href="/terms" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Privacy Policy</Link></li>
-              <li><Link href="/refunds" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Refund Policy</Link></li>
+              <li><Link href="/support?tab=terms" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Terms of Service</Link></li>
+              <li><Link href="/support?tab=refund" className="hover:text-primary hover:underline underline-offset-4 decoration-2">Refund Policy</Link></li>
             </ul>
           </div>
         </div>
