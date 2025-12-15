@@ -151,7 +151,7 @@ export function AffiliateTermsOfService() {
                 <ul className="list-disc list-inside space-y-2 text-gray-600 ml-4">
                   <li><strong className="text-black uppercase">Minimum threshold:</strong> A minimum payout threshold may apply (configurable by Voyage, currently defaults to $0)</li>
                   <li><strong className="text-black uppercase">Available balance only:</strong> You can only request payouts for commissions in "available" status, not "pending" commissions</li>
-                  <li><strong className="text-black uppercase">Payout methods:</strong> Payouts can be requested via PayPal, bank transfer (IBAN/SWIFT), or converted to V-Cash (store credit)</li>
+                  <li><strong className="text-black uppercase">Payout methods:</strong> Payouts can be requested via PayPal, bank transfer (IBAN/SWIFT), or converted to Spare Change (store credit)</li>
                   <li><strong className="text-black uppercase">Manual review:</strong> All payout requests are reviewed manually by Voyage staff before approval</li>
                   <li><strong className="text-black uppercase">Fraud risk:</strong> Voyage reserves the right to decline or hold payout requests if fraud risk is detected or if your account is under investigation</li>
                   <li><strong className="text-black uppercase">Valid information required:</strong> You must provide accurate and valid payout information. Invalid payment details will result in declined payout requests</li>
@@ -163,20 +163,20 @@ export function AffiliateTermsOfService() {
             </div>
           </section>
 
-          {/* V-Cash Conversion Rules */}
+          {/* Spare Change Conversion Rules */}
           <section>
             <h3 className="text-lg font-black text-black uppercase mb-3 flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-purple-600" />
-              7. V-Cash Conversion Rules
+              7. Spare Change Conversion Rules
             </h3>
             <div className="bg-purple-50 border-2 border-purple-600 p-6 shadow-[4px_4px_0px_0px_rgba(147,51,234,1)]">
               <ul className="list-disc list-inside space-y-2 text-purple-900 ml-4">
-                <li><strong className="text-black uppercase">Conversion is final:</strong> Converting commission to V-Cash is an irreversible transaction. Once converted, you cannot convert it back to cash or request a payout</li>
-                <li><strong className="text-black uppercase">Instant availability:</strong> Converted commission becomes instantly available as V-Cash (store credit) in your account</li>
-                <li><strong className="text-black uppercase">No cash value:</strong> V-Cash has no cash value and cannot be withdrawn or refunded. It can only be used to purchase eSIM plans and top-ups on the Voyage platform</li>
+                <li><strong className="text-black uppercase">Conversion is final:</strong> Converting commission to Spare Change is an irreversible transaction. Once converted, you cannot convert it back to cash or request a payout</li>
+                <li><strong className="text-black uppercase">Instant availability:</strong> Converted commission becomes instantly available as Spare Change (store credit) in your account</li>
+                <li><strong className="text-black uppercase">No cash value:</strong> Spare Change has no cash value and cannot be withdrawn or refunded. It can only be used to purchase eSIM plans and top-ups on the Voyage platform</li>
                 <li><strong className="text-black uppercase">Available balance only:</strong> You can only convert commissions that are in "available" status (have passed the holding period)</li>
-                <li><strong className="text-black uppercase">Partial conversion:</strong> You can convert any portion of your available commission balance to V-Cash, not necessarily the full amount</li>
-                <li><strong className="text-black uppercase">No expiration:</strong> V-Cash does not expire and remains in your account until used</li>
+                <li><strong className="text-black uppercase">Partial conversion:</strong> You can convert any portion of your available commission balance to Spare Change, not necessarily the full amount</li>
+                <li><strong className="text-black uppercase">No expiration:</strong> Spare Change does not expire and remains in your account until used</li>
               </ul>
             </div>
           </section>
@@ -195,7 +195,7 @@ export function AffiliateTermsOfService() {
                 <li><strong className="text-black uppercase">Account freeze:</strong> If fraud is suspected, your affiliate account may be frozen pending investigation. During a freeze:
                   <ul className="list-disc list-inside space-y-1 ml-6 mt-2">
                     <li>You cannot request payouts</li>
-                    <li>You cannot convert commissions to V-Cash</li>
+                    <li>You cannot convert commissions to Spare Change</li>
                     <li>New commissions may still accrue but cannot be accessed until the freeze is lifted</li>
                     <li>You will be notified of the freeze via email</li>
                   </ul>
@@ -218,7 +218,7 @@ export function AffiliateTermsOfService() {
                 <li><strong className="text-black uppercase">Voyage's discretion:</strong> Voyage may terminate your affiliate account at its sole discretion, with or without cause, at any time</li>
                 <li><strong className="text-black uppercase">Instant termination:</strong> Fraud, rule violations, prohibited activities, or violations of these terms may result in immediate termination without notice</li>
                 <li><strong className="text-black uppercase">Commission forfeiture:</strong> Upon termination, you forfeit all unpaid commissions and pending payout requests. You will not receive payment for commissions that were pending or available at the time of termination</li>
-                <li><strong className="text-black uppercase">Loss of eligibility:</strong> Once terminated, you lose all payout eligibility and cannot convert remaining commissions to V-Cash</li>
+                <li><strong className="text-black uppercase">Loss of eligibility:</strong> Once terminated, you lose all payout eligibility and cannot convert remaining commissions to Spare Change</li>
                 <li><strong className="text-black uppercase">Referral link deactivation:</strong> Your referral code and referral link will be immediately deactivated and will no longer generate commissions</li>
                 <li><strong className="text-black uppercase">No reinstatement:</strong> Terminated accounts generally cannot be reinstated. Voyage's decision to terminate is final</li>
                 <li><strong className="text-black uppercase">Reapplication:</strong> You may not reapply for the affiliate program after termination without Voyage's explicit written permission</li>

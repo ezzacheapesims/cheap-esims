@@ -30,9 +30,9 @@ export function PlanDetails({ plan }: { plan: any }) {
   const [showDeviceWarning, setShowDeviceWarning] = useState(false);
   const [deviceCompatibility, setDeviceCompatibility] = useState<any>(null);
   const [proceedWithCheckout, setProceedWithCheckout] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'vcash'>('stripe');
-  const [vcashBalance, setVcashBalance] = useState<number | null>(null);
-  const [loadingVCash, setLoadingVCash] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'spare-change'>('stripe');
+  const [spareChangeBalance, setSpareChangeBalance] = useState<number | null>(null);
+  const [loadingSpareChange, setLoadingSpareChange] = useState(false);
   const [processing, setProcessing] = useState(false);
   
   const planGB = calculateGB(plan.volume || 0);
@@ -65,36 +65,36 @@ export function PlanDetails({ plan }: { plan: any }) {
 
   useEffect(() => {
     if (!userLoaded || !user) {
-      setVcashBalance(null);
+      setSpareChangeBalance(null);
       return;
     }
-    const fetchVCashBalance = async () => {
-      setLoadingVCash(true);
+    const fetchSpareChangeBalance = async () => {
+      setLoadingSpareChange(true);
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
         const userEmail = user.primaryEmailAddress?.emailAddress;
         if (!userEmail) {
-          setLoadingVCash(false);
+          setLoadingSpareChange(false);
           return;
         }
-        const data = await safeFetch<{ balanceCents: number }>(`${apiUrl}/vcash`, {
+        const data = await safeFetch<{ balanceCents: number }>(`${apiUrl}/spare-change`, {
           headers: { 'x-user-email': userEmail },
           showToast: false,
         });
-        setVcashBalance(data.balanceCents);
+        setSpareChangeBalance(data.balanceCents);
       } catch (error) {
-        console.error("Failed to fetch V-Cash balance:", error);
-        setVcashBalance(null);
+        console.error("Failed to fetch Spare Change balance:", error);
+        setSpareChangeBalance(null);
       } finally {
-        setLoadingVCash(false);
+        setLoadingSpareChange(false);
       }
     };
-    fetchVCashBalance();
+    fetchSpareChangeBalance();
   }, [userLoaded, user]);
 
   async function buyNow() {
-    if (paymentMethod === 'vcash' && (!userLoaded || !user)) {
-      toast({ title: "Sign in required", description: "Please sign in to use V-Cash.", variant: "destructive" });
+    if (paymentMethod === 'spare-change' && (!userLoaded || !user)) {
+      toast({ title: "Sign in required", description: "Please sign in to use Spare Change.", variant: "destructive" });
       return;
     }
 
@@ -104,9 +104,9 @@ export function PlanDetails({ plan }: { plan: any }) {
       return;
     }
 
-    if (paymentMethod === 'vcash') {
-      if (vcashBalance === null || vcashBalance < priceUSDCents) {
-        toast({ title: "Insufficient V-Cash", description: `Balance too low.`, variant: "destructive" });
+    if (paymentMethod === 'spare-change') {
+      if (spareChangeBalance === null || spareChangeBalance < priceUSDCents) {
+        toast({ title: "Insufficient Spare Change", description: `Balance too low.`, variant: "destructive" });
         return;
       }
     }
@@ -116,7 +116,7 @@ export function PlanDetails({ plan }: { plan: any }) {
       const referralCode = getStoredReferralCode();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
       const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (paymentMethod === 'vcash' && user?.primaryEmailAddress?.emailAddress) {
+      if (paymentMethod === 'spare-change' && user?.primaryEmailAddress?.emailAddress) {
         headers['x-user-email'] = user.primaryEmailAddress.emailAddress;
       }
 
@@ -135,8 +135,8 @@ export function PlanDetails({ plan }: { plan: any }) {
         { method: "POST", headers, body: JSON.stringify(requestBody), errorMessage: "Checkout failed." }
       );
 
-      if (paymentMethod === 'vcash' && data.success) {
-        toast({ title: "Success", description: "Order placed via V-Cash." });
+      if (paymentMethod === 'spare-change' && data.success) {
+        toast({ title: "Success", description: "Order placed via Spare Change." });
         router.push('/my-esims');
       } else if (data.url) {
         window.location.href = data.url;
@@ -282,17 +282,17 @@ export function PlanDetails({ plan }: { plan: any }) {
              {userLoaded && user && (
                  <div className="bg-secondary p-4 border border-black mb-6">
                      <div className="flex justify-between items-center mb-2">
-                         <span className="font-bold text-sm">V-Cash Balance:</span>
-                         <span className="font-mono">${vcashBalance !== null ? (vcashBalance / 100).toFixed(2) : '...'}</span>
+                         <span className="font-bold text-sm">Spare Change Balance:</span>
+                         <span className="font-mono">${spareChangeBalance !== null ? (spareChangeBalance / 100).toFixed(2) : '...'}</span>
                      </div>
                      
                      <div className="grid grid-cols-2 gap-2 mt-4">
                         <button
-                            onClick={() => setPaymentMethod('vcash')}
-                            disabled={!vcashBalance || vcashBalance < priceUSDCents}
-                            className={`p-2 border-2 text-center text-xs font-bold uppercase ${paymentMethod === 'vcash' ? 'border-primary bg-black text-primary' : 'border-gray-300 text-gray-400'}`}
+                            onClick={() => setPaymentMethod('spare-change')}
+                            disabled={!spareChangeBalance || spareChangeBalance < priceUSDCents}
+                            className={`p-2 border-2 text-center text-xs font-bold uppercase ${paymentMethod === 'spare-change' ? 'border-primary bg-black text-primary' : 'border-gray-300 text-gray-400'}`}
                         >
-                            Pay w/ V-Cash
+                            Pay w/ Spare Change
                         </button>
                         <button
                             onClick={() => setPaymentMethod('stripe')}

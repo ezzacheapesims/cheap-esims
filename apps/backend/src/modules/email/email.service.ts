@@ -247,7 +247,7 @@ export class EmailService {
 
   // Convenience wrappers
   async sendOrderConfirmation(to: string, variables: any, idempotency?: string) {
-    const subject = `Order confirmed — Voyage`;
+    const subject = `Order confirmed — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'order-confirmation',
@@ -258,7 +258,7 @@ export class EmailService {
   }
 
   async sendEsimReady(to: string, variables: any, idempotency?: string) {
-    const subject = `Your eSIM is ready — Voyage`;
+    const subject = `Your eSIM is ready — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'esim-ready',
@@ -269,7 +269,7 @@ export class EmailService {
   }
 
   async sendTopupConfirmation(to: string, variables: any, idempotency?: string) {
-    const subject = `Top-up confirmed — Voyage`;
+    const subject = `Top-up confirmed — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'topup-confirmation',
@@ -280,7 +280,7 @@ export class EmailService {
   }
 
   async sendPaymentFailed(to: string, variables: any, idempotency?: string) {
-    const subject = `Payment failed — Voyage`;
+    const subject = `Payment failed — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'payment-failed',
@@ -291,7 +291,7 @@ export class EmailService {
   }
 
   async sendEsimExpiring(to: string, variables: any, idempotency?: string) {
-    const subject = `Your eSIM expires soon — Voyage`;
+    const subject = `Your eSIM expires soon — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'esim-expiring',
@@ -302,7 +302,7 @@ export class EmailService {
   }
 
   async sendReceiptEmail(to: string, variables: any, idempotency?: string) {
-    const subject = `Receipt for your purchase — Voyage`;
+    const subject = `Receipt for your purchase — Cheap eSIMs`;
     return this.sendEmail({
       to,
       template: 'receipt',
@@ -314,7 +314,7 @@ export class EmailService {
 
   // Affiliate email notifications
   async sendAffiliateCommissionEarned(to: string, variables: any, idempotency?: string) {
-    const subject = `You earned commission — Voyage Affiliate`;
+    const subject = `You earned commission — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_commission_earned',
@@ -325,7 +325,7 @@ export class EmailService {
   }
 
   async sendAffiliateNewReferral(to: string, variables: any, idempotency?: string) {
-    const subject = `New referral joined — Voyage Affiliate`;
+    const subject = `New referral joined — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_new_referral',
@@ -336,7 +336,7 @@ export class EmailService {
   }
 
   async sendAffiliatePayoutRequested(to: string, variables: any, idempotency?: string) {
-    const subject = `Payout request submitted — Voyage Affiliate`;
+    const subject = `Payout request submitted — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_payout_requested',
@@ -347,7 +347,7 @@ export class EmailService {
   }
 
   async sendAffiliatePayoutApproved(to: string, variables: any, idempotency?: string) {
-    const subject = `Payout approved — Voyage Affiliate`;
+    const subject = `Payout approved — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_payout_approved',
@@ -358,7 +358,7 @@ export class EmailService {
   }
 
   async sendAffiliatePayoutDeclined(to: string, variables: any, idempotency?: string) {
-    const subject = `Payout request declined — Voyage Affiliate`;
+    const subject = `Payout request declined — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_payout_declined',
@@ -369,7 +369,7 @@ export class EmailService {
   }
 
   async sendAffiliatePayoutPaid(to: string, variables: any, idempotency?: string) {
-    const subject = `Payout sent — Voyage Affiliate`;
+    const subject = `Payout sent — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
       template: 'affiliate_payout_paid',
@@ -388,7 +388,7 @@ export class EmailService {
     amount: number;
     dashboardUrl: string;
   }) {
-    const subject = `New Cash-Out Request — Voyage Affiliate`;
+    const subject = `New Cash-Out Request — Cheap eSIMs Affiliate`;
     const variables = {
       affiliateEmail: params.affiliateEmail,
       affiliateName: params.affiliateName,
@@ -414,25 +414,25 @@ export class EmailService {
   }
 
 
-  async sendRefundToVCashEmail(to: string, variables: any, idempotency?: string) {
-    const subject = `Refund issued as V-Cash — Voyage`;
+  async sendRefundToSpareChangeEmail(to: string, variables: any, idempotency?: string) {
+    const subject = `Refund issued as Spare Change — Cheap eSIMs`;
     return this.sendEmail({
       to,
-      template: 'refund_to_vcash',
+      template: 'refund_to_spare-change',
       subject,
       variables,
-      idempotencyKey: idempotency || `refund-vcash-${variables.orderId || Date.now()}`,
+      idempotencyKey: idempotency || `refund-spare-change-${variables.orderId || Date.now()}`,
     });
   }
 
-  async sendAffiliateCommissionConvertedToVCash(to: string, variables: any, idempotency?: string) {
-    const subject = `Commission converted to V-Cash — Voyage Affiliate`;
+  async sendAffiliateCommissionConvertedToSpareChange(to: string, variables: any, idempotency?: string) {
+    const subject = `Commission converted to Spare Change — Cheap eSIMs Affiliate`;
     return this.sendEmail({
       to,
-      template: 'affiliate_commission_converted_vcash',
+      template: 'affiliate_commission_converted_spare-change',
       subject,
       variables,
-      idempotencyKey: idempotency || `affiliate-vcash-convert-${Date.now()}`,
+      idempotencyKey: idempotency || `affiliate-spare-change-convert-${Date.now()}`,
     });
   }
 }

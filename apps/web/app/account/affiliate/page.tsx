@@ -48,8 +48,8 @@ export default function AffiliateDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [submittingCashOut, setSubmittingCashOut] = useState(false);
-  const [convertingToVCash, setConvertingToVCash] = useState(false);
-  const [vcashAmount, setVcashAmount] = useState("");
+  const [convertingToSpareChange, setConvertingToSpareChange] = useState(false);
+  const [spareChangeAmount, setSpareChangeAmount] = useState("");
   const [cashOutForm, setCashOutForm] = useState({
     paymentMethod: "",
     affiliateCode: "",
@@ -266,13 +266,13 @@ export default function AffiliateDashboardPage() {
 
       {/* Actions Section: Convert & Cash Out */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Convert to V-Cash Section */}
+        {/* Convert to Spare Change Section */}
         {dashboard?.remainingCommission !== undefined && dashboard.remainingCommission > 0 ? (
           <div className="bg-white border-2 border-black p-8 shadow-hard">
-            <h3 className="text-xl font-black uppercase mb-6">Convert to V-Cash</h3>
+            <h3 className="text-xl font-black uppercase mb-6">Convert to Spare Change</h3>
             <div className="space-y-6">
               <p className="font-mono text-sm text-gray-600">
-                Convert your affiliate earnings into V-Cash store credit instantly.
+                Convert your affiliate earnings into Spare Change store credit instantly.
               </p>
               <div className="p-4 bg-secondary border-2 border-black">
                 <p className="text-xs font-mono font-bold uppercase text-gray-500">Available to convert:</p>
@@ -283,10 +283,10 @@ export default function AffiliateDashboardPage() {
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  if (!user || convertingToVCash || dashboard?.affiliate?.isFrozen) return;
+                  if (!user || convertingToSpareChange || dashboard?.affiliate?.isFrozen) return;
 
-                  const amountNum = Math.round(parseFloat(vcashAmount) * 100); 
-                  if (!vcashAmount.trim() || isNaN(amountNum) || amountNum <= 0) {
+                  const amountNum = Math.round(parseFloat(spareChangeAmount) * 100); 
+                  if (!spareChangeAmount.trim() || isNaN(amountNum) || amountNum <= 0) {
                     toast({ title: "Error", description: "Please enter a valid amount", variant: "destructive" });
                     return;
                   }
@@ -296,46 +296,46 @@ export default function AffiliateDashboardPage() {
                     return;
                   }
 
-                  setConvertingToVCash(true);
+                  setConvertingToSpareChange(true);
                   try {
                     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
-                    const result = await safeFetch<any>(`${apiUrl}/affiliate/vcash/convert`, {
+                    const result = await safeFetch<any>(`${apiUrl}/affiliate/spare-change/convert`, {
                       method: "POST",
                       headers: { "x-user-email": user.primaryEmailAddress?.emailAddress || "", "Content-Type": "application/json" },
                       body: JSON.stringify({ amountCents: amountNum }),
                     });
 
                     toast({ title: "Success", description: `Converted ${formatCurrency(result.convertedAmountCents)} successfully.` });
-                    setVcashAmount("");
+                    setSpareChangeAmount("");
                     window.location.reload();
                   } catch (error: any) {
                     toast({ title: "Error", description: error.message || "Failed to convert", variant: "destructive" });
                   } finally {
-                    setConvertingToVCash(false);
+                    setConvertingToSpareChange(false);
                   }
                 }}
                 className="space-y-4"
               >
                 <div className="space-y-2">
-                  <Label htmlFor="vcashAmount" className="font-bold uppercase text-xs">Amount (USD)</Label>
+                  <Label htmlFor="spareChangeAmount" className="font-bold uppercase text-xs">Amount (USD)</Label>
                   <Input
-                    id="vcashAmount"
+                    id="spareChangeAmount"
                     type="number"
                     step="0.01"
                     min="0.01"
                     placeholder={`Max: ${formatCurrency(dashboard?.remainingCommission || 0)}`}
-                    value={vcashAmount}
-                    onChange={(e) => setVcashAmount(e.target.value)}
+                    value={spareChangeAmount}
+                    onChange={(e) => setSpareChangeAmount(e.target.value)}
                     className="border-2 border-black rounded-none font-mono"
-                    disabled={convertingToVCash || dashboard?.affiliate?.isFrozen}
+                    disabled={convertingToSpareChange || dashboard?.affiliate?.isFrozen}
                   />
                 </div>
                 <Button
                   type="submit"
                   className="w-full bg-black hover:bg-white hover:text-black text-white border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
-                  disabled={convertingToVCash || dashboard.affiliate?.isFrozen}
+                  disabled={convertingToSpareChange || dashboard.affiliate?.isFrozen}
                 >
-                  {convertingToVCash ? "Converting..." : "Convert to V-Cash"}
+                  {convertingToSpareChange ? "Converting..." : "Convert to Spare Change"}
                 </Button>
               </form>
             </div>
@@ -344,11 +344,11 @@ export default function AffiliateDashboardPage() {
           <div className="bg-white border-2 border-black p-8 shadow-hard flex items-center justify-center text-center h-full border-dashed">
             <div className="space-y-2">
               <p className="text-gray-500 font-mono">
-                You need commission earnings to convert to V-Cash.
+                You need commission earnings to convert to Spare Change.
               </p>
-              <Link href="/account/vcash">
+              <Link href="/account/spare-change">
                 <Button variant="link" className="text-primary font-bold uppercase">
-                  View V-Cash Balance →
+                  View Spare Change Balance →
                 </Button>
               </Link>
             </div>

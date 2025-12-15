@@ -8,7 +8,7 @@ import { DollarSign, ArrowRight, Wallet, MessageSquare } from "lucide-react";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { safeFetch } from "@/lib/safe-fetch";
 
-interface VCashBalance {
+interface SpareChangeBalance {
   balanceCents: number;
   currency: string;
 }
@@ -16,30 +16,30 @@ interface VCashBalance {
 export default function AccountPage() {
   const { user, isLoaded } = useUser();
   const { formatCurrency: formatCurrencyContext, convert } = useCurrency();
-  const [vcashBalance, setVcashBalance] = useState<VCashBalance | null>(null);
-  const [loadingVCash, setLoadingVCash] = useState(true);
+  const [spareChangeBalance, setSpareChangeBalance] = useState<SpareChangeBalance | null>(null);
+  const [loadingSpareChange, setLoadingSpareChange] = useState(true);
 
   useEffect(() => {
     if (!isLoaded || !user) return;
 
-    const fetchVCash = async () => {
+    const fetchSpareChange = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
-        const data = await safeFetch<VCashBalance>(`${apiUrl}/vcash`, {
+        const data = await safeFetch<SpareChangeBalance>(`${apiUrl}/spare-change`, {
           headers: {
             "x-user-email": user.primaryEmailAddress?.emailAddress || "",
           },
           showToast: false,
         });
-        setVcashBalance(data);
+        setSpareChangeBalance(data);
       } catch (error) {
-        console.error("Failed to fetch V-Cash balance:", error);
+        console.error("Failed to fetch Spare Change balance:", error);
       } finally {
-        setLoadingVCash(false);
+        setLoadingSpareChange(false);
       }
     };
 
-    fetchVCash();
+    fetchSpareChange();
   }, [user, isLoaded]);
 
   const formatCurrency = (cents: number) => {
@@ -55,7 +55,7 @@ export default function AccountPage() {
         <p className="text-gray-500 font-mono uppercase text-sm font-bold">Manage your wallet, rewards & settings</p>
       </div>
 
-      {/* V-Cash Balance Card */}
+      {/* Spare Change Balance Card */}
       <div className="bg-white border-2 border-black p-8 shadow-hard relative overflow-hidden group hover:shadow-hard-lg transition-all">
         <div className="absolute top-0 right-0 bg-black text-white px-4 py-1 font-mono text-xs uppercase font-bold">
             Wallet
@@ -66,14 +66,14 @@ export default function AccountPage() {
                     <div className="p-3 border-2 border-black bg-secondary">
                         <Wallet className="h-6 w-6 text-black" />
                     </div>
-                    <h2 className="text-2xl font-black uppercase">V-Cash Balance</h2>
+                    <h2 className="text-2xl font-black uppercase">Spare Change Balance</h2>
                 </div>
                 <div>
-                    {loadingVCash ? (
+                    {loadingSpareChange ? (
                         <div className="h-12 w-48 bg-gray-100 animate-pulse border border-gray-200"></div>
                     ) : (
                         <p className="text-5xl font-black tracking-tighter text-primary drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-stroke-1">
-                            {vcashBalance ? formatCurrency(vcashBalance.balanceCents) : "$0.00"}
+                            {spareChangeBalance ? formatCurrency(spareChangeBalance.balanceCents) : "$0.00"}
                         </p>
                     )}
                     <p className="text-sm font-mono text-gray-500 mt-2 max-w-md">
@@ -81,7 +81,7 @@ export default function AccountPage() {
                     </p>
                 </div>
             </div>
-            <Link href="/account/vcash">
+            <Link href="/account/spare-change">
                 <Button variant="outline" className="border-2 border-black rounded-none shadow-hard-sm hover:shadow-none hover:bg-black hover:text-white font-bold uppercase transition-all">
                     View History <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

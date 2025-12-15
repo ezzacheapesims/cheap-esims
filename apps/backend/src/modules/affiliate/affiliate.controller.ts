@@ -9,7 +9,7 @@ import { FraudService } from './fraud/fraud.service';
 import { FraudDetectionService } from './fraud/fraud-detection.service';
 import { EmailService } from '../email/email.service';
 import { AdminSettingsService } from '../admin/admin-settings.service';
-import { VCashService } from '../vcash/vcash.service';
+import { SpareChangeService } from '../spare-change/spare-change.service';
 import { PrismaService } from '../../prisma.service';
 import { sanitizeInput } from '../../common/utils/sanitize';
 import { SecurityLoggerService } from '../../common/services/security-logger.service';
@@ -31,7 +31,7 @@ export class AffiliateController {
     private config: ConfigService,
     private emailService: EmailService,
     private adminSettingsService: AdminSettingsService,
-    private vcashService: VCashService,
+    private spareChangeService: SpareChangeService,
     private securityLogger: SecurityLoggerService,
   ) {}
 
@@ -490,10 +490,10 @@ export class AffiliateController {
   }
 
   /**
-   * Convert affiliate commission to V-Cash
+   * Convert affiliate commission to Spare Change
    */
-  @Post('vcash/convert')
-  async convertCommissionToVCash(
+  @Post('spare-change/convert')
+  async convertCommissionToSpareChange(
     @Req() req: any,
     @Body() body: { amountCents: number },
   ) {
@@ -546,14 +546,14 @@ export class AffiliateController {
       data: {
         id: crypto.randomUUID(),
         affiliateId: affiliate.id,
-        type: 'vcash',
+        type: 'spare-change',
         amountCents: body.amountCents,
       },
     });
 
-    // Credit V-Cash
+    // Credit Spare Change
     const ip = getClientIp(req);
-    await this.vcashService.credit(
+    await this.spareChangeService.credit(
       user.id,
       body.amountCents,
       'affiliate_conversion',
@@ -563,7 +563,7 @@ export class AffiliateController {
 
     // Log security event
     await this.securityLogger.logSecurityEvent({
-      type: 'AFFILIATE_COMMISSION_TO_VCASH' as any,
+      type: 'AFFILIATE_COMMISSION_TO_SPARE_CHANGE' as any,
       userId: user.id,
       ip,
       details: {
@@ -577,14 +577,14 @@ export class AffiliateController {
     if (this.emailService) {
       try {
         const webUrl = this.config.get<string>('WEB_URL') || 'http://localhost:3000';
-        await this.emailService.sendAffiliateCommissionConvertedToVCash(
+        await this.emailService.sendAffiliateCommissionConvertedToSpareChange(
           email,
           {
             amountCents: body.amountCents,
             amountFormatted: `$${(body.amountCents / 100).toFixed(2)}`,
-            vcashBalanceCents: await this.vcashService.getBalance(user.id),
-            vcashBalanceFormatted: `$${((await this.vcashService.getBalance(user.id)) / 100).toFixed(2)}`,
-            dashboardUrl: `${webUrl}/account/vcash`,
+            spareChangeBalanceCents: await this.spareChangeService.getBalance(user.id),
+            spareChangeBalanceFormatted: `$${((await this.spareChangeService.getBalance(user.id)) / 100).toFixed(2)}`,
+            dashboardUrl: `${webUrl}/account/spare-change`,
           },
         );
       } catch (error) {
@@ -592,13 +592,13 @@ export class AffiliateController {
       }
     }
 
-    const newVcashBalance = await this.vcashService.getBalance(user.id);
+    const newSpareChangeBalance = await this.spareChangeService.getBalance(user.id);
 
     return {
       success: true,
       convertedAmountCents: body.amountCents,
       remainingCommissionCents: remainingCommission - body.amountCents,
-      vcashBalanceCents: newVcashBalance,
+      spareChangeBalanceCents: newSpareChangeBalance,
     };
   }
 

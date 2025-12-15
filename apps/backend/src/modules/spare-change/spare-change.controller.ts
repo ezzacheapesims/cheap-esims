@@ -5,7 +5,7 @@ import {
   Req,
   NotFoundException,
 } from '@nestjs/common';
-import { SpareChangeService } from './vcash.service';
+import { SpareChangeService } from './spare-change.service';
 import { PrismaService } from '../../prisma.service';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
@@ -13,7 +13,7 @@ import * as crypto from 'crypto';
 @Controller('spare-change')
 export class SpareChangeController {
   constructor(
-    private readonly vcashService: SpareChangeService,
+    private readonly spareChangeService: SpareChangeService,
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
   ) {}
@@ -39,7 +39,7 @@ export class SpareChangeController {
       update: {},
     });
 
-    const balanceCents = await this.vcashService.getBalance(user.id);
+    const balanceCents = await this.spareChangeService.getBalance(user.id);
     const defaultCurrency = this.config.get<string>('DEFAULT_CURRENCY') || 'USD';
 
     return {
@@ -76,7 +76,7 @@ export class SpareChangeController {
     const pageNum = parseInt(page, 10) || 1;
     const pageSizeNum = parseInt(pageSize, 10) || 50;
 
-    return this.vcashService.getTransactions(user.id, pageNum, pageSizeNum);
+    return this.spareChangeService.getTransactions(user.id, pageNum, pageSizeNum);
   }
 }
 

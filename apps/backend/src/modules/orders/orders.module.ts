@@ -8,7 +8,7 @@ import { EmailModule } from '../email/email.module';
 import { ReceiptModule } from '../receipt/receipt.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { AffiliateModule } from '../affiliate/affiliate.module';
-import { VCashModule } from '../vcash/vcash.module';
+import { SpareChangeModule } from '../spare-change/spare-change.module';
 import { AdminModule } from '../admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -21,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     forwardRef(() => ReceiptModule),
     CurrencyModule,
     forwardRef(() => AffiliateModule),
-    VCashModule,
+    SpareChangeModule,
     forwardRef(() => AdminModule),
   ],
   controllers: [OrdersController],

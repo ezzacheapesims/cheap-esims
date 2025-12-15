@@ -167,7 +167,7 @@ export default function AdminLayout({
       icon: Users,
       children: [
         { href: "/admin/users", label: "Users", icon: Users },
-        { href: "/admin/vcash", label: "V-Cash", icon: Wallet },
+        { href: "/admin/spare-change", label: "Spare Change", icon: Wallet },
       ]
     },
     {

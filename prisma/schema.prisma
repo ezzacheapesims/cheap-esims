@@ -404,19 +404,21 @@ model User {
   Order            Order[]
   Referral         Referral?
   TopUp            TopUp[]
-  VCashBalance     VCashBalance?
-  VCashTransaction VCashTransaction[]
+  SpareChangeBalance     SpareChangeBalance?
+  SpareChangeTransaction SpareChangeTransaction[]
 }
 
-model VCashBalance {
+model SpareChangeBalance {
   userId       String   @id
   balanceCents Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("VCashBalance")
 }
 
-model VCashTransaction {
+model SpareChangeTransaction {
   id          String   @id
   userId      String
   type        String
@@ -429,6 +431,7 @@ model VCashTransaction {
   @@index([type])
   @@index([userId, createdAt])
   @@index([userId])
+  @@map("VCashTransaction")
 }
 
 model WebhookEvent {

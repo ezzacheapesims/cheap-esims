@@ -10,7 +10,7 @@ import { CurrencyService } from '../currency/currency.service';
 import { AffiliateService } from '../affiliate/affiliate.service';
 import { AffiliateCommissionService } from '../affiliate/affiliate-commission.service';
 import { FraudDetectionService } from '../affiliate/fraud/fraud-detection.service';
-import { VCashService } from '../vcash/vcash.service';
+import { SpareChangeService } from '../spare-change/spare-change.service';
 import { AdminSettingsService } from '../admin/admin-settings.service';
 import * as crypto from 'crypto';
 
@@ -23,7 +23,7 @@ export class OrdersService {
     private esimService: EsimService,
     private currencyService: CurrencyService,
     private affiliateService: AffiliateService,
-    private vcashService: VCashService,
+    private spareChangeService: SpareChangeService,
     @Inject(forwardRef(() => AffiliateCommissionService))
     private commissionService?: AffiliateCommissionService,
     @Inject(forwardRef(() => EmailService))
@@ -153,7 +153,7 @@ export class OrdersService {
     }
   }
 
-  async createVCashOrder({ planCode, amount, currency, planName, displayCurrency, referralCode, email }: {
+  async createSpareChangeOrder({ planCode, amount, currency, planName, displayCurrency, referralCode, email }: {
     planCode: string;
     amount: number;
     currency: string;
@@ -162,7 +162,7 @@ export class OrdersService {
     referralCode?: string;
     email: string;
   }) {
-    this.logger.log(`[VCASH CHECKOUT] Received from frontend: amount=${amount} USD, email=${email}, planCode=${planCode}`);
+    this.logger.log(`[SPARE_CHANGE CHECKOUT] Received from frontend: amount=${amount} USD, email=${email}, planCode=${planCode}`);
 
     // Auto-create user if they don't exist (e.g., just signed up via Clerk)
     const user = await this.prisma.user.upsert({
@@ -178,12 +178,12 @@ export class OrdersService {
     // Calculate amount in USD cents
     const amountUSDCents = Math.round(amount * 100);
     
-    // Check V-Cash balance
-    const vcashBalance = await this.vcashService.getBalance(user.id);
+    // Check Spare Change balance
+    const spareChangeBalance = await this.spareChangeService.getBalance(user.id);
     
-    if (vcashBalance < amountUSDCents) {
+    if (spareChangeBalance < amountUSDCents) {
       throw new BadRequestException(
-        `Insufficient V-Cash balance. Available: $${(vcashBalance / 100).toFixed(2)}, Required: $${(amountUSDCents / 100).toFixed(2)}`
+        `Insufficient Spare Change balance. Available: $${(spareChangeBalance / 100).toFixed(2)}, Required: $${(amountUSDCents / 100).toFixed(2)}`
       );
     }
 
@@ -200,9 +200,9 @@ export class OrdersService {
     // Create order first (before debiting to ensure order exists if something fails)
     const orderId = crypto.randomUUID();
     
-    // Debit V-Cash
-    const ip = 'system'; // V-Cash orders are internal, no IP tracking needed
-    await this.vcashService.debit(
+    // Debit Spare Change
+    const ip = 'system'; // Spare Change orders are internal, no IP tracking needed
+    await this.spareChangeService.debit(
       user.id,
       amountUSDCents,
       `ORDER_PAYMENT_${orderId}`,
@@ -210,7 +210,7 @@ export class OrdersService {
       ip
     );
 
-    this.logger.log(`[VCASH CHECKOUT] Debited ${amountUSDCents} cents from user ${user.id}. Creating order...`);
+    this.logger.log(`[SPARE_CHANGE CHECKOUT] Debited ${amountUSDCents} cents from user ${user.id}. Creating order...`);
 
     // Create order
     const order = await this.prisma.order.create({
@@ -223,8 +223,8 @@ export class OrdersService {
         displayCurrency: targetCurrency,
         displayAmountCents: displayAmountCents,
         status: 'paid',
-        paymentMethod: 'vcash',
-        paymentRef: `vcash_${orderId}`,
+        paymentMethod: 'spare-change',
+        paymentRef: `spare-change_${orderId}`,
         esimOrderNo: `PENDING-${orderId}`,
       },
     });
@@ -244,15 +244,15 @@ export class OrdersService {
 
     // Trigger eSIM provisioning (async, don't wait)
     this.performEsimOrderForOrder(order, user, planCode).catch((err) => {
-      this.logger.error(`[ESIM] Failed to provision eSIM for V-Cash order ${orderId}:`, err);
+      this.logger.error(`[ESIM] Failed to provision eSIM for Spare Change order ${orderId}:`, err);
     });
 
-    this.logger.log(`[VCASH CHECKOUT] Order ${orderId} created successfully. V-Cash balance remaining: $${((vcashBalance - amountUSDCents) / 100).toFixed(2)}`);
+    this.logger.log(`[SPARE_CHANGE CHECKOUT] Order ${orderId} created successfully. Spare Change balance remaining: $${((spareChangeBalance - amountUSDCents) / 100).toFixed(2)}`);
 
     return {
       success: true,
       orderId: order.id,
-      message: 'Order created successfully with V-Cash payment',
+      message: 'Order created successfully with Spare Change payment',
     };
   }
 
@@ -390,10 +390,10 @@ export class OrdersService {
 
   async performEsimOrderForOrder(order, user, planCode: string, session?: Stripe.Checkout.Session) {
     // provider requires transactionId < 50 chars
-    // Use payment method prefix: stripe_ or vcash_
-    const paymentPrefix = order.paymentMethod === 'vcash' ? 'vcash_' : 'stripe_';
+    // Use payment method prefix: stripe_ or spare-change_
+    const paymentPrefix = order.paymentMethod === 'spare-change' ? 'spare-change_' : 'stripe_';
     const transactionId = `${paymentPrefix}${order.id}`;  
-    // "stripe_" or "vcash_" (7 chars) + UUID (36 chars) = 43 chars (valid)
+    // "stripe_" or "spare-change_" (7 chars) + UUID (36 chars) = 43 chars (valid)
     
     // Get current provider price (NOT the marked-up customer price)
     // order.amountCents contains the marked-up price that customer paid
@@ -625,7 +625,7 @@ export class OrdersService {
         this.logger.log(`[RETRY] Processing order ${order.id} (status: ${order.status})`);
 
         // Build the same transactionId format as original
-        const paymentPrefix = order.paymentMethod === 'vcash' ? 'vcash_' : 'stripe_';
+        const paymentPrefix = order.paymentMethod === 'spare-change' ? 'spare-change_' : 'stripe_';
         const transactionId = `${paymentPrefix}${order.id}`;
         
         // Get current provider price (NOT the marked-up customer price)
@@ -1342,7 +1342,7 @@ export class OrdersService {
 
   /**
    * Add commission for a completed order
-   * NOTE: V-Cash payments do NOT generate commissions
+   * NOTE: Spare Change payments do NOT generate commissions
    */
   private async addCommissionForOrder(order: any): Promise<void> {
       try {
@@ -1365,9 +1365,9 @@ export class OrdersService {
           return;
         }
 
-        // Skip commission for V-Cash payments
-        if (freshOrder.paymentMethod === 'vcash') {
-          this.logger.log(`[AFFILIATE] Skipping commission for order ${freshOrder.id} - V-Cash payment method`);
+        // Skip commission for Spare Change payments
+        if (freshOrder.paymentMethod === 'spare-change') {
+          this.logger.log(`[AFFILIATE] Skipping commission for order ${freshOrder.id} - Spare Change payment method`);
           return;
         }
 

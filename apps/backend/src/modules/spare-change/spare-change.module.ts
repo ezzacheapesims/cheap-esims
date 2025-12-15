@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SpareChangeController } from './vcash.controller';
-import { SpareChangeService } from './vcash.service';
+import { SpareChangeController } from './spare-change.controller';
+import { SpareChangeService } from './spare-change.service';
 import { PrismaService } from '../../prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from '../../common/modules/common.module';

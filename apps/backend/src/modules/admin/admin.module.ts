@@ -11,21 +11,21 @@ import { AdminSettingsController, AdminCheckController, AdminDiscountsController
 import { AdminLogsController } from './controllers/admin-logs.controller';
 import { AdminAffiliatesController } from './controllers/admin-affiliates.controller';
 import { AdminPayoutsController } from './controllers/admin-payouts.controller';
-import { AdminVCashController } from './controllers/admin-vcash.controller';
+import { AdminSpareChangeController } from './controllers/admin-spare-change.controller';
 import { AdminAffiliateAnalyticsController } from './controllers/admin-affiliate-analytics.controller';
 import { AdminFraudController } from './controllers/admin-fraud.controller';
 import { PrismaService } from '../../prisma.service';
 import { OrdersModule } from '../orders/orders.module';
 import { EsimModule } from '../esim/esim.module';
 import { AffiliateModule } from '../affiliate/affiliate.module';
-import { VCashModule } from '../vcash/vcash.module';
+import { SpareChangeModule } from '../spare-change/spare-change.module';
 import { StripeModule } from '../stripe/stripe.module';
 import { EmailModule } from '../email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from '../../common/modules/common.module';
 
 @Module({
-        imports: [forwardRef(() => OrdersModule), forwardRef(() => EsimModule), forwardRef(() => AffiliateModule), VCashModule, StripeModule, forwardRef(() => EmailModule), ConfigModule, CommonModule],
+        imports: [forwardRef(() => OrdersModule), forwardRef(() => EsimModule), forwardRef(() => AffiliateModule), SpareChangeModule, StripeModule, forwardRef(() => EmailModule), ConfigModule, CommonModule],
   controllers: [
     AdminOrdersController,
     AdminEsimsController,
@@ -38,7 +38,7 @@ import { CommonModule } from '../../common/modules/common.module';
     AdminLogsController,
     AdminAffiliatesController,
     AdminPayoutsController,
-    AdminVCashController,
+    AdminSpareChangeController,
     AdminAffiliateAnalyticsController,
     AdminFraudController,
   ],

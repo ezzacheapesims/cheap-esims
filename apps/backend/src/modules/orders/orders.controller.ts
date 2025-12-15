@@ -28,7 +28,7 @@ export class OrdersController {
       planName: string;
       displayCurrency?: string;
       referralCode?: string;
-      paymentMethod?: 'stripe' | 'vcash';
+      paymentMethod?: 'stripe' | 'spare-change';
     },
     @Req() req: any,
   ) {
@@ -56,13 +56,13 @@ export class OrdersController {
         throw new BadRequestException('Missing required field: currency is required');
       }
       
-      // If V-Cash payment, we need user email from headers
-      if (paymentMethod === 'vcash') {
+      // If Spare Change payment, we need user email from headers
+      if (paymentMethod === 'spare-change') {
         const email = req.headers['x-user-email'] as string;
         if (!email) {
-          throw new NotFoundException('User email required for V-Cash payment');
+          throw new NotFoundException('User email required for Spare Change payment');
         }
-        return this.ordersService.createVCashOrder({ ...body, email });
+        return this.ordersService.createSpareChangeOrder({ ...body, email });
       }
       
       // Default to Stripe checkout

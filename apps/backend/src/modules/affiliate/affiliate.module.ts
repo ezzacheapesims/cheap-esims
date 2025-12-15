@@ -11,11 +11,11 @@ import { PrismaService } from '../../prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { EmailModule } from '../email/email.module';
 import { AdminModule } from '../admin/admin.module';
-import { VCashModule } from '../vcash/vcash.module';
+import { SpareChangeModule } from '../spare-change/spare-change.module';
 import { CommonModule } from '../../common/modules/common.module';
 
 @Module({
-  imports: [ConfigModule, forwardRef(() => EmailModule), forwardRef(() => AdminModule), VCashModule, CommonModule],
+  imports: [ConfigModule, forwardRef(() => EmailModule), forwardRef(() => AdminModule), SpareChangeModule, CommonModule],
   controllers: [AffiliateController, AffiliatePayoutController],
   providers: [
     AffiliateService,

@@ -15,7 +15,7 @@ import { AdminGuard } from '../guards/admin.guard';
 import { OrdersService } from '../../orders/orders.service';
 import { AdminService } from '../admin.service';
 import { PrismaService } from '../../../prisma.service';
-import { VCashService } from '../../vcash/vcash.service';
+import { SpareChangeService } from '../../spare-change/spare-change.service';
 import { EmailService } from '../../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { SecurityLoggerService } from '../../../common/services/security-logger.service';
@@ -31,7 +31,7 @@ export class AdminOrdersController {
     private readonly ordersService: OrdersService,
     private readonly adminService: AdminService,
     private readonly prisma: PrismaService,
-    private readonly vcashService: VCashService,
+    private readonly spareChangeService: SpareChangeService,
     private readonly emailService: EmailService,
     private readonly config: ConfigService,
     private readonly securityLogger: SecurityLoggerService,
@@ -231,13 +231,13 @@ export class AdminOrdersController {
 
   /**
    * Refund an order
-   * Supports both card refund (via Stripe) and V-Cash refund
+   * Supports both card refund (via Stripe) and Spare Change refund
    */
   @Post(':id/refund')
   async refundOrder(
     @Param('id') id: string,
     @Req() req: any,
-    @Body() body: { refundMethod?: 'card' | 'vcash'; amountCents?: number },
+    @Body() body: { refundMethod?: 'card' | 'spare-change'; amountCents?: number },
   ) {
     const order = await this.prisma.order.findUnique({
       where: { id },
@@ -258,15 +258,15 @@ export class AdminOrdersController {
     const refundAmountCents = body.amountCents || order.amountCents;
     const ip = getClientIp(req);
 
-    if (refundMethod === 'vcash') {
+    if (refundMethod === 'spare-change') {
       // Get plan name for better transaction history
       const plan = await this.prisma.plan.findUnique({
         where: { id: order.planId },
         select: { name: true },
       });
 
-      // Refund as V-Cash
-      await this.vcashService.credit(
+      // Refund as Spare Change
+      await this.spareChangeService.credit(
         order.userId,
         refundAmountCents,
         'refund',
@@ -278,14 +278,14 @@ export class AdminOrdersController {
       await this.prisma.order.update({
         where: { id },
         data: {
-          refundMethod: 'vcash',
+          refundMethod: 'spare-change',
           refundAmountCents,
           refundedAt: new Date(),
           status: 'cancelled',
         },
       });
 
-      // Reverse commission if exists (for V-Cash refunds, we handle it here)
+      // Reverse commission if exists (for Spare Change refunds, we handle it here)
       if (this.commissionService) {
         try {
           await this.commissionService.reverseCommission(order.id, 'order');
@@ -296,7 +296,7 @@ export class AdminOrdersController {
 
       // Log security event
       await this.securityLogger.logSecurityEvent({
-        type: 'ORDER_REFUND_VCASH' as any,
+        type: 'ORDER_REFUND_SPARE_CHANGE' as any,
         userId: order.userId,
         ip,
         details: {
@@ -310,15 +310,15 @@ export class AdminOrdersController {
       if (this.emailService) {
         try {
           const webUrl = this.config.get<string>('WEB_URL') || 'http://localhost:3000';
-          const vcashBalance = await this.vcashService.getBalance(order.userId);
-          await this.emailService.sendRefundToVCashEmail(
+          const spareChangeBalance = await this.spareChangeService.getBalance(order.userId);
+          await this.emailService.sendRefundToSpareChangeEmail(
             order.User.email,
             {
               orderId: order.id,
               refundAmountFormatted: `$${(refundAmountCents / 100).toFixed(2)}`,
-              vcashBalanceFormatted: `$${(vcashBalance / 100).toFixed(2)}`,
-              vcashBalanceCents: vcashBalance,
-              dashboardUrl: `${webUrl}/account/vcash`,
+              spareChangeBalanceFormatted: `$${(spareChangeBalance / 100).toFixed(2)}`,
+              spareChangeBalanceCents: spareChangeBalance,
+              dashboardUrl: `${webUrl}/account/spare-change`,
             },
           );
         } catch (error) {
@@ -329,7 +329,7 @@ export class AdminOrdersController {
       // Log admin action
       await this.adminService.logAction(
         req.adminEmail,
-        'refund_order_vcash',
+        'refund_order_spare-change',
         'order',
         id,
         { orderId: id, refundAmountCents },
@@ -337,8 +337,8 @@ export class AdminOrdersController {
 
       return {
         success: true,
-        message: `Order refunded as V-Cash: $${(refundAmountCents / 100).toFixed(2)}`,
-        refundMethod: 'vcash',
+        message: `Order refunded as Spare Change: $${(refundAmountCents / 100).toFixed(2)}`,
+        refundMethod: 'spare-change',
         refundAmountCents,
       };
     } else {
