@@ -22,6 +22,7 @@ import { SecurityLoggerService } from '../../../common/services/security-logger.
 import { StripeService } from '../../stripe/stripe.service';
 import { AffiliateCommissionService } from '../../affiliate/affiliate-commission.service';
 import { getClientIp } from '../../../common/utils/webhook-ip-whitelist';
+import Stripe from 'stripe';
 
 @Controller('admin/orders')
 @UseGuards(AdminGuard)
@@ -382,6 +383,102 @@ export class AdminOrdersController {
       } catch (error: any) {
         throw new BadRequestException(`Stripe refund failed: ${error.message}`);
       }
+    }
+  }
+
+  /**
+   * Manually create order from Stripe payment reference
+   * Useful when order creation failed due to database schema issues
+   */
+  @Post('recreate-from-payment/:paymentRef')
+  async recreateOrderFromPayment(
+    @Param('paymentRef') paymentRef: string,
+    @Req() req: any,
+  ) {
+    try {
+      // Check if order already exists
+      const existingOrder = await this.prisma.order.findUnique({
+        where: { paymentRef },
+      });
+
+      if (existingOrder) {
+        return {
+          success: false,
+          error: 'Order already exists for this payment reference',
+          orderId: existingOrder.id,
+        };
+      }
+
+      // Try to fetch checkout session by payment intent or session ID
+      let session: Stripe.Checkout.Session | null = null;
+      
+      // First try as payment intent
+      try {
+        const paymentIntent = await this.stripeService.stripe.paymentIntents.retrieve(paymentRef);
+        if (paymentIntent.metadata?.checkoutSessionId) {
+          session = await this.stripeService.stripe.checkout.sessions.retrieve(
+            paymentIntent.metadata.checkoutSessionId
+          );
+        }
+      } catch (e) {
+        // Not a payment intent, try as checkout session ID
+        try {
+          session = await this.stripeService.stripe.checkout.sessions.retrieve(paymentRef);
+        } catch (e2) {
+          // Try with cs_live_ prefix if not present
+          if (!paymentRef.startsWith('cs_')) {
+            try {
+              session = await this.stripeService.stripe.checkout.sessions.retrieve(`cs_live_${paymentRef}`);
+            } catch (e3) {
+              // Last attempt: try with cs_test_ prefix
+              session = await this.stripeService.stripe.checkout.sessions.retrieve(`cs_test_${paymentRef}`);
+            }
+          }
+        }
+      }
+
+      if (!session) {
+        throw new BadRequestException(`Could not find Stripe checkout session for payment reference: ${paymentRef}`);
+      }
+
+      // Check if session is completed
+      if (session.payment_status !== 'paid') {
+        throw new BadRequestException(`Checkout session payment status is ${session.payment_status}, not paid`);
+      }
+
+      // Create order using the same logic as webhook handler
+      await this.ordersService.handleStripePayment(session);
+
+      // Fetch the newly created order
+      const newOrder = await this.prisma.order.findUnique({
+        where: { paymentRef: session.payment_intent as string || session.id },
+        include: {
+          User: true,
+          EsimProfile: true,
+        },
+      });
+
+      // Log admin action
+      await this.adminService.logAction(
+        req.adminEmail,
+        'recreate_order_from_payment',
+        'order',
+        newOrder?.id || paymentRef,
+        { paymentRef, sessionId: session.id },
+      );
+
+      return {
+        success: true,
+        message: 'Order recreated successfully',
+        orderId: newOrder?.id,
+        paymentRef: newOrder?.paymentRef,
+        profiles: newOrder?.EsimProfile || [],
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || 'Failed to recreate order',
+      };
     }
   }
 }
