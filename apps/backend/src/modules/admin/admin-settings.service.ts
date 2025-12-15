@@ -108,5 +108,42 @@ export class AdminSettingsService {
     // Clear cache after update
     this.clearCache();
   }
+
+  // Get pricing (individual plan prices in USD)
+  async getPricing(): Promise<Record<string, number>> {
+    const settings = await this.getSettings();
+    if (!settings.pricingJson || typeof settings.pricingJson !== 'object') {
+      return {};
+    }
+    
+    return (settings.pricingJson as Record<string, number>) || {};
+  }
+
+  // Set pricing (individual plan prices in USD)
+  async setPricing(pricing: Record<string, number>): Promise<void> {
+    // Validate pricing values (must be positive numbers)
+    for (const [planCode, price] of Object.entries(pricing)) {
+      if (typeof price !== 'number' || price < 0) {
+        throw new Error(`Invalid price for ${planCode}: must be a positive number`);
+      }
+    }
+
+    // NOTE:
+    // The Prisma client types might not yet include `pricingJson` if the
+    // client hasn't been regenerated. To avoid type errors while still
+    // sending the correct field to the database (which already has the
+    // column via migration), we cast the `data` object to `any`.
+    await this.prisma.adminSettings.update({
+      where: { id: 'settings' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: {
+        pricingJson: pricing,
+        updatedAt: new Date(),
+      } as any,
+    });
+
+    // Clear cache after update
+    this.clearCache();
+  }
 }
 

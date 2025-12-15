@@ -154,24 +154,24 @@ export default function AdminVCashPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">V-Cash Management</h1>
-        <p className="text-[var(--voyage-muted)]">
+        <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">V-Cash Management</h1>
+        <p className="text-gray-600 font-mono font-bold uppercase text-sm">
           Add V-Cash to any user account
         </p>
       </div>
 
       {/* Search User */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
+          <CardTitle className="text-black font-black uppercase flex items-center gap-2">
             <Search className="h-5 w-5" />
             Search User
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="flex gap-3">
             <div className="flex-1">
-              <Label htmlFor="email" className="text-white mb-2 block">
+              <Label htmlFor="email" className="text-black font-bold uppercase text-xs mb-2 block">
                 Email Address
               </Label>
               <Input
@@ -185,14 +185,14 @@ export default function AdminVCashPage() {
                     handleSearch();
                   }
                 }}
-                className="bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                className="bg-white border-2 border-black rounded-none shadow-sm text-black font-mono"
               />
             </div>
             <div className="flex items-end">
               <Button
                 onClick={handleSearch}
                 disabled={searching}
-                className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)]"
+                className="bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
               >
                 {searching ? (
                   <>
@@ -213,42 +213,42 @@ export default function AdminVCashPage() {
 
       {/* Selected User Info */}
       {selectedUser && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase flex items-center gap-2">
               <Wallet className="h-5 w-5" />
               User Information
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-3">
               <div>
-                <Label className="text-[var(--voyage-muted)] text-sm">Email</Label>
-                <p className="text-white font-medium">{selectedUser.email}</p>
+                <Label className="text-gray-500 font-mono font-bold text-xs uppercase">Email</Label>
+                <p className="text-black font-bold text-lg">{selectedUser.email}</p>
               </div>
               {selectedUser.name && (
                 <div>
-                  <Label className="text-[var(--voyage-muted)] text-sm">Name</Label>
-                  <p className="text-white font-medium">{selectedUser.name}</p>
+                  <Label className="text-gray-500 font-mono font-bold text-xs uppercase">Name</Label>
+                  <p className="text-black font-bold text-lg">{selectedUser.name}</p>
                 </div>
               )}
               <div>
-                <Label className="text-[var(--voyage-muted)] text-sm">User ID</Label>
-                <p className="text-white font-mono text-sm">{selectedUser.id}</p>
+                <Label className="text-gray-500 font-mono font-bold text-xs uppercase">User ID</Label>
+                <p className="text-black font-mono text-sm bg-gray-100 p-2 border border-black inline-block">{selectedUser.id}</p>
               </div>
-              <div className="pt-2 border-t border-[var(--voyage-border)]">
-                <Label className="text-[var(--voyage-muted)] text-sm">V-Cash Balance</Label>
+              <div className="pt-4 mt-4 border-t-2 border-dashed border-black">
+                <Label className="text-gray-500 font-mono font-bold text-xs uppercase">V-Cash Balance</Label>
                 {loadingBalance ? (
                   <div className="flex items-center gap-2 mt-1">
-                    <Loader2 className="h-4 w-4 animate-spin text-[var(--voyage-accent)]" />
-                    <span className="text-[var(--voyage-muted)]">Loading...</span>
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    <span className="text-gray-500 font-mono uppercase font-bold text-xs">Loading...</span>
                   </div>
                 ) : balance !== null ? (
-                  <p className="text-2xl font-bold text-white mt-1">
+                  <p className="text-4xl font-black text-green-600 mt-1 tracking-tighter">
                     ${(balance / 100).toFixed(2)}
                   </p>
                 ) : (
-                  <p className="text-[var(--voyage-muted)] mt-1">Unable to load balance</p>
+                  <p className="text-red-500 font-mono font-bold uppercase text-xs mt-1">Unable to load balance</p>
                 )}
               </div>
             </div>
@@ -258,17 +258,17 @@ export default function AdminVCashPage() {
 
       {/* Credit Form */}
       {selectedUser && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase flex items-center gap-2">
               <Plus className="h-5 w-5" />
               Add V-Cash
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="amount" className="text-white mb-2 block">
+                <Label htmlFor="amount" className="text-black font-bold uppercase text-xs mb-2 block">
                   Amount (USD)
                 </Label>
                 <Input
@@ -279,15 +279,15 @@ export default function AdminVCashPage() {
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                  className="bg-white border-2 border-black rounded-none shadow-sm text-black font-mono text-lg font-bold"
                 />
-                <p className="text-xs text-[var(--voyage-muted)] mt-1">
+                <p className="text-xs text-gray-500 font-mono mt-1">
                   Enter amount in dollars (e.g., 10.50 for $10.50)
                 </p>
               </div>
 
               <div>
-                <Label htmlFor="reason" className="text-white mb-2 block">
+                <Label htmlFor="reason" className="text-black font-bold uppercase text-xs mb-2 block">
                   Reason (Optional)
                 </Label>
                 <Input
@@ -296,14 +296,14 @@ export default function AdminVCashPage() {
                   placeholder="Manual credit, refund, etc."
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                  className="bg-white border-2 border-black rounded-none shadow-sm text-black font-mono"
                 />
               </div>
 
               <Button
                 onClick={handleCredit}
                 disabled={crediting || !amount}
-                className="w-full bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)]"
+                className="w-full bg-black hover:bg-white hover:text-black text-white border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
               >
                 {crediting ? (
                   <>
@@ -323,9 +323,9 @@ export default function AdminVCashPage() {
       )}
 
       {!selectedUser && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardContent className="py-8 text-center">
-            <p className="text-[var(--voyage-muted)]">
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardContent className="py-12 text-center border-dashed border-2 border-gray-200 m-4">
+            <p className="text-gray-500 font-mono uppercase font-bold">
               Search for a user by email to view their V-Cash balance and add credits
             </p>
           </CardContent>
@@ -334,5 +334,3 @@ export default function AdminVCashPage() {
     </div>
   );
 }
-
-

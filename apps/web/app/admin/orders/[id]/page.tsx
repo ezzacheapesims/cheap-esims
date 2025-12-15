@@ -192,8 +192,8 @@ export default function AdminOrderDetailPage() {
   if (loading || !order) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--voyage-accent)] mx-auto mb-4"></div>
-        <p className="text-[var(--voyage-muted)]">Loading order...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+        <p className="text-gray-500 font-mono font-bold uppercase">Loading order...</p>
       </div>
     );
   }
@@ -204,37 +204,37 @@ export default function AdminOrderDetailPage() {
         <Button
           variant="ghost"
           onClick={() => router.push("/admin/orders")}
-          className="text-[var(--voyage-muted)] hover:text-white"
+          className="text-gray-500 hover:text-black font-mono uppercase font-bold text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Order Details</h1>
-          <p className="text-[var(--voyage-muted)]">Order ID: {order.id}</p>
+          <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">Order Details</h1>
+          <p className="text-gray-600 font-mono font-bold uppercase text-sm">Order ID: {order.id}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Order Information</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Order Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-6 space-y-4">
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Status</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Status</p>
               {(() => {
                 const statusDisplay = getOrderStatusDisplay(order.status);
-                return <Badge className={`mt-1 ${statusDisplay.className}`}>{statusDisplay.label}</Badge>;
+                return <Badge className={`mt-1 ${statusDisplay.className} rounded-none border-black shadow-sm font-bold uppercase`}>{statusDisplay.label}</Badge>;
               })()}
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Plan</p>
-              <div className="text-white">
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Plan</p>
+              <div className="text-black font-bold">
                 {planName && planName !== order.planId ? (
                   <>
-                    <div>{planName}</div>
-                    <div className="text-xs text-[var(--voyage-muted)] font-mono">{order.planId}</div>
+                    <div className="uppercase">{planName}</div>
+                    <div className="text-xs text-gray-500 font-mono mt-1">{order.planId}</div>
                   </>
                 ) : (
                   <span className="font-mono">{order.planId}</span>
@@ -242,87 +242,88 @@ export default function AdminOrderDetailPage() {
               </div>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Amount</p>
-              <p className="text-white">{formatUsdDollars(order.amountCents / 100)}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Amount</p>
+              <p className="text-black font-black text-xl">{formatUsdDollars(order.amountCents / 100)}</p>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Payment Method</p>
-              <p className="text-white">{order.paymentMethod}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Payment Method</p>
+              <p className="text-black font-bold uppercase">{order.paymentMethod}</p>
             </div>
             {order.paymentRef && (
               <div>
-                <p className="text-sm text-[var(--voyage-muted)]">Payment Ref</p>
-                <p className="text-white font-mono text-xs">{order.paymentRef}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Payment Ref</p>
+                <p className="text-black font-mono text-sm bg-gray-100 p-2 border border-black inline-block">{order.paymentRef}</p>
               </div>
             )}
             {order.esimOrderNo && (
               <div>
-                <p className="text-sm text-[var(--voyage-muted)]">Provider Order No</p>
-                <p className="text-white font-mono text-xs">{order.esimOrderNo}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Provider Order No</p>
+                <p className="text-black font-mono text-sm bg-gray-100 p-2 border border-black inline-block">{order.esimOrderNo}</p>
               </div>
             )}
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Created</p>
-              <p className="text-white">
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Created</p>
+              <p className="text-black font-bold">
                 {new Date(order.createdAt).toLocaleString()}
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">User Information</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">User Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-6 space-y-4">
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Email</p>
-              <p className="text-white">{order.user.email}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Email</p>
+              <p className="text-black font-bold">{order.user.email}</p>
             </div>
             {order.user.name && (
               <div>
-                <p className="text-sm text-[var(--voyage-muted)]">Name</p>
-                <p className="text-white">{order.user.name}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Name</p>
+                <p className="text-black font-bold">{order.user.name}</p>
               </div>
             )}
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">User ID</p>
-              <p className="text-white font-mono text-xs">{order.user.id}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">User ID</p>
+              <p className="text-black font-mono text-sm">{order.user.id}</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {order.profiles && order.profiles.length > 0 && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">eSIM Profiles</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">eSIM Profiles</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-4">
               {order.profiles.map((profile) => (
                 <div
                   key={profile.id}
-                  className="p-4 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)]"
+                  className="p-4 bg-gray-50 border-2 border-black rounded-none"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-[var(--voyage-muted)]">ICCID</p>
-                      <p className="text-white font-mono text-xs">{profile.iccid}</p>
+                      <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">ICCID</p>
+                      <p className="text-black font-mono text-sm font-bold">{profile.iccid}</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => router.push(`/admin/esims/${profile.id}`)}
+                      className="text-xs font-bold uppercase hover:bg-black hover:text-white rounded-none border-2 border-transparent hover:border-black"
                     >
-                      View
+                      View Details
                     </Button>
                   </div>
                   {profile.esimStatus && (
                     <div className="mt-2">
                       {(() => {
                         const statusDisplay = getEsimStatusDisplay(profile.esimStatus);
-                        return <Badge className={statusDisplay.className}>{statusDisplay.label}</Badge>;
+                        return <Badge className={`${statusDisplay.className} rounded-none border-black font-bold uppercase shadow-sm`}>{statusDisplay.label}</Badge>;
                       })()}
                     </div>
                   )}
@@ -333,15 +334,15 @@ export default function AdminOrderDetailPage() {
         </Card>
       )}
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white">Actions</CardTitle>
+            <CardTitle className="text-black font-black uppercase">Actions</CardTitle>
             <div className="flex gap-2">
               <Button
                 onClick={handleRetry}
                 disabled={actionLoading !== null}
-                className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)]"
+                className="bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
               >
                 {actionLoading === "retry" ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -354,7 +355,7 @@ export default function AdminOrderDetailPage() {
                 onClick={handleSync}
                 disabled={actionLoading !== null}
                 variant="outline"
-                className="border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)]"
+                className="border-2 border-black rounded-none font-bold uppercase hover:bg-black hover:text-white"
               >
                 {actionLoading === "sync" ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -367,7 +368,7 @@ export default function AdminOrderDetailPage() {
                 onClick={handleResendReceipt}
                 disabled={actionLoading !== null}
                 variant="outline"
-                className="border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)]"
+                className="border-2 border-black rounded-none font-bold uppercase hover:bg-black hover:text-white"
               >
                 {actionLoading === "resend" ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -380,20 +381,23 @@ export default function AdminOrderDetailPage() {
           </div>
         </CardHeader>
         {order.webhookEvents && order.webhookEvents.length > 0 && (
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-2">
-              <p className="text-sm text-[var(--voyage-muted)] mb-2">Webhook Events</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-2">Webhook Events</p>
               {order.webhookEvents.map((event) => (
                 <details
                   key={event.id}
-                  className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)]"
+                  className="p-3 bg-white border-2 border-black rounded-none group open:bg-gray-50 transition-colors"
                 >
-                  <summary className="cursor-pointer text-sm text-white">
-                    {event.source} - {new Date(event.createdAt).toLocaleString()}
+                  <summary className="cursor-pointer text-sm text-black font-bold uppercase list-none flex justify-between items-center">
+                    <span>{event.source}</span>
+                    <span className="text-gray-500 font-mono text-xs">{new Date(event.createdAt).toLocaleString()}</span>
                   </summary>
-                  <pre className="mt-2 text-xs text-[var(--voyage-muted)] overflow-auto">
-                    {JSON.stringify(event.payload, null, 2)}
-                  </pre>
+                  <div className="mt-2 pt-2 border-t-2 border-dashed border-gray-300">
+                    <pre className="text-xs text-black font-mono overflow-auto p-2 bg-gray-100 border border-gray-200">
+                      {JSON.stringify(event.payload, null, 2)}
+                    </pre>
+                  </div>
                 </details>
               ))}
             </div>
@@ -402,14 +406,14 @@ export default function AdminOrderDetailPage() {
       </Card>
 
       {/* Receipt Section */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <h3 className="text-lg font-semibold text-white">Receipt</h3>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
+          <h3 className="text-lg font-black text-black uppercase">Receipt</h3>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <Button
             variant="secondary"
-            className="border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)]"
+            className="border-2 border-black rounded-none font-bold uppercase hover:bg-black hover:text-white transition-all bg-white text-black shadow-sm"
             onClick={async () => {
               const receiptUrl = `${apiUrl}/orders/${order.id}/receipt`;
               const adminEmail = user?.primaryEmailAddress?.emailAddress || '';
@@ -448,4 +452,3 @@ export default function AdminOrderDetailPage() {
     </div>
   );
 }
-

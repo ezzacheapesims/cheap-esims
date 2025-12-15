@@ -6,6 +6,7 @@ interface Column<T> {
   header: string;
   accessor: keyof T | ((row: T) => string | number);
   className?: string | ((row: T) => string);
+  render?: (row: T) => React.ReactNode;
 }
 
 interface AdminTableProps<T> {
@@ -23,21 +24,21 @@ function AdminTableComponent<T extends { id: string }>({
 }: AdminTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="text-center py-12 text-[var(--voyage-muted)]">
+      <div className="text-center py-12 text-gray-500 font-mono font-bold uppercase border-dashed border-2 border-gray-200">
         {emptyMessage}
       </div>
     );
   }
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto bg-white">
       <table className="w-full border-collapse text-left">
         <thead>
-          <tr className="border-b border-[var(--voyage-border)]">
+          <tr className="border-b-2 border-black bg-secondary">
             {columns.map((column, idx) => (
               <th
                 key={idx}
-                className={`text-left px-4 py-3 text-sm font-semibold text-[var(--voyage-muted)] whitespace-nowrap ${
+                className={`text-left px-4 py-3 text-xs font-black text-black uppercase whitespace-nowrap tracking-wider ${
                   typeof column.className === "string" ? column.className : ""
                 }`}
               >
@@ -46,39 +47,45 @@ function AdminTableComponent<T extends { id: string }>({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-200">
           {data.map((row) => (
             <tr
               key={row.id}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
-              className={`border-b border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)] transition-colors ${
+              className={`hover:bg-gray-50 transition-colors ${
                 onRowClick ? "cursor-pointer" : ""
               }`}
             >
               {columns.map((column, idx) => {
-                let cellValue = "";
-                try {
-                  if (typeof column.accessor === "function") {
-                    const result = column.accessor(row);
-                    cellValue = result != null ? String(result) : "";
-                  } else {
-                    cellValue = row[column.accessor] != null ? String(row[column.accessor]) : "";
+                let cellContent: React.ReactNode = "";
+                
+                if (column.render) {
+                  cellContent = column.render(row);
+                } else {
+                  try {
+                    if (typeof column.accessor === "function") {
+                      const result = column.accessor(row);
+                      cellContent = result != null ? String(result) : "";
+                    } else {
+                      // @ts-ignore
+                      cellContent = row[column.accessor] != null ? String(row[column.accessor]) : "";
+                    }
+                  } catch (error) {
+                    console.error("Error in accessor:", error);
+                    cellContent = "Error";
                   }
-                } catch (error) {
-                  console.error("Error in accessor:", error);
-                  cellValue = "Error";
                 }
                 
                 const cellClassName = typeof column.className === "function"
                   ? column.className(row)
-                  : (column.className || "text-white");
+                  : (column.className || "text-black");
                 
                 return (
                   <td
                     key={idx}
                     className={`text-left px-4 py-3 text-sm break-words ${cellClassName}`}
                   >
-                    {cellValue}
+                    {cellContent}
                   </td>
                 );
               })}

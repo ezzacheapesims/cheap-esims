@@ -2,6 +2,7 @@
 
 import { useCurrency } from './providers/CurrencyProvider';
 import { useState, useEffect } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
 
 const SUPPORTED_CURRENCIES = [
   { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -72,24 +73,15 @@ export function CurrencySelector() {
     setMounted(true);
   }, []);
 
-  const selectedCurrencyInfo = SUPPORTED_CURRENCIES.find(c => c.code === selectedCurrency) || SUPPORTED_CURRENCIES[0];
-
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--voyage-bg-light)] border border-[var(--voyage-border)] hover:bg-[var(--voyage-card)] transition-colors text-white"
+        className="flex items-center gap-2 px-3 py-1.5 border border-white/30 hover:border-white text-white bg-transparent hover:bg-white/10 transition-colors font-mono text-sm font-bold"
         aria-label="Select currency"
       >
-        <span className="text-sm font-medium">{mounted ? selectedCurrency : 'USD'}</span>
-        <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span>{mounted ? selectedCurrency : 'USD'}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
@@ -98,7 +90,7 @@ export function CurrencySelector() {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-48 bg-[var(--voyage-card)] border border-[var(--voyage-border)] rounded-lg shadow-xl z-20 max-h-80 overflow-y-auto">
+          <div className="absolute right-0 top-full mt-2 w-56 bg-white border-2 border-black shadow-hard z-20 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-100">
             {SUPPORTED_CURRENCIES.map((currency) => (
               <button
                 key={currency.code}
@@ -106,24 +98,20 @@ export function CurrencySelector() {
                   setCurrency(currency.code);
                   setIsOpen(false);
                 }}
-                className={`w-full text-left px-4 py-3 hover:bg-[var(--voyage-bg-light)] transition-colors flex items-center justify-between ${
+                className={`w-full text-left px-4 py-3 hover:bg-secondary flex items-center justify-between group border-b border-gray-100 last:border-0 ${
                   selectedCurrency === currency.code
-                    ? 'bg-[var(--voyage-bg-light)] text-[var(--voyage-accent)]'
-                    : 'text-white'
+                    ? 'bg-secondary text-black'
+                    : 'text-gray-600'
                 }`}
               >
                 <div className="flex flex-col">
-                  <span className="font-medium">{currency.code}</span>
-                  <span className="text-xs text-[var(--voyage-muted)]">{currency.name}</span>
+                  <span className={`font-bold font-mono ${selectedCurrency === currency.code ? 'text-black' : 'text-gray-900'}`}>
+                    {currency.code}
+                  </span>
+                  <span className="text-xs text-gray-500 uppercase">{currency.name}</span>
                 </div>
                 {selectedCurrency === currency.code && (
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <Check className="w-4 h-4 text-primary" strokeWidth={4} />
                 )}
               </button>
             ))}

@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DollarSign, ArrowRight, Wallet, MessageSquare } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { safeFetch } from "@/lib/safe-fetch";
 
@@ -51,90 +49,96 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 space-y-12">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Account</h1>
-        <p className="text-[var(--voyage-muted)]">Manage your account settings</p>
+        <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">My Account</h1>
+        <p className="text-gray-500 font-mono uppercase text-sm font-bold">Manage your wallet, rewards & settings</p>
       </div>
 
       {/* V-Cash Balance Card */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <Wallet className="h-6 w-6 text-[var(--voyage-accent)]" />
-            <CardTitle className="text-white">V-Cash Balance</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {loadingVCash ? (
-            <Skeleton className="h-8 w-32" />
-          ) : (
-            <p className="text-3xl font-bold text-[var(--voyage-accent)]">
-              {vcashBalance ? formatCurrency(vcashBalance.balanceCents) : "$0.00"}
-            </p>
-          )}
-          <p className="text-sm text-[var(--voyage-muted)]">
-            V-Cash is store credit you can use on Voyage purchases. Get V-Cash from refunds or affiliate earnings.
-          </p>
-          <Link href="/account/vcash">
-            <Button variant="outline" className="border-[var(--voyage-border)]">
-              View V-Cash Details
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-
-      {/* Affiliate Program Card */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <DollarSign className="h-6 w-6 text-[var(--voyage-accent)]" />
-            <CardTitle className="text-white">Affiliate Program</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-[var(--voyage-muted)]">
-            Earn 10% lifetime commissions on all purchases from your referrals (initial eSIM purchases and top-ups).
-            Share your unique referral link and start earning today!
-          </p>
-          <Link href="/account/affiliate">
-            <Button className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)] text-white">
-              View Affiliate Dashboard
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-
-      {/* Support Tickets Card */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <MessageSquare className="h-6 w-6 text-[var(--voyage-accent)]" />
-            <CardTitle className="text-white">Support Tickets</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-[var(--voyage-muted)]">
-            View all your support tickets and responses from our support team.
-          </p>
-          <div className="flex gap-3">
-            <Link href="/account/support">
-              <Button variant="outline" className="border-[var(--voyage-border)]">
-                View My Tickets
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+      <div className="bg-white border-2 border-black p-8 shadow-hard relative overflow-hidden group hover:shadow-hard-lg transition-all">
+        <div className="absolute top-0 right-0 bg-black text-white px-4 py-1 font-mono text-xs uppercase font-bold">
+            Wallet
+        </div>
+        <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
+            <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                    <div className="p-3 border-2 border-black bg-secondary">
+                        <Wallet className="h-6 w-6 text-black" />
+                    </div>
+                    <h2 className="text-2xl font-black uppercase">V-Cash Balance</h2>
+                </div>
+                <div>
+                    {loadingVCash ? (
+                        <div className="h-12 w-48 bg-gray-100 animate-pulse border border-gray-200"></div>
+                    ) : (
+                        <p className="text-5xl font-black tracking-tighter text-primary drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-stroke-1">
+                            {vcashBalance ? formatCurrency(vcashBalance.balanceCents) : "$0.00"}
+                        </p>
+                    )}
+                    <p className="text-sm font-mono text-gray-500 mt-2 max-w-md">
+                        Store credit for future purchases. Non-expiring.
+                    </p>
+                </div>
+            </div>
+            <Link href="/account/vcash">
+                <Button variant="outline" className="border-2 border-black rounded-none shadow-hard-sm hover:shadow-none hover:bg-black hover:text-white font-bold uppercase transition-all">
+                    View History <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
             </Link>
-            <Link href="/support/contact">
-              <Button className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)] text-white">
-                Create New Ticket
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Affiliate Program Card */}
+        <div className="bg-white border-2 border-black p-8 shadow-hard hover:shadow-hard-lg transition-all flex flex-col justify-between">
+            <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                    <div className="p-3 border-2 border-black bg-primary">
+                        <DollarSign className="h-6 w-6 text-black" />
+                    </div>
+                    <h2 className="text-2xl font-black uppercase">Affiliate Program</h2>
+                </div>
+                <p className="font-mono text-sm text-gray-600">
+                    Earn <span className="font-black text-black bg-primary px-1">10% COMMISSION</span> on all referrals. Share your link and start earning real cash today.
+                </p>
+            </div>
+            <div className="mt-8">
+                <Link href="/account/affiliate">
+                    <Button className="w-full bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
+                        Affiliate Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                </Link>
+            </div>
+        </div>
+
+        {/* Support Tickets Card */}
+        <div className="bg-white border-2 border-black p-8 shadow-hard hover:shadow-hard-lg transition-all flex flex-col justify-between">
+            <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                    <div className="p-3 border-2 border-black bg-secondary">
+                        <MessageSquare className="h-6 w-6 text-black" />
+                    </div>
+                    <h2 className="text-2xl font-black uppercase">Support Tickets</h2>
+                </div>
+                <p className="font-mono text-sm text-gray-600">
+                    Need help? Track your existing requests or submit a new inquiry to our support team.
+                </p>
+            </div>
+            <div className="mt-8 flex gap-4">
+                <Link href="/account/support" className="flex-1">
+                    <Button variant="outline" className="w-full border-2 border-black rounded-none font-bold uppercase hover:bg-secondary">
+                        My Tickets
+                    </Button>
+                </Link>
+                <Link href="/support/contact" className="flex-1">
+                    <Button className="w-full bg-black text-white hover:bg-white hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none">
+                        New Ticket
+                    </Button>
+                </Link>
+            </div>
+        </div>
+      </div>
     </div>
   );
 }
-

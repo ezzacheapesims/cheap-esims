@@ -84,12 +84,12 @@ export default function AdminEsimsPage() {
     {
       header: "ICCID",
       accessor: (row: EsimProfile) => row.iccid,
-      className: "break-all min-w-[120px] font-mono text-xs",
+      className: "break-all min-w-[120px] font-mono text-xs font-bold text-gray-700",
     },
     {
       header: "esimTranNo",
       accessor: (row: EsimProfile) => row.esimTranNo,
-      className: "break-all min-w-[100px] font-mono text-xs",
+      className: "break-all min-w-[100px] font-mono text-xs text-gray-500",
     },
     {
       header: "Status",
@@ -101,12 +101,13 @@ export default function AdminEsimsPage() {
       render: (row: EsimProfile) => {
         const status = row.esimStatus || row.smdpStatus;
         const statusDisplay = getEsimStatusDisplay(status);
-        return <Badge className={statusDisplay.className}>{statusDisplay.label}</Badge>;
+        return <Badge className={`${statusDisplay.className} rounded-none uppercase font-bold border border-black shadow-sm`}>{statusDisplay.label}</Badge>;
       },
     },
     {
       header: "Total Volume",
       accessor: (row: EsimProfile) => formatBytes(row.totalVolume),
+      className: "font-mono font-bold text-black",
     },
     {
       header: "Expired Time",
@@ -114,6 +115,7 @@ export default function AdminEsimsPage() {
         row.expiredTime
           ? new Date(row.expiredTime).toLocaleDateString()
           : "N/A",
+      className: "text-gray-600 font-mono text-xs",
     },
     {
       header: "User Email",
@@ -123,14 +125,15 @@ export default function AdminEsimsPage() {
         const user = (order as any).User || (order as any).user;
         return user?.email || "-";
       },
+      className: "text-black",
     },
   ], []);
 
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--voyage-accent)] mx-auto mb-4"></div>
-        <p className="text-[var(--voyage-muted)]">Loading eSIM profiles...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+        <p className="text-gray-500 font-mono font-bold uppercase">Loading eSIM profiles...</p>
       </div>
     );
   }
@@ -138,13 +141,13 @@ export default function AdminEsimsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">eSIM Profiles</h1>
-        <p className="text-[var(--voyage-muted)]">
+        <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">eSIM Profiles</h1>
+        <p className="text-gray-600 font-mono font-bold uppercase text-sm">
           Manage and monitor all eSIM profiles
         </p>
       </div>
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
         <CardContent className="p-0">
           <AdminTable
             data={esims}
@@ -157,4 +160,3 @@ export default function AdminEsimsPage() {
     </div>
   );
 }
-

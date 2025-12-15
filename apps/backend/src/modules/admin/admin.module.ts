@@ -7,7 +7,7 @@ import { AdminOrdersController } from './controllers/admin-orders.controller';
 import { AdminEsimsController } from './controllers/admin-esims.controller';
 import { AdminTopupController } from './controllers/admin-topup.controller';
 import { AdminUsersController } from './controllers/admin-users.controller';
-import { AdminSettingsController, AdminCheckController, AdminDiscountsController } from './controllers/admin-settings.controller';
+import { AdminSettingsController, AdminCheckController, AdminDiscountsController, AdminPricingController } from './controllers/admin-settings.controller';
 import { AdminLogsController } from './controllers/admin-logs.controller';
 import { AdminAffiliatesController } from './controllers/admin-affiliates.controller';
 import { AdminPayoutsController } from './controllers/admin-payouts.controller';
@@ -34,6 +34,7 @@ import { CommonModule } from '../../common/modules/common.module';
     AdminSettingsController,
     AdminCheckController,
     AdminDiscountsController,
+    AdminPricingController,
     AdminLogsController,
     AdminAffiliatesController,
     AdminPayoutsController,

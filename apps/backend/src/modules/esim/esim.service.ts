@@ -34,8 +34,20 @@ export class EsimService {
     return await this.adminSettingsService.getMockMode();
   }
 
-  // Apply markup to price
-  async applyMarkup(providerPriceCents: number): Promise<number> {
+  // Apply markup to price (checks individual pricing first, then global markup)
+  async applyMarkup(providerPriceCents: number, packageCode?: string): Promise<number> {
+    // Check for individual pricing override first
+    if (packageCode) {
+      const individualPricing = await this.adminSettingsService.getPricing();
+      if (individualPricing[packageCode] !== undefined && individualPricing[packageCode] !== null) {
+        const individualPriceUSD = individualPricing[packageCode];
+        const individualPriceCents = Math.round(individualPriceUSD * 100);
+        this.logger.log(`[PRICING] Using individual price for ${packageCode}: ${individualPriceUSD} USD (${individualPriceCents} cents)`);
+        return individualPriceCents;
+      }
+    }
+
+    // Fall back to global markup
     const markupPercent = await this.adminSettingsService.getDefaultMarkupPercent();
     if (markupPercent === 0) {
       return providerPriceCents;
@@ -180,8 +192,8 @@ export class EsimService {
       // Example: 2500 units / 10000 * 100 = 25 cents
       const providerPriceCents = priceFromProvider ? Math.round((priceFromProvider / 10000) * 100) : 0;
       
-      // Apply markup
-      const finalPriceCents = await this.applyMarkup(providerPriceCents);
+      // Apply markup (checks individual pricing first)
+      const finalPriceCents = await this.applyMarkup(providerPriceCents, pkg.packageCode);
       
       // Convert to dollars for frontend
       const priceInDollars = finalPriceCents / 100;
@@ -237,8 +249,8 @@ export class EsimService {
     // Example: 2500 units / 10000 * 100 = 25 cents
     const providerPriceCents = priceFromProvider ? Math.round((priceFromProvider / 10000) * 100) : 0;
     
-    // Apply markup
-    const finalPriceCents = await this.applyMarkup(providerPriceCents);
+    // Apply markup (checks individual pricing first for this package)
+    const finalPriceCents = await this.applyMarkup(providerPriceCents, packageCode);
     
     // Convert to dollars for frontend
     const priceInDollars = finalPriceCents / 100;

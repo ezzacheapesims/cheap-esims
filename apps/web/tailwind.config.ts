@@ -17,6 +17,7 @@ const config: Config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          dark: "#5A8200",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -44,10 +45,15 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0px",
+        md: "0px",
+        sm: "0px",
       },
+      boxShadow: {
+        'hard': '4px 4px 0px 0px var(--foreground)',
+        'hard-sm': '2px 2px 0px 0px var(--foreground)',
+        'hard-lg': '8px 8px 0px 0px var(--foreground)',
+      }
     },
   },
   plugins: [],

@@ -4,36 +4,81 @@
 
 @layer base {
   :root {
-    --voyage-bg: #0A1A2F;
-    --voyage-bg-light: #0F2540;
-    --voyage-accent: #1E90FF;
-    --voyage-accent-soft: #4BA3FF;
-    --voyage-text: #E9F1FF;
-    --voyage-muted: #A8B5C8;
-    --voyage-card: #132742;
-    --voyage-card-hover: #163054;
-    --voyage-border: #1E3555;
-    
-    --background: 215 28% 13%;
-    --foreground: 210 40% 96%;
-    --card: 217 33% 17%;
-    --card-foreground: 210 40% 96%;
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 210 100% 56%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217 33% 20%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 20%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 20%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
-    --ring: 210 100% 56%;
-    --radius: 0.75rem;
+    /* Cheap eSIMs "Discounter" Theme */
+    --background: 0 0% 100%; /* Pure White */
+    --foreground: 0 0% 0%; /* Pure Black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 79 100% 44%; /* #98DE00 Lime Green */
+    --primary-foreground: 0 0% 0%; /* Black Text on Lime */
+
+    --secondary: 0 0% 96%; /* #F5F5F5 Very Light Grey */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 0 0% 92%; /* #EBEBEB */
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 48 100% 50%; /* #FFCC00 Warning Yellow */
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 100% 50%; /* Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 0%; /* Black Borders */
+    --input: 0 0% 100%;
+    --ring: 0 0% 0%; /* Black Focus Rings */
+
+    --radius: 0px; /* Brutalist - No rounded corners */
+
+    /* Legacy Voyage Mappings (remapped to new theme) */
+    --voyage-bg: #FFFFFF;
+    --voyage-bg-light: #F5F5F5;
+    --voyage-text: #000000;
+    --voyage-muted: #666666;
+    --voyage-card: #FFFFFF;
+    --voyage-card-hover: #F0F0F0;
+    --voyage-border: #000000;
+    --voyage-accent: #98DE00;
+    --voyage-accent-soft: #7AB300;
+  }
+
+  .dark {
+    /* Force Light Mode Aesthetics even in dark mode for this brand identity 
+       or create a high-contrast dark mode. Let's do high-contrast dark. */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 79 100% 44%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 48 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 100%; /* White Borders in Dark Mode */
+    --input: 0 0% 10%;
+    --ring: 0 0% 100%;
+
+    --voyage-bg: #000000;
+    --voyage-bg-light: #1A1A1A;
+    --voyage-text: #FFFFFF;
+    --voyage-muted: #999999;
+    --voyage-card: #111111;
+    --voyage-card-hover: #222222;
+    --voyage-border: #FFFFFF;
+    --voyage-accent: #98DE00;
+    --voyage-accent-soft: #7AB300;
   }
 }
 
@@ -42,47 +87,23 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--voyage-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--voyage-border);
-  border-radius: 5px;
-  border: 2px solid var(--voyage-bg);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--voyage-accent);
-}
-
-/* Shimmer Animation */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
+  
+  /* Brutalist Utilities */
+  .border-thick {
+    border-width: 2px;
   }
-  100% {
-    background-position: 1000px 0;
+  
+  .shadow-hard {
+    box-shadow: 4px 4px 0px 0px var(--foreground);
   }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(
-    to right,
-    var(--voyage-card) 4%,
-    var(--voyage-bg-light) 25%,
-    var(--voyage-card) 36%
-  );
-  background-size: 1000px 100%;
+  
+  .shadow-hard-sm {
+    box-shadow: 2px 2px 0px 0px var(--foreground);
+  }
+  
+  .shadow-hard-lg {
+    box-shadow: 8px 8px 0px 0px var(--foreground);
+  }
 }

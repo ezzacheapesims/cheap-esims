@@ -214,3 +214,39 @@ export class AdminDiscountsController {
   }
 }
 
+// Pricing controller (public GET, admin-only POST)
+@Controller('admin/pricing')
+export class AdminPricingController {
+  constructor(
+    private readonly adminSettingsService: AdminSettingsService,
+  ) {}
+
+  @Get()
+  async getPricing() {
+    // Public endpoint - anyone can read pricing
+    return await this.adminSettingsService.getPricing();
+  }
+
+  @Post()
+  @UseGuards(AdminGuard)
+  async setPricing(
+    @Body() body: Record<string, number>,
+    @Req() req: any,
+  ) {
+    // Admin-only endpoint - validate structure
+    if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+      throw new Error('Invalid pricing format: must be an object');
+    }
+
+    // Validate pricing values (must be positive numbers)
+    for (const [planCode, price] of Object.entries(body)) {
+      if (typeof price !== 'number' || price < 0) {
+        throw new Error(`Invalid price for ${planCode}: must be a positive number`);
+      }
+    }
+
+    await this.adminSettingsService.setPricing(body);
+    return { success: true };
+  }
+}
+

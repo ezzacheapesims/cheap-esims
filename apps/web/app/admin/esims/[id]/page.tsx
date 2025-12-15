@@ -247,8 +247,8 @@ export default function AdminEsimDetailPage() {
   if (loading || !esim) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--voyage-accent)] mx-auto mb-4"></div>
-        <p className="text-[var(--voyage-muted)]">Loading eSIM profile...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+        <p className="text-gray-500 font-mono font-bold uppercase">Loading eSIM profile...</p>
       </div>
     );
   }
@@ -259,86 +259,86 @@ export default function AdminEsimDetailPage() {
         <Button
           variant="ghost"
           onClick={() => router.push("/admin/esims")}
-          className="text-[var(--voyage-muted)] hover:text-white"
+          className="text-gray-500 hover:text-black font-mono uppercase font-bold text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">eSIM Profile Details</h1>
-          <p className="text-[var(--voyage-muted)]">ICCID: {esim.iccid}</p>
+          <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">eSIM Profile Details</h1>
+          <p className="text-gray-600 font-mono font-bold uppercase text-sm">ICCID: {esim.iccid}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Profile Information</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Profile Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-6 space-y-4">
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">ICCID</p>
-              <p className="text-white font-mono text-xs">{esim.iccid}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">ICCID</p>
+              <p className="text-black font-mono text-sm font-bold bg-gray-100 p-2 border border-black inline-block">{esim.iccid}</p>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">esimTranNo</p>
-              <p className="text-white font-mono text-xs">{esim.esimTranNo}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">esimTranNo</p>
+              <p className="text-black font-mono text-sm font-bold">{esim.esimTranNo}</p>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Status</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Status</p>
               {(() => {
                 const status = esim.esimStatus || esim.smdpStatus;
                 const statusDisplay = getEsimStatusDisplay(status);
-                return <Badge className={`mt-1 ${statusDisplay.className}`}>{statusDisplay.label}</Badge>;
+                return <Badge className={`mt-1 ${statusDisplay.className} rounded-none border-black shadow-sm font-bold uppercase`}>{statusDisplay.label}</Badge>;
               })()}
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Total Volume</p>
-              <p className="text-white">{formatBytes(esim.totalVolume)}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Total Volume</p>
+              <p className="text-black font-black text-xl">{formatBytes(esim.totalVolume)}</p>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Usage</p>
-              <p className="text-white">{formatBytes(esim.orderUsage)}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Usage</p>
+              <p className="text-black font-black text-xl">{formatBytes(esim.orderUsage)}</p>
             </div>
             {esim.expiredTime && (
               <div>
-                <p className="text-sm text-[var(--voyage-muted)]">Expires</p>
-                <p className="text-white">
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Expires</p>
+                <p className="text-black font-bold">
                   {new Date(esim.expiredTime).toLocaleString()}
                 </p>
               </div>
             )}
             {esim.ac && (
               <div>
-                <p className="text-sm text-[var(--voyage-muted)]">Activation Code</p>
-                <p className="text-white font-mono text-xs break-all">{esim.ac}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Activation Code</p>
+                <p className="text-black font-mono text-xs break-all bg-gray-100 p-2 border border-black">{esim.ac}</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Order Information</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Order Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-6 space-y-4">
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Order ID</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Order ID</p>
               <Button
                 variant="link"
                 onClick={() => router.push(`/admin/orders/${esim.order.id}`)}
-                className="p-0 h-auto text-[var(--voyage-accent)]"
+                className="p-0 h-auto text-primary hover:text-black font-bold uppercase underline"
               >
                 {esim.order.id}
               </Button>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Plan</p>
-              <div className="text-white">
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Plan</p>
+              <div className="text-black font-bold">
                 {planName && planName !== esim.order.planId ? (
                   <>
-                    <div>{planName}</div>
-                    <div className="text-xs text-[var(--voyage-muted)] font-mono">{esim.order.planId}</div>
+                    <div className="uppercase">{planName}</div>
+                    <div className="text-xs text-gray-500 font-mono mt-1">{esim.order.planId}</div>
                   </>
                 ) : (
                   <span className="font-mono">{esim.order.planId}</span>
@@ -346,39 +346,39 @@ export default function AdminEsimDetailPage() {
               </div>
             </div>
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">User Email</p>
-              <p className="text-white">{esim.order.user.email}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">User Email</p>
+              <p className="text-black font-medium">{esim.order.user.email}</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
               {esim.topups?.length > 0 && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Top-up History</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Top-up History</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-2">
               {esim.topups.map((topup) => (
                 <div
                   key={topup.id}
-                  className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)] flex items-center justify-between"
+                  className="p-3 bg-gray-50 rounded-none border-2 border-black flex items-center justify-between"
                 >
                   <div>
-                    <p className="text-white">
+                    <p className="text-black font-bold uppercase">
                       {topUpPlanNames.get(topup.planCode) || topup.planCode}
                     </p>
                     {topUpPlanNames.get(topup.planCode) && (
-                      <p className="text-xs text-[var(--voyage-muted)] font-mono">{topup.planCode}</p>
+                      <p className="text-xs text-gray-500 font-mono">{topup.planCode}</p>
                     )}
-                    <p className="text-xs text-[var(--voyage-muted)]">
+                    <p className="text-xs text-gray-500 font-mono mt-1">
                       {formatUsdDollars(topup.amountCents / 100)} • {new Date(topup.createdAt).toLocaleString()}
                     </p>
                   </div>
                   {(() => {
                     const statusDisplay = getTopUpStatusDisplay(topup.status);
-                    return <Badge className={statusDisplay.className}>{statusDisplay.label}</Badge>;
+                    return <Badge className={`${statusDisplay.className} rounded-none border-black font-bold uppercase shadow-sm`}>{statusDisplay.label}</Badge>;
                   })()}
                 </div>
               ))}
@@ -388,10 +388,10 @@ export default function AdminEsimDetailPage() {
       )}
 
       {/* Usage History */}
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-black font-black uppercase flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
               Data Usage History
             </CardTitle>
@@ -400,7 +400,7 @@ export default function AdminEsimDetailPage() {
               disabled={usageHistoryLoading}
               variant="outline"
               size="sm"
-              className="border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)]"
+              className="border-2 border-black rounded-none font-bold uppercase hover:bg-black hover:text-white"
             >
               {usageHistoryLoading ? (
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -411,7 +411,7 @@ export default function AdminEsimDetailPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           {usageHistory.length > 0 ? (
             <>
               <div className="h-80 mb-6">
@@ -421,33 +421,36 @@ export default function AdminEsimDetailPage() {
                     usedGB: (Number(record.usedBytes) / (1024 * 1024 * 1024)).toFixed(2),
                     timestamp: record.recordedAt,
                   }))}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
                     <XAxis 
                       dataKey="date" 
-                      stroke="#888"
-                      style={{ fontSize: '12px' }}
+                      stroke="#000"
+                      style={{ fontSize: '12px', fontWeight: 'bold', fontFamily: 'monospace' }}
                     />
                     <YAxis 
-                      stroke="#888"
-                      style={{ fontSize: '12px' }}
-                      label={{ value: 'GB Used', angle: -90, position: 'insideLeft', style: { fill: '#888' } }}
+                      stroke="#000"
+                      style={{ fontSize: '12px', fontWeight: 'bold', fontFamily: 'monospace' }}
+                      label={{ value: 'GB Used', angle: -90, position: 'insideLeft', style: { fill: '#000', fontWeight: 'bold' } }}
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'var(--voyage-bg-light)',
-                        border: '1px solid var(--voyage-border)',
-                        borderRadius: '8px',
-                        color: 'white',
+                        backgroundColor: '#fff',
+                        border: '2px solid #000',
+                        borderRadius: '0px',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        fontFamily: 'monospace',
+                        boxShadow: '4px 4px 0px 0px #000'
                       }}
                       formatter={(value: any) => [`${value} GB`, 'Data Used']}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="usedGB" 
-                      stroke="var(--voyage-accent)" 
-                      strokeWidth={2}
-                      dot={{ fill: 'var(--voyage-accent)', r: 4 }}
-                      activeDot={{ r: 6 }}
+                      stroke="#98DE00" 
+                      strokeWidth={4}
+                      dot={{ fill: '#000', r: 4, stroke: '#000', strokeWidth: 2 }}
+                      activeDot={{ r: 6, fill: '#98DE00', stroke: '#000', strokeWidth: 2 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -458,13 +461,13 @@ export default function AdminEsimDetailPage() {
                 {usageHistory.slice().reverse().map((record) => (
                   <div
                     key={record.id}
-                    className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)] flex items-center justify-between"
+                    className="p-3 bg-gray-50 border-2 border-black flex items-center justify-between"
                   >
                     <div>
-                      <p className="text-white text-sm font-medium">
+                      <p className="text-black font-black text-sm">
                         {formatBytes(record.usedBytes)}
                       </p>
-                      <p className="text-xs text-[var(--voyage-muted)]">
+                      <p className="text-xs text-gray-500 font-mono">
                         {new Date(record.recordedAt).toLocaleString()}
                       </p>
                     </div>
@@ -473,25 +476,25 @@ export default function AdminEsimDetailPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-8 text-[var(--voyage-muted)]">
+            <div className="text-center py-8 text-gray-500">
               <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No usage history yet</p>
-              <p className="text-xs mt-2">Usage data will appear here after syncing</p>
+              <p className="font-mono font-bold uppercase">No usage history yet</p>
+              <p className="text-xs mt-2 font-mono">Usage data will appear here after syncing</p>
             </div>
           )}
         </CardContent>
       </Card>
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white">Actions</CardTitle>
+            <CardTitle className="text-black font-black uppercase">Actions</CardTitle>
             <div className="flex gap-2">
               <Button
                 onClick={handleSync}
                 disabled={actionLoading}
                 variant="outline"
-                className="border-[var(--voyage-border)] hover:bg-[var(--voyage-bg-light)]"
+                className="border-2 border-black rounded-none font-bold uppercase hover:bg-black hover:text-white"
               >
                 {actionLoading ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -504,7 +507,7 @@ export default function AdminEsimDetailPage() {
                 onClick={handleDelete}
                 disabled={actionLoading}
                 variant="outline"
-                className="border-red-500/50 text-red-400 hover:bg-red-500/20 hover:border-red-500"
+                className="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded-none font-bold uppercase"
               >
                 {actionLoading ? (
                   <Trash2 className="h-4 w-4 mr-2 animate-pulse" />
@@ -517,17 +520,17 @@ export default function AdminEsimDetailPage() {
           </div>
         </CardHeader>
         {deleteConfirm && (
-          <CardContent>
-            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-              <p className="text-sm text-red-400 mb-2">
+          <CardContent className="p-6">
+            <div className="p-4 bg-red-50 border-2 border-red-500 rounded-none">
+              <p className="text-sm text-red-600 font-bold uppercase mb-2">
                 ⚠️ Warning: This will permanently delete this eSIM profile.
               </p>
               {esim.topups?.length > 0 && (
-                <p className="text-xs text-[var(--voyage-muted)] mb-2">
+                <p className="text-xs text-red-500 font-mono mb-2">
                   This profile has {esim.topups.length} top-up(s) that will also be deleted.
                 </p>
               )}
-              <p className="text-xs text-[var(--voyage-muted)]">
+              <p className="text-xs text-red-500 font-mono">
                 Click "Confirm Delete" again to proceed, or refresh the page to cancel.
               </p>
             </div>
@@ -537,4 +540,3 @@ export default function AdminEsimDetailPage() {
     </div>
   );
 }
-

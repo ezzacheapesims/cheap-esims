@@ -29,6 +29,7 @@ model AdminSettings {
   emailFrom            String?
   emailProvider        String?
   discountsJson        Json?
+  pricingJson           Json?
 }
 
 model Affiliate {

@@ -12,6 +12,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { safeFetch } from "@/lib/safe-fetch";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Package } from "lucide-react";
+import { formatDataSize } from "@/lib/plan-utils";
 
 interface TopUpOption {
   packageCode: string;
@@ -135,7 +136,7 @@ export default function TopUpSelectionPage() {
         <PlanListWithFilters
           plans={options}
           renderItem={(plan) => {
-            const sizeGB = (plan.volume / 1024 / 1024 / 1024).toFixed(1);
+            const { value: sizeValue, unit: sizeUnit } = formatDataSize(plan.volume);
             const priceUSD = plan.price || 0;
             const convertedPrice = convert(priceUSD);
             
@@ -149,7 +150,7 @@ export default function TopUpSelectionPage() {
                          {plan.duration} {plan.durationUnit}s
                       </Badge>
                       <h3 className="text-2xl font-bold text-white group-hover:text-[var(--voyage-accent)] transition-colors">
-                         {sizeGB} GB
+                         {sizeValue} {sizeUnit}
                       </h3>
                    </div>
                    <div className="h-10 w-10 rounded-full bg-[var(--voyage-bg-light)] flex items-center justify-center text-[var(--voyage-accent-soft)] group-hover:bg-[var(--voyage-accent)] group-hover:text-white transition-colors">

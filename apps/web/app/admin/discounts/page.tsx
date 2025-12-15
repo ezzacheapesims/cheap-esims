@@ -19,7 +19,7 @@ import {
 import { safeFetch } from "@/lib/safe-fetch";
 import { Plan } from "@/components/PlanCard";
 import { Download, Upload, Trash2, Save, Search, ArrowLeft } from "lucide-react";
-import { calculateGB, filterVisiblePlans } from "@/lib/plan-utils";
+import { calculateGB, filterVisiblePlans, formatDataSize } from "@/lib/plan-utils";
 
 /**
  * Admin Discounts Page
@@ -55,22 +55,22 @@ export default function AdminDiscountsPage() {
       setDiscountsState(discountData.individual);
       setGlobalDiscountsState(discountData.global);
 
-    // Fetch countries only (lightweight)
-    const fetchCountries = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-        const countriesData = await safeFetch<Country[]>(`${apiUrl}/countries`, { showToast: false });
-        // Sort countries alphabetically by name
-        const sortedCountries = (countriesData || []).sort((a, b) => 
-          a.name.localeCompare(b.name)
-        );
-        setCountries(sortedCountries);
-      } catch (error) {
-        console.error("Failed to fetch countries:", error);
-      } finally {
-        setLoadingCountries(false);
-      }
-    };
+      // Fetch countries only (lightweight)
+      const fetchCountries = async () => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+          const countriesData = await safeFetch<Country[]>(`${apiUrl}/countries`, { showToast: false });
+          // Sort countries alphabetically by name
+          const sortedCountries = (countriesData || []).sort((a, b) => 
+            a.name.localeCompare(b.name)
+          );
+          setCountries(sortedCountries);
+        } catch (error) {
+          console.error("Failed to fetch countries:", error);
+        } finally {
+          setLoadingCountries(false);
+        }
+      };
 
       fetchCountries();
     };
@@ -101,7 +101,7 @@ export default function AdminDiscountsPage() {
           countryName: selectedCountry.name,
         }));
 
-        // Apply filtering: exclude 0.5GB, 1.5GB, 2GB and plans under $3
+        // Apply filtering: only plans >= 100MB
         const filteredPlans = filterVisiblePlans(plansWithCountry);
         
         setCountryPlans(filteredPlans);
@@ -139,7 +139,7 @@ export default function AdminDiscountsPage() {
     try {
       const adminEmail = user?.primaryEmailAddress?.emailAddress || "";
       await saveDiscounts({ global: globalDiscounts, individual: discounts }, adminEmail);
-      clearDiscountsCache(); // Clear cache so fresh data is fetched
+      clearDiscountsCache();
       alert("Discounts saved successfully!");
     } catch (error) {
       console.error("Failed to save discounts:", error);
@@ -285,22 +285,22 @@ export default function AdminDiscountsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Admin Discounts</h1>
-        <p className="text-[var(--voyage-muted)]">
+        <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">Admin Discounts</h1>
+        <p className="text-gray-600 font-mono font-bold uppercase text-sm">
           Set discounts for plans. Select a country to view and edit discounts. Discounts are stored in the backend and applied globally.
         </p>
       </div>
 
       {/* Global Discounts Section */}
-      <div className="bg-[var(--voyage-card)] border border-[var(--voyage-border)] rounded-lg p-6 space-y-4">
+      <div className="bg-white border-2 border-black rounded-none shadow-hard p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white mb-1">Global Discounts by Data Size</h2>
-            <p className="text-sm text-[var(--voyage-muted)]">
+            <h2 className="text-xl font-black text-black uppercase mb-1">Global Discounts by Data Size</h2>
+            <p className="text-sm text-gray-600 font-mono">
               Set discounts that apply to all plans of a specific GB size across all countries. Individual plan discounts override these.
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={handleClearGlobal}>
+          <Button variant="outline" size="sm" onClick={handleClearGlobal} className="border-2 border-black rounded-none hover:bg-red-100 hover:text-red-600 font-bold uppercase">
             <Trash2 className="h-4 w-4 mr-2" />
             Clear Global
           </Button>
@@ -312,7 +312,7 @@ export default function AdminDiscountsPage() {
             const globalDiscount = globalDiscounts[gbKey] || 0;
             return (
               <div key={gbSize} className="space-y-2">
-                <Label htmlFor={`global-${gbSize}`} className="text-sm text-[var(--voyage-muted)]">
+                <Label htmlFor={`global-${gbSize}`} className="text-sm text-black font-black uppercase">
                   {gbSize} GB
                 </Label>
                 <div className="flex items-center gap-2">
@@ -324,51 +324,51 @@ export default function AdminDiscountsPage() {
                     step="0.1"
                     value={globalDiscount || ""}
                     onChange={(e) => handleGlobalDiscountChange(gbSize, e.target.value)}
-                    className="bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                    className="bg-white border-2 border-black rounded-none text-black font-mono shadow-sm"
                     placeholder="0"
                   />
-                  <span className="text-[var(--voyage-muted)]">%</span>
+                  <span className="text-gray-500 font-black">%</span>
                 </div>
               </div>
             );
           })}
         </div>
         
-        <div className="text-xs text-[var(--voyage-muted)] pt-2 border-t border-[var(--voyage-border)]">
+        <div className="text-xs text-gray-500 font-mono pt-2 border-t-2 border-dashed border-gray-300">
           💡 Tip: Global discounts apply to all plans of that GB size. Set individual plan discounts below to override.
         </div>
       </div>
 
       {/* Actions Bar */}
       <div className="flex gap-4 items-center flex-wrap">
-        <Button onClick={handleSave} disabled={saving}>
+        <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
           <Save className="h-4 w-4 mr-2" />
           {saving ? "Saving..." : "Save Changes"}
         </Button>
-        <Button variant="outline" onClick={handleExport}>
+        <Button variant="outline" onClick={handleExport} className="border-2 border-black rounded-none font-bold uppercase hover:bg-secondary">
           <Download className="h-4 w-4 mr-2" />
           Export JSON
         </Button>
-        <Button variant="outline" onClick={handleClear}>
+        <Button variant="outline" onClick={handleClear} className="border-2 border-black rounded-none font-bold uppercase hover:bg-red-100 hover:text-red-600">
           <Trash2 className="h-4 w-4 mr-2" />
           Clear All
         </Button>
       </div>
 
       {/* Import Section */}
-      <div className="bg-[var(--voyage-card)] border border-[var(--voyage-border)] rounded-lg p-4 space-y-3">
-        <Label htmlFor="import-json">Import Discounts (JSON)</Label>
+      <div className="bg-white border-2 border-black rounded-none shadow-hard p-4 space-y-3">
+        <Label htmlFor="import-json" className="text-black font-black uppercase text-sm">Import Discounts (JSON)</Label>
         <textarea
           id="import-json"
           value={importText}
           onChange={(e) => setImportText(e.target.value)}
-          className="w-full h-32 bg-[var(--voyage-bg)] border border-[var(--voyage-border)] rounded-md p-3 text-white font-mono text-sm"
+          className="w-full h-32 bg-white border-2 border-black rounded-none p-3 text-black font-mono text-sm shadow-inner"
           placeholder='{"PLAN_CODE_1": 10, "PLAN_CODE_2": 15}'
         />
         {importError && (
-          <p className="text-red-400 text-sm">{importError}</p>
+          <p className="text-red-600 font-bold uppercase text-xs">{importError}</p>
         )}
-        <Button variant="outline" onClick={handleImport}>
+        <Button variant="outline" onClick={handleImport} className="border-2 border-black rounded-none font-bold uppercase hover:bg-secondary">
           <Upload className="h-4 w-4 mr-2" />
           Import
         </Button>
@@ -378,7 +378,7 @@ export default function AdminDiscountsPage() {
       {!selectedCountry && (
         <>
           {loadingCountries ? (
-            <div className="text-center py-20 text-[var(--voyage-muted)]">
+            <div className="text-center py-20 text-gray-500 font-mono uppercase font-bold">
               Loading countries...
             </div>
           ) : (
@@ -387,10 +387,10 @@ export default function AdminDiscountsPage() {
                 <button
                   key={country.code}
                   onClick={() => setSelectedCountry(country)}
-                  className="bg-[var(--voyage-card)] border border-[var(--voyage-border)] rounded-lg p-4 hover:bg-[var(--voyage-bg-light)] hover:border-[var(--voyage-accent)] transition-colors text-left"
+                  className="bg-white border-2 border-black rounded-none p-4 hover:bg-primary hover:text-black transition-all text-left shadow-hard-sm hover:shadow-hard hover:-translate-y-1"
                 >
-                  <div className="text-white font-medium">{country.name}</div>
-                  <div className="text-sm text-[var(--voyage-muted)] mt-1">{country.code}</div>
+                  <div className="font-black uppercase">{country.name}</div>
+                  <div className="text-xs font-mono mt-1 opacity-70">{country.code}</div>
                 </button>
               ))}
             </div>
@@ -409,15 +409,15 @@ export default function AdminDiscountsPage() {
                 setSelectedCountry(null);
                 setSearchQuery("");
               }}
-              className="text-[var(--voyage-muted)] hover:text-white"
+              className="text-gray-500 hover:text-black font-mono uppercase font-bold text-sm"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Countries
             </Button>
             <div>
-              <h2 className="text-xl font-bold text-white">{selectedCountry.name}</h2>
-              <p className="text-sm text-[var(--voyage-muted)]">
-                Plans: 1GB, 3GB, 5GB+ (excluding 0.5GB, 1.5GB, 2GB) • Minimum $3 USD
+              <h2 className="text-xl font-black text-black uppercase">{selectedCountry.name}</h2>
+              <p className="text-sm text-gray-600 font-mono">
+                Plans: 100MB+ (displays as MB if &lt; 1GB, GB if &gt;= 1GB)
               </p>
             </div>
           </div>
@@ -425,62 +425,67 @@ export default function AdminDiscountsPage() {
           {/* Search and Sort Controls */}
           <div className="flex gap-4 items-center flex-wrap">
             <div className="flex-1 min-w-[300px]">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--voyage-muted)]" />
+              <div className="relative group">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-black" />
                 <Input
                   type="text"
                   placeholder="Search by plan code or plan name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                  className="pl-10 bg-white border-2 border-black rounded-none text-black font-mono shadow-sm"
                 />
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Label htmlFor="sort-select" className="text-[var(--voyage-muted)] whitespace-nowrap">
+              <Label htmlFor="sort-select" className="text-gray-600 font-bold uppercase text-xs whitespace-nowrap">
                 Sort by:
               </Label>
-              <select
-                id="sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                className="px-3 py-2 bg-[var(--voyage-bg)] border border-[var(--voyage-border)] rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--voyage-accent)]"
-              >
-                <option value="code">Plan Code</option>
-                <option value="name">Plan Name</option>
-                <option value="dataSize">Data Size (GB)</option>
-                <option value="duration">Duration</option>
-                <option value="discount">Discount %</option>
-              </select>
+              <div className="relative">
+                <select
+                  id="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                  className="px-4 py-2 bg-white border-2 border-black rounded-none text-black font-mono text-sm focus:outline-none focus:border-primary shadow-sm appearance-none pr-8 cursor-pointer"
+                >
+                  <option value="code">Plan Code</option>
+                  <option value="name">Plan Name</option>
+                  <option value="dataSize">Data Size (GB)</option>
+                  <option value="duration">Duration</option>
+                  <option value="discount">Discount %</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-black">
+                  <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Discount Table */}
           {loadingPlans ? (
-            <div className="text-center py-20 text-[var(--voyage-muted)]">
+            <div className="text-center py-20 text-gray-500 font-mono uppercase font-bold">
               Loading plans...
             </div>
           ) : (
-        <div className="bg-[var(--voyage-card)] border border-[var(--voyage-border)] rounded-lg overflow-hidden">
+        <div className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[var(--voyage-bg-light)] border-b border-[var(--voyage-border)]">
+              <thead className="bg-secondary border-b-2 border-black">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">
+                  <th className="px-4 py-3 text-left text-xs font-black uppercase text-black tracking-wider">
                     Plan Code
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">
+                  <th className="px-4 py-3 text-left text-xs font-black uppercase text-black tracking-wider">
                     Plan Details
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">
+                  <th className="px-4 py-3 text-left text-xs font-black uppercase text-black tracking-wider">
                     Discount %
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">
+                  <th className="px-4 py-3 text-left text-xs font-black uppercase text-black tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-200">
                 {filteredPlans.map((plan) => {
                   const planGB = calculateGB(plan.volume);
                   const roundedGB = Math.round(planGB * 10) / 10;
@@ -495,34 +500,34 @@ export default function AdminDiscountsPage() {
                   const displayDiscount = hasIndividualDiscount ? individualDiscount : globalDiscount;
                   const isUsingGlobal = !hasIndividualDiscount && globalDiscount > 0;
                   
-                  const gb = planGB.toFixed(1);
-                  const planName = plan.name || `${gb} GB, ${plan.duration} ${plan.durationUnit}s`;
+                  const { value: sizeValue, unit: sizeUnit } = formatDataSize(plan.volume);
+                  const planName = plan.name || `${sizeValue} ${sizeUnit}, ${plan.duration} ${plan.durationUnit}s`;
                   
                   return (
                     <tr
                       key={plan.packageCode}
-                      className="border-b border-[var(--voyage-border)] last:border-0 hover:bg-[var(--voyage-bg-light)]/50"
+                      className="hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-4 py-3">
-                        <div className="font-mono text-sm text-white">
+                        <div className="font-mono text-sm font-bold text-black">
                           {plan.packageCode}
                         </div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="space-y-1">
-                          <div className="text-white font-medium">
+                          <div className="text-black font-bold uppercase text-sm">
                             {planName}
                           </div>
-                          <div className="text-xs text-[var(--voyage-muted)]">
-                            {gb} GB • {plan.duration} {plan.durationUnit}s • ${plan.price?.toFixed(2)} USD
+                          <div className="text-xs text-gray-500 font-mono">
+                            {sizeValue} {sizeUnit} • {plan.duration} {plan.durationUnit}s • ${plan.price?.toFixed(2)} USD
                           </div>
                           {isUsingGlobal && (
-                            <div className="text-xs text-[var(--voyage-accent)] mt-1">
+                            <div className="text-xs text-primary font-bold uppercase mt-1">
                               Using global: {globalDiscount}% for {roundedGB}GB
                             </div>
                           )}
                           {hasIndividualDiscount && (
-                            <div className="text-xs text-green-400 mt-1">
+                            <div className="text-xs text-green-600 font-bold uppercase mt-1">
                               Custom discount (overrides global)
                             </div>
                           )}
@@ -537,13 +542,13 @@ export default function AdminDiscountsPage() {
                             step="0.1"
                             value={hasIndividualDiscount ? individualDiscount : ""}
                             onChange={(e) => handleDiscountChange(plan.packageCode, e.target.value)}
-                            className="w-24 bg-[var(--voyage-bg)] border-[var(--voyage-border)] text-white"
+                            className="w-24 bg-white border-2 border-black rounded-none text-black font-mono shadow-sm h-8"
                             placeholder={isUsingGlobal ? globalDiscount.toString() : "0"}
                           />
-                          <span className="text-[var(--voyage-muted)]">%</span>
+                          <span className="text-gray-500 font-black">%</span>
                         </div>
                         {isUsingGlobal && displayDiscount > 0 && (
-                          <div className="text-xs text-[var(--voyage-muted)] mt-1">
+                          <div className="text-xs text-gray-400 font-mono mt-1">
                             Global: {globalDiscount}%
                           </div>
                         )}
@@ -559,6 +564,7 @@ export default function AdminDiscountsPage() {
                               delete newDiscounts[plan.packageCode];
                               setDiscountsState(newDiscounts);
                             }}
+                            className="text-xs font-bold uppercase hover:bg-secondary rounded-none h-8"
                           >
                             Use Global
                           </Button>
@@ -574,17 +580,17 @@ export default function AdminDiscountsPage() {
           )}
 
           {filteredPlans.length === 0 && !loadingPlans && (
-            <div className="text-center py-20 text-[var(--voyage-muted)]">
+            <div className="text-center py-20 text-gray-500 font-mono uppercase font-bold border-2 border-dashed border-gray-300">
               {searchQuery ? (
                 <>No plans found matching "{searchQuery}"</>
               ) : (
-                <>No plans available for {selectedCountry.name}. Plans must be &gt;= $3 USD and exclude 0.5GB, 1.5GB, 2GB sizes.</>
+                <>No plans available for {selectedCountry.name}. Plans must be &gt;= 100MB.</>
               )}
             </div>
           )}
 
           {filteredPlans.length > 0 && !loadingPlans && (
-            <div className="text-sm text-[var(--voyage-muted)] text-center">
+            <div className="text-xs text-gray-500 font-mono text-center uppercase font-bold mt-4">
               Showing {filteredPlans.length} plan{filteredPlans.length !== 1 ? 's' : ''}
               {searchQuery && ` matching "${searchQuery}"`}
             </div>
@@ -594,4 +600,3 @@ export default function AdminDiscountsPage() {
     </div>
   );
 }
-

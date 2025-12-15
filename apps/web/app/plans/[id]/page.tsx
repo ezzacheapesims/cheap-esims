@@ -52,10 +52,10 @@ export default function PlanPage() {
   if (!plan) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold text-white mb-4">Plan Not Found</h1>
-        <p className="text-[var(--voyage-muted)] mb-6">The plan you're looking for doesn't exist or has been removed.</p>
-        <Link href="/countries">
-          <Button variant="secondary">Browse Plans</Button>
+        <h1 className="text-3xl font-bold text-black mb-4">Plan Not Found</h1>
+        <p className="text-gray-500 mb-6">The plan you're looking for doesn't exist or has been removed.</p>
+        <Link href="/">
+          <Button className="font-bold uppercase rounded-none border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">Browse Plans</Button>
         </Link>
       </div>
     );
@@ -91,22 +91,18 @@ export default function PlanPage() {
       {useBackNavigation ? (
         <Button 
           variant="ghost" 
-          className="pl-0 hover:pl-2 transition-all text-[var(--voyage-muted)] hover:text-white hover:bg-transparent"
+          className="pl-0 hover:pl-2 hover:bg-transparent text-gray-500 hover:text-black transition-all font-mono uppercase text-sm font-bold"
           onClick={handleBackClick}
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Plans
         </Button>
       ) : (
         <Link href={backUrl}>
-          <Button variant="ghost" className="pl-0 hover:pl-2 transition-all text-[var(--voyage-muted)] hover:text-white hover:bg-transparent">
+          <Button variant="ghost" className="pl-0 hover:pl-2 hover:bg-transparent text-gray-500 hover:text-black transition-all font-mono uppercase text-sm font-bold">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Plans
           </Button>
         </Link>
       )}
-      
-      <div className="text-sm text-[var(--voyage-muted)]">
-        Not sure if your device supports eSIM? <Link href="/device-check" className="text-[var(--voyage-accent)] hover:underline">Check compatibility</Link>
-      </div>
       
       <PlanDetails plan={plan} />
     </div>

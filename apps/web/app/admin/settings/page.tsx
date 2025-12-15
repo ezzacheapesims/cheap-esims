@@ -80,8 +80,8 @@ export default function AdminSettingsPage() {
   if (loading || !settings) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--voyage-accent)] mx-auto mb-4"></div>
-        <p className="text-[var(--voyage-muted)]">Loading settings...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+        <p className="text-gray-500 font-mono font-bold uppercase">Loading settings...</p>
       </div>
     );
   }
@@ -89,30 +89,30 @@ export default function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-[var(--voyage-muted)]">
+        <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">Settings</h1>
+        <p className="text-gray-600 font-mono font-bold uppercase text-sm">
           Configure admin panel and system settings
         </p>
       </div>
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <CardTitle className="text-white">System Settings</CardTitle>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
+          <CardTitle className="text-black font-black uppercase">System Settings</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="p-6 space-y-6">
           <div>
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={settings.mockMode}
                 onChange={(e) =>
                   setSettings({ ...settings, mockMode: e.target.checked })
                 }
-                className="w-5 h-5 rounded border-[var(--voyage-border)] bg-[var(--voyage-bg-light)]"
+                className="w-5 h-5 border-2 border-black rounded-none text-black focus:ring-0 checked:bg-black checked:border-black appearance-none cursor-pointer relative after:content-[''] after:absolute after:top-0.5 after:left-1.5 after:w-1.5 after:h-3 after:border-r-2 after:border-b-2 after:border-white after:rotate-45 after:hidden checked:after:block"
               />
               <div>
-                <p className="text-white font-medium">Mock Mode</p>
-                <p className="text-sm text-[var(--voyage-muted)]">
+                <p className="text-black font-bold uppercase text-sm">Mock Mode</p>
+                <p className="text-xs text-gray-500 font-mono">
                   Enable mock mode for testing
                 </p>
               </div>
@@ -120,7 +120,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-xs font-black text-black uppercase mb-2">
               Default Markup Percent
             </label>
             <Input
@@ -132,16 +132,16 @@ export default function AdminSettingsPage() {
                   defaultMarkupPercent: parseFloat(e.target.value) || 0,
                 })
               }
-              className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)] text-white"
+              className="bg-white border-2 border-black rounded-none text-black shadow-sm font-mono"
               step="0.01"
             />
-            <p className="text-xs text-[var(--voyage-muted)] mt-1">
+            <p className="text-xs text-gray-500 font-mono mt-1">
               Default markup percentage for pricing
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-xs font-black text-black uppercase mb-2">
               Default Currency
             </label>
             <Input
@@ -150,13 +150,13 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 setSettings({ ...settings, defaultCurrency: e.target.value })
               }
-              className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)] text-white"
+              className="bg-white border-2 border-black rounded-none text-black shadow-sm font-mono"
               placeholder="USD"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-xs font-black text-black uppercase mb-2">
               Admin Emails (comma-separated)
             </label>
             <textarea
@@ -170,10 +170,10 @@ export default function AdminSettingsPage() {
                     .filter(Boolean),
                 })
               }
-              className="w-full px-3 py-2 rounded-lg bg-[var(--voyage-bg-light)] border border-[var(--voyage-border)] text-white"
+              className="w-full px-3 py-2 bg-white border-2 border-black rounded-none text-black font-mono text-sm shadow-sm focus:outline-none focus:border-primary"
               rows={4}
             />
-            <p className="text-xs text-[var(--voyage-muted)] mt-1">
+            <p className="text-xs text-gray-500 font-mono mt-1">
               List of admin email addresses
             </p>
           </div>
@@ -181,31 +181,31 @@ export default function AdminSettingsPage() {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)]"
+            className="bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
           >
             {saving ? "Saving..." : "Save Settings"}
           </Button>
         </CardContent>
       </Card>
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <CardTitle className="text-white">Email Settings</CardTitle>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
+          <CardTitle className="text-black font-black uppercase">Email Settings</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="p-6 space-y-6">
           <div>
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={settings.emailEnabled !== false}
                 onChange={(e) =>
                   setSettings({ ...settings, emailEnabled: e.target.checked })
                 }
-                className="w-5 h-5 rounded border-[var(--voyage-border)] bg-[var(--voyage-bg-light)]"
+                className="w-5 h-5 border-2 border-black rounded-none text-black focus:ring-0 checked:bg-black checked:border-black appearance-none cursor-pointer relative after:content-[''] after:absolute after:top-0.5 after:left-1.5 after:w-1.5 after:h-3 after:border-r-2 after:border-b-2 after:border-white after:rotate-45 after:hidden checked:after:block"
               />
               <div>
-                <p className="text-white font-medium">Enable Email Notifications</p>
-                <p className="text-sm text-[var(--voyage-muted)]">
+                <p className="text-black font-bold uppercase text-sm">Enable Email Notifications</p>
+                <p className="text-xs text-gray-500 font-mono">
                   Send transactional emails for orders, eSIMs, and top-ups
                 </p>
               </div>
@@ -213,7 +213,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-xs font-black text-black uppercase mb-2">
               Email From Address
             </label>
             <Input
@@ -222,16 +222,16 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 setSettings({ ...settings, emailFrom: e.target.value })
               }
-              className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)] text-white"
+              className="bg-white border-2 border-black rounded-none text-black shadow-sm font-mono"
               placeholder="no-reply@voyage.app"
             />
-            <p className="text-xs text-[var(--voyage-muted)] mt-1">
+            <p className="text-xs text-gray-500 font-mono mt-1">
               Default sender email address for all notifications
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-xs font-black text-black uppercase mb-2">
               Email Provider
             </label>
             <select
@@ -239,24 +239,24 @@ export default function AdminSettingsPage() {
               onChange={(e) =>
                 setSettings({ ...settings, emailProvider: e.target.value })
               }
-              className="w-full px-3 py-2 rounded-lg bg-[var(--voyage-bg-light)] border border-[var(--voyage-border)] text-white"
+              className="w-full px-3 py-2 bg-white border-2 border-black rounded-none text-black font-mono text-sm shadow-sm focus:outline-none focus:border-primary"
             >
               <option value="resend">Resend</option>
             </select>
-            <p className="text-xs text-[var(--voyage-muted)] mt-1">
+            <p className="text-xs text-gray-500 font-mono mt-1">
               Email service provider for sending transactional emails
             </p>
           </div>
 
-          <div className="pt-4 border-t border-[var(--voyage-border)]">
-            <h3 className="text-white font-medium mb-4">Test Email</h3>
+          <div className="pt-4 border-t-2 border-black">
+            <h3 className="text-black font-black uppercase text-sm mb-4">Test Email</h3>
             <div className="flex gap-2">
               <Input
                 type="email"
                 value={testEmailTo}
                 onChange={(e) => setTestEmailTo(e.target.value)}
                 placeholder="Enter email address to test"
-                className="bg-[var(--voyage-bg-light)] border-[var(--voyage-border)] text-white flex-1"
+                className="bg-white border-2 border-black rounded-none text-black flex-1 shadow-sm font-mono"
               />
               <Button
                 onClick={async () => {
@@ -306,7 +306,7 @@ export default function AdminSettingsPage() {
                   }
                 }}
                 disabled={testEmailSending || !testEmailTo}
-                className="bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)]"
+                className="bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all"
               >
                 {testEmailSending ? "Sending..." : "Send Test Email"}
               </Button>
@@ -317,4 +317,3 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
-

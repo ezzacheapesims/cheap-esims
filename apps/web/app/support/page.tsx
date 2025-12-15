@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HelpCircle, FileText, Wrench, Smartphone, DollarSign, Scale, Mail, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { HelpCircle, FileText, Wrench, Smartphone, DollarSign, Scale, Mail, Users, ArrowRight } from "lucide-react";
 import { InstallGuides } from "./sections/install-guides";
 import { Troubleshooting } from "./sections/troubleshooting";
 import { RefundPolicy } from "./sections/refund-policy";
@@ -23,125 +24,105 @@ function SupportContent() {
   }, [tabParam]);
 
   return (
-    <div className="min-h-screen py-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Help Center</h1>
-          <p className="text-[var(--voyage-muted)]">
+    <div className="min-h-screen py-12">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">Help Center</h1>
+          <p className="text-gray-500 font-mono font-bold uppercase text-sm">
             Find answers, installation guides, and get support
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 mb-6">
-            <TabsTrigger value="install" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <span className="hidden md:inline">Install Guides</span>
-            </TabsTrigger>
-            <TabsTrigger value="troubleshooting" className="flex items-center gap-2">
-              <Wrench className="h-4 w-4" />
-              <span className="hidden md:inline">Troubleshooting</span>
-            </TabsTrigger>
-            <TabsTrigger value="device" className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4" />
-              <span className="hidden md:inline">Device Check</span>
-            </TabsTrigger>
-            <TabsTrigger value="refund" className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              <span className="hidden md:inline">Refund Policy</span>
-            </TabsTrigger>
-            <TabsTrigger value="terms" className="flex items-center gap-2">
-              <Scale className="h-4 w-4" />
-              <span className="hidden md:inline">Terms</span>
-            </TabsTrigger>
-            <TabsTrigger value="affiliate-terms" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span className="hidden md:inline">Affiliate Terms</span>
-            </TabsTrigger>
-            <TabsTrigger value="contact" className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              <span className="hidden md:inline">Contact</span>
-            </TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
+          <TabsList className="w-full flex flex-wrap justify-start gap-2 bg-transparent p-0 h-auto">
+            {[
+              { value: "install", icon: FileText, label: "Install Guides" },
+              { value: "troubleshooting", icon: Wrench, label: "Troubleshooting" },
+              { value: "device", icon: Smartphone, label: "Device Check" },
+              { value: "refund", icon: DollarSign, label: "Refund Policy" },
+              { value: "terms", icon: Scale, label: "Terms" },
+              { value: "affiliate-terms", icon: Users, label: "Affiliate Terms" },
+              { value: "contact", icon: Mail, label: "Contact" },
+            ].map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="flex items-center gap-2 border-2 border-transparent data-[state=active]:border-black data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:shadow-hard-sm rounded-none px-4 py-2 font-bold uppercase text-gray-500 hover:text-black transition-all bg-gray-100"
+              >
+                <tab.icon className="h-4 w-4" />
+                <span className="hidden md:inline">{tab.label}</span>
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="install">
-            <InstallGuides />
-          </TabsContent>
+          <div className="bg-white border-2 border-black p-8 shadow-hard min-h-[400px]">
+            <TabsContent value="install" className="mt-0">
+              <InstallGuides />
+            </TabsContent>
 
-          <TabsContent value="troubleshooting">
-            <Troubleshooting />
-          </TabsContent>
+            <TabsContent value="troubleshooting" className="mt-0">
+              <Troubleshooting />
+            </TabsContent>
 
-          <TabsContent value="device">
-            <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Smartphone className="h-5 w-5" />
-                  Device Compatibility Checker
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[var(--voyage-muted)] mb-4">
-                  Check if your device supports eSIM before purchasing a plan.
+            <TabsContent value="device" className="mt-0 space-y-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-secondary border-2 border-black">
+                    <Smartphone className="h-8 w-8 text-black" />
+                  </div>
+                  <h2 className="text-2xl font-black uppercase">Device Compatibility Checker</h2>
+                </div>
+                <p className="text-gray-600 font-mono">
+                  Check if your device supports eSIM technology before purchasing a plan. Most modern phones from Apple, Samsung, and Google are compatible.
                 </p>
                 <Link href="/support/device-check">
-                  <button className="px-6 py-3 bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)] text-white rounded-lg font-medium transition-colors">
-                    Check Device Compatibility
-                  </button>
+                  <Button className="w-full md:w-auto bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
+                    Check Device Compatibility <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </Link>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="refund">
-            <RefundPolicy />
-          </TabsContent>
+            <TabsContent value="refund" className="mt-0">
+              <RefundPolicy />
+            </TabsContent>
 
-          <TabsContent value="terms">
-            <TermsOfService />
-          </TabsContent>
+            <TabsContent value="terms" className="mt-0">
+              <TermsOfService />
+            </TabsContent>
 
-          <TabsContent value="affiliate-terms">
-            <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Affiliate Terms of Service
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[var(--voyage-muted)] mb-4">
+            <TabsContent value="affiliate-terms" className="mt-0 space-y-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-secondary border-2 border-black">
+                    <Users className="h-8 w-8 text-black" />
+                  </div>
+                  <h2 className="text-2xl font-black uppercase">Affiliate Terms of Service</h2>
+                </div>
+                <p className="text-gray-600 font-mono mb-6">
                   Rules, guidelines, and payout conditions for Voyage affiliates. Learn about commission structure, referral rules, holding periods, and payout policies.
                 </p>
                 <Link href="/support/affiliate-terms">
-                  <button className="px-6 py-3 bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)] text-white rounded-lg font-medium transition-colors">
-                    View Affiliate Terms of Service
-                  </button>
+                  <Button className="w-full md:w-auto bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
+                    View Affiliate Terms <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </Link>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="contact">
-            <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Mail className="h-5 w-5" />
-                  Contact Support
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[var(--voyage-muted)] mb-4">
-                  Need help? Send us a message and we'll get back to you as soon as possible.
+            <TabsContent value="contact" className="mt-0 space-y-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-secondary border-2 border-black">
+                    <Mail className="h-8 w-8 text-black" />
+                  </div>
+                  <h2 className="text-2xl font-black uppercase">Contact Support</h2>
+                </div>
+                <p className="text-gray-600 font-mono mb-6">
+                  Need help with your eSIM or account? Send us a message and we'll get back to you as soon as possible.
                 </p>
                 <Link href="/support/contact">
-                  <button className="px-6 py-3 bg-[var(--voyage-accent)] hover:bg-[var(--voyage-accent-soft)] text-white rounded-lg font-medium transition-colors">
-                    Open Contact Form
-                  </button>
+                  <Button className="w-full md:w-auto bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
+                    Open Contact Form <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </Link>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
     </div>
@@ -151,13 +132,11 @@ function SupportContent() {
 export default function SupportPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen py-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">Help Center</h1>
-            <p className="text-[var(--voyage-muted)]">
-              Find answers, installation guides, and get support
-            </p>
+      <div className="min-h-screen py-12">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <div className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">Help Center</h1>
+            <div className="h-6 w-48 bg-gray-200 animate-pulse"></div>
           </div>
         </div>
       </div>
@@ -166,4 +145,3 @@ export default function SupportPage() {
     </Suspense>
   );
 }
-

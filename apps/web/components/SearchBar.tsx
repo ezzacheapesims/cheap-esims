@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 interface SearchBarProps {
   value: string;
@@ -10,14 +11,14 @@ interface SearchBarProps {
   className?: string;
 }
 
-export function SearchBar({ value, onChange, placeholder = "Search countries...", className }: SearchBarProps) {
+export function SearchBar({ value, onChange, placeholder = "Search destinations...", className }: SearchBarProps) {
   return (
-    <div className={cn("relative w-full max-w-lg group", className)}>
-      <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--voyage-muted)] group-focus-within:text-[var(--voyage-accent)] transition-colors" />
+    <div className={cn("relative w-full group", className)}>
+      <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="bg-[var(--voyage-bg-light)] border border-[var(--voyage-border)] rounded-full pl-12 pr-6 py-4 w-full text-[var(--voyage-text)] placeholder-[var(--voyage-muted)] focus:ring-2 focus:ring-[var(--voyage-accent)] focus:border-transparent outline-none transition-all shadow-lg focus:shadow-[var(--voyage-accent)]/20"
+        className="flex h-12 w-full rounded-md border border-input bg-background px-10 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
         placeholder={placeholder}
       />
     </div>

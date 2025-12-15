@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 import { Calendar, Clock } from "lucide-react";
 import { useCurrency } from "./providers/CurrencyProvider";
 import { getDiscount } from "@/lib/admin-discounts";
-import { calculateGB } from "@/lib/plan-utils";
-import { calculateFinalPrice } from "@/lib/plan-utils";
+import { calculateGB, calculateFinalPrice, formatDataSize } from "@/lib/plan-utils";
 
 interface DurationOption {
   duration: number;
@@ -38,6 +37,10 @@ export function DurationSelector({
 }: DurationSelectorProps) {
   const { convert, formatCurrency, rates } = useCurrency();
 
+  // Format selectedSize for display (convert GB to bytes, then format)
+  const selectedSizeBytes = selectedSize * 1024 * 1024 * 1024;
+  const { value: sizeValue, unit: sizeUnit } = formatDataSize(selectedSizeBytes);
+
   // Sort durations by length (shorter to longer)
   const sortedDurations = [...durations].sort((a, b) => {
     // Normalize to days for comparison
@@ -59,7 +62,7 @@ export function DurationSelector({
             Step 2: Choose Your Duration
           </h2>
           <p className="text-[var(--voyage-muted)] text-sm">
-            Available validity periods for {selectedSize} GB plans
+            Available validity periods for {sizeValue} {sizeUnit} plans
           </p>
         </div>
         
@@ -183,7 +186,7 @@ export function DurationSelector({
 
       {sortedDurations.length === 0 && (
         <div className="text-center py-8 text-[var(--voyage-muted)]">
-          No duration options available for {selectedSize} GB plans
+          No duration options available for {sizeValue} {sizeUnit} plans
         </div>
       )}
     </div>

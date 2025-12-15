@@ -90,8 +90,8 @@ export default function AdminUserDetailPage() {
   if (loading || !userDetail) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--voyage-accent)] mx-auto mb-4"></div>
-        <p className="text-[var(--voyage-muted)]">Loading user...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+        <p className="text-gray-500 font-mono font-bold uppercase">Loading user...</p>
       </div>
     );
   }
@@ -102,56 +102,56 @@ export default function AdminUserDetailPage() {
         <Button
           variant="ghost"
           onClick={() => router.push("/admin/users")}
-          className="text-[var(--voyage-muted)] hover:text-white"
+          className="text-gray-500 hover:text-black font-mono uppercase font-bold text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">User Details</h1>
-          <p className="text-[var(--voyage-muted)]">{userDetail.email}</p>
+          <h1 className="text-3xl font-black text-black uppercase tracking-tighter mb-2">User Details</h1>
+          <p className="text-gray-600 font-mono font-bold uppercase text-sm">{userDetail.email}</p>
         </div>
       </div>
 
-      <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-        <CardHeader>
-          <CardTitle className="text-white">User Information</CardTitle>
+      <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+        <CardHeader className="bg-secondary border-b-2 border-black p-6">
+          <CardTitle className="text-black font-black uppercase">User Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="p-6 space-y-4">
           <div>
-            <p className="text-sm text-[var(--voyage-muted)]">Email</p>
-            <p className="text-white">{userDetail.email}</p>
+            <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Email</p>
+            <p className="text-black font-bold text-lg">{userDetail.email}</p>
           </div>
           {userDetail.name && (
             <div>
-              <p className="text-sm text-[var(--voyage-muted)]">Name</p>
-              <p className="text-white">{userDetail.name}</p>
+              <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Name</p>
+              <p className="text-black font-bold">{userDetail.name}</p>
             </div>
           )}
           <div>
-            <p className="text-sm text-[var(--voyage-muted)]">User ID</p>
-            <p className="text-white font-mono text-xs">{userDetail.id}</p>
+            <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">User ID</p>
+            <p className="text-black font-mono text-sm bg-gray-100 p-2 border border-black inline-block">{userDetail.id}</p>
           </div>
           <div>
-            <p className="text-sm text-[var(--voyage-muted)]">Created</p>
-            <p className="text-white">
+            <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Created</p>
+            <p className="text-black font-bold">
               {new Date(userDetail.createdAt).toLocaleString()}
             </p>
           </div>
           <div>
-            <p className="text-sm text-[var(--voyage-muted)]">Statistics</p>
+            <p className="text-xs font-mono font-bold text-gray-500 uppercase mb-1">Statistics</p>
             <div className="flex gap-4 mt-2">
-              <div>
-                <p className="text-white font-bold">{userDetail.orders?.length || 0}</p>
-                <p className="text-xs text-[var(--voyage-muted)]">Orders</p>
+              <div className="p-3 border-2 border-black bg-gray-50 min-w-[100px] text-center">
+                <p className="text-black font-black text-2xl">{userDetail.orders?.length || 0}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase">Orders</p>
               </div>
-              <div>
-                <p className="text-white font-bold">{userDetail.profiles?.length || 0}</p>
-                <p className="text-xs text-[var(--voyage-muted)]">eSIMs</p>
+              <div className="p-3 border-2 border-black bg-gray-50 min-w-[100px] text-center">
+                <p className="text-black font-black text-2xl">{userDetail.profiles?.length || 0}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase">eSIMs</p>
               </div>
-              <div>
-                <p className="text-white font-bold">{userDetail.topups?.length || 0}</p>
-                <p className="text-xs text-[var(--voyage-muted)]">Top-ups</p>
+              <div className="p-3 border-2 border-black bg-gray-50 min-w-[100px] text-center">
+                <p className="text-black font-black text-2xl">{userDetail.topups?.length || 0}</p>
+                <p className="text-xs font-mono font-bold text-gray-500 uppercase">Top-ups</p>
               </div>
             </div>
           </div>
@@ -159,35 +159,35 @@ export default function AdminUserDetailPage() {
       </Card>
 
       {userDetail.orders && userDetail.orders.length > 0 && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Orders</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Orders</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-2">
               {userDetail.orders.map((order) => (
                 <div
                   key={order.id}
-                  className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)] flex items-center justify-between"
+                  className="p-3 bg-white border-2 border-black rounded-none flex items-center justify-between hover:bg-gray-50 transition-colors"
                 >
                   <div>
                     <Button
                       variant="link"
                       onClick={() => router.push(`/admin/orders/${order.id}`)}
-                      className="p-0 h-auto text-[var(--voyage-accent)]"
+                      className="p-0 h-auto text-primary hover:text-black font-bold uppercase underline"
                     >
                       {order.id.substring(0, 8)}...
                     </Button>
-                    <p className="text-xs text-[var(--voyage-muted)]">
+                    <p className="text-xs text-gray-500 font-mono mt-1">
                       {planNames.get(order.planId) || order.planId} • {formatUsdDollars(order.amountCents / 100)}
                     </p>
                     {planNames.get(order.planId) && (
-                      <p className="text-xs text-[var(--voyage-muted)] font-mono">{order.planId}</p>
+                      <p className="text-xs text-gray-400 font-mono">{order.planId}</p>
                     )}
                   </div>
                   {(() => {
                     const statusDisplay = getOrderStatusDisplay(order.status);
-                    return <Badge className={statusDisplay.className}>{statusDisplay.label}</Badge>;
+                    return <Badge className={`${statusDisplay.className} rounded-none border-black font-bold uppercase shadow-sm`}>{statusDisplay.label}</Badge>;
                   })()}
                 </div>
               ))}
@@ -197,24 +197,25 @@ export default function AdminUserDetailPage() {
       )}
 
       {userDetail.profiles && userDetail.profiles.length > 0 && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">eSIM Profiles</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">eSIM Profiles</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-2">
               {userDetail.profiles.map((profile) => (
                 <div
                   key={profile.id}
-                  className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)] flex items-center justify-between"
+                  className="p-3 bg-white border-2 border-black rounded-none flex items-center justify-between hover:bg-gray-50 transition-colors"
                 >
                   <div>
-                    <p className="text-white font-mono text-xs">{profile.iccid}</p>
+                    <p className="text-black font-mono font-bold text-sm">{profile.iccid}</p>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => router.push(`/admin/esims/${profile.id}`)}
+                    className="text-xs font-bold uppercase hover:bg-black hover:text-white border-2 border-transparent hover:border-black rounded-none"
                   >
                     View
                   </Button>
@@ -226,31 +227,31 @@ export default function AdminUserDetailPage() {
       )}
 
       {userDetail.topups && userDetail.topups.length > 0 && (
-        <Card className="bg-[var(--voyage-card)] border-[var(--voyage-border)]">
-          <CardHeader>
-            <CardTitle className="text-white">Top-ups</CardTitle>
+        <Card className="bg-white border-2 border-black rounded-none shadow-hard overflow-hidden">
+          <CardHeader className="bg-secondary border-b-2 border-black p-6">
+            <CardTitle className="text-black font-black uppercase">Top-ups</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-2">
               {userDetail.topups.map((topup) => (
                 <div
                   key={topup.id}
-                  className="p-3 bg-[var(--voyage-bg-light)] rounded-lg border border-[var(--voyage-border)] flex items-center justify-between"
+                  className="p-3 bg-white border-2 border-black rounded-none flex items-center justify-between hover:bg-gray-50 transition-colors"
                 >
                   <div>
-                    <p className="text-white">
+                    <p className="text-black font-bold uppercase">
                       {planNames.get(topup.planCode) || topup.planCode}
                     </p>
                     {planNames.get(topup.planCode) && (
-                      <p className="text-xs text-[var(--voyage-muted)] font-mono">{topup.planCode}</p>
+                      <p className="text-xs text-gray-500 font-mono">{topup.planCode}</p>
                     )}
-                    <p className="text-xs text-[var(--voyage-muted)]">
+                    <p className="text-xs text-gray-500 font-mono mt-1">
                       {formatUsdDollars(topup.amountCents / 100)} • {new Date(topup.createdAt).toLocaleString()}
                     </p>
                   </div>
                   {(() => {
                     const statusDisplay = getTopUpStatusDisplay(topup.status);
-                    return <Badge className={statusDisplay.className}>{statusDisplay.label}</Badge>;
+                    return <Badge className={`${statusDisplay.className} rounded-none border-black font-bold uppercase shadow-sm`}>{statusDisplay.label}</Badge>;
                   })()}
                 </div>
               ))}
@@ -261,4 +262,3 @@ export default function AdminUserDetailPage() {
     </div>
   );
 }
-

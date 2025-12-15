@@ -14,6 +14,38 @@ export function calculateGB(volumeBytes: number): number {
 }
 
 /**
+ * Calculate MB from volume in bytes
+ */
+export function calculateMB(volumeBytes: number): number {
+  return volumeBytes / 1024 / 1024;
+}
+
+/**
+ * Format data size for display
+ * Shows MB for sizes < 1GB, GB for sizes >= 1GB
+ * @param volumeBytes - Volume in bytes
+ * @returns Formatted string like "100 MB" or "1.5 GB"
+ */
+export function formatDataSize(volumeBytes: number): { value: string; unit: string } {
+  if (volumeBytes === -1) {
+    return { value: "UL", unit: "" };
+  }
+  
+  const gb = calculateGB(volumeBytes);
+  
+  if (gb < 1) {
+    const mb = calculateMB(volumeBytes);
+    // Round to nearest 10MB for cleaner display
+    const roundedMB = Math.round(mb / 10) * 10;
+    return { value: roundedMB.toString(), unit: "MB" };
+  } else {
+    // Round to 1 decimal for GB
+    const roundedGB = Math.round(gb * 10) / 10;
+    return { value: roundedGB.toFixed(1), unit: "GB" };
+  }
+}
+
+/**
  * Calculate final price with discount (frontend only)
  * This does NOT modify backend data
  * 
@@ -84,50 +116,42 @@ export function getFinalPriceUSD(
 }
 
 /**
- * Check if plan should be visible (>= $3 USD)
- * Backend prices are already in USD, so we compare directly
+ * Check if plan should be visible (>= 100MB)
+ * All plans >= 100MB are visible regardless of price
  */
 export function isPlanVisible(
   plan: Plan,
   discountPercent?: number
 ): boolean {
-  const finalPriceUSD = getFinalPriceUSD(plan, discountPercent);
-  return finalPriceUSD >= 3.0;
+  // Check minimum size (100MB = 100 * 1024 * 1024 bytes)
+  if (plan.volume === -1) {
+    return true; // Unlimited plans are always visible
+  }
+  
+  const minSizeBytes = 100 * 1024 * 1024; // 100MB in bytes
+  if (plan.volume < minSizeBytes) {
+    return false;
+  }
+  
+  // All plans >= 100MB are visible (no price filter)
+  return true;
 }
 
 /**
- * GB sizes we don't sell - filter these out
+ * Group plans by data size
+ * Groups by GB (rounded to 1 decimal) for >= 1GB, or MB (rounded to nearest 10) for < 1GB
  */
-const EXCLUDED_GB_SIZES = [0.5, 1.5, 2.0];
-
-/**
- * Check if a GB size should be excluded
- */
-function isExcludedGBSize(gb: number): boolean {
-  const rounded = Math.round(gb * 10) / 10; // Round to 1 decimal
-  return EXCLUDED_GB_SIZES.includes(rounded);
-}
-
-/**
- * Group plans by data size (GB)
- * Filters out excluded GB sizes (0.5GB, 1.5GB, 2GB)
- */
-export function groupPlansByDataSize(plans: Plan[]): Map<number, Plan[]> {
-  const grouped = new Map<number, Plan[]>();
+export function groupPlansByDataSize(plans: Plan[]): Map<string, Plan[]> {
+  const grouped = new Map<string, Plan[]>();
   
   for (const plan of plans) {
-    const gb = calculateGB(plan.volume);
-    const roundedGB = Math.round(gb * 10) / 10; // Round to 1 decimal
+    const { value, unit } = formatDataSize(plan.volume);
+    const key = `${value} ${unit}`;
     
-    // Skip excluded GB sizes
-    if (isExcludedGBSize(roundedGB)) {
-      continue;
+    if (!grouped.has(key)) {
+      grouped.set(key, []);
     }
-    
-    if (!grouped.has(roundedGB)) {
-      grouped.set(roundedGB, []);
-    }
-    grouped.get(roundedGB)!.push(plan);
+    grouped.get(key)!.push(plan);
   }
   
   return grouped;
@@ -138,14 +162,15 @@ export function groupPlansByDataSize(plans: Plan[]): Map<number, Plan[]> {
  */
 export function getDurationsForSize(
   plans: Plan[],
-  targetGB: number
+  targetSize: string // Format: "100 MB" or "1.5 GB"
 ): Array<{ duration: number; durationUnit: string; plan: Plan }> {
-  const gb = calculateGB;
-  const matches = plans.filter(
-    (plan) => Math.round(gb(plan.volume) * 10) / 10 === targetGB
-  );
+  const matches = plans.filter((plan) => {
+    const { value, unit } = formatDataSize(plan.volume);
+    const planKey = `${value} ${unit}`;
+    return planKey === targetSize;
+  });
   
-  // Filter to only visible plans (>= $3)
+  // Filter to only visible plans (>= 100MB)
   const visible = matches.filter((plan) => {
     const gb = calculateGB(plan.volume);
     const discountPercent = getDiscount(plan.packageCode, gb);
@@ -178,19 +203,12 @@ export function getDurationsForSize(
 }
 
 /**
- * Filter plans to only those >= $3 USD and exclude 0.5GB, 1.5GB, 2GB
+ * Filter plans to only those >= 100MB
  */
 export function filterVisiblePlans(plans: Plan[]): Plan[] {
   return plans.filter((plan) => {
-    // Exclude specific GB sizes we don't sell
     const gb = calculateGB(plan.volume);
-    if (isExcludedGBSize(gb)) {
-      return false;
-    }
-    
-    // Filter by price (>= $3 USD)
     const discountPercent = getDiscount(plan.packageCode, gb);
     return isPlanVisible(plan, discountPercent);
   });
 }
-
