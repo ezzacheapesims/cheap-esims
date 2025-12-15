@@ -67,9 +67,9 @@ export class EsimController {
     const planDetails = await this.esimService.getPlan(planId);
     const locationCode = planDetails.location; // e.g. 'US'
 
-    // 3. Fetch packages for that location
-    // Usually top-ups are just standard packages for the region
-    const packages = await this.esimService.getPackages(locationCode);
+    // 3. Fetch TOPUP-specific packages for that location
+    // Top-ups require packages with type='TOPUP', not regular BASE packages
+    const packages = await this.esimService.getTopupPackages(locationCode, iccid);
     return packages.packageList;
   }
 

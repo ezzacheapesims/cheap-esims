@@ -181,11 +181,22 @@ export class EsimService {
   // ---- 2. GET PACKAGES FOR A COUNTRY ----
   async getPackages(locationCode: string) {
     const result = await this.esimAccess.packages.getPackagesByLocation(locationCode);
+    return this.processPackageList(result?.obj?.packageList || []);
+  }
+
+  // ---- 2b. GET TOPUP PACKAGES FOR A LOCATION/ICCID ----
+  async getTopupPackages(locationCode: string, iccid?: string) {
+    const result = await this.esimAccess.packages.getTopupPlans({ locationCode, iccid });
+    return this.processPackageList(result?.obj?.packageList || []);
+  }
+
+  // Helper method to process package list (shared between getPackages and getTopupPackages)
+  private async processPackageList(rawPackageList: any[]) {
     const isMock = await this.mockEnabled();
 
     // Convert prices from provider format (1/10000th units) to dollars
     // Architecture doc: map price / 10000 -> decimal (2500 = $0.25)
-    const packageList = await Promise.all((result?.obj?.packageList || []).map(async (pkg: any) => {
+    const packageList = await Promise.all(rawPackageList.map(async (pkg: any) => {
       const priceFromProvider = pkg.price; // Provider price in 1/10000th units
       
       // Convert to cents: provider units / 10000 * 100 = cents
