@@ -13,6 +13,7 @@ import { ErrorToastProvider } from "@/components/ui/error-toast-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { LiveChat } from "@/components/LiveChat";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
 
                 <Footer />
                 <Toaster />
+                <LiveChat />
               </body>
             </html>
           </ErrorToastProvider>
