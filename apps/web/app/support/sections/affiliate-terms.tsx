@@ -17,7 +17,7 @@ export function AffiliateTermsOfService() {
               </p>
               <div className="hidden md:block w-1 h-1 bg-black rounded-full"></div>
               <p className="text-gray-600">
-                By participating in the Voyage Affiliate Program, you agree to be bound by these terms.
+                By participating in the Cheap eSIMs Affiliate Program, you agree to be bound by these terms.
               </p>
            </div>
         </div>
@@ -31,12 +31,12 @@ export function AffiliateTermsOfService() {
             </h3>
             <div className="text-gray-600 space-y-2 ml-7">
               <p>
-                The Voyage Affiliate Program allows you to earn commissions by referring new customers to our eSIM marketplace. 
+                The Cheap eSIMs Affiliate Program allows you to earn commissions by referring new customers to our eSIM marketplace. 
                 These terms govern your participation in the program, including how referrals work, how commissions are calculated, 
                 and the rules you must follow.
               </p>
               <p>
-                Participation in the affiliate program is subject to Voyage's approval and ongoing compliance with these terms. 
+                Participation in the affiliate program is subject to Cheap eSIMs' approval and ongoing compliance with these terms. 
                 We reserve the right to modify these terms at any time.
               </p>
             </div>
@@ -49,16 +49,16 @@ export function AffiliateTermsOfService() {
               2. Eligibility
             </h3>
             <div className="text-gray-600 space-y-2 ml-7">
-              <p>To participate in the Voyage Affiliate Program, you must:</p>
+              <p>To participate in the Cheap eSIMs Affiliate Program, you must:</p>
               <ul className="list-disc list-inside space-y-1 ml-4 text-black">
                 <li>Be at least 18 years old</li>
-                <li>Have a valid Voyage account in good standing</li>
+                <li>Have a valid Cheap eSIMs account in good standing</li>
                 <li>Provide accurate and complete information when enrolling</li>
                 <li>Comply with all applicable laws and regulations</li>
-                <li>Not be a competitor of Voyage or engaged in any competing business</li>
+                <li>Not be a competitor of Cheap eSIMs or engaged in any competing business</li>
               </ul>
               <p className="mt-3">
-                Voyage reserves the right to deny or terminate affiliate status at its discretion, including if you violate 
+                Cheap eSIMs reserves the right to deny or terminate affiliate status at its discretion, including if you violate 
                 these terms or engage in fraudulent or harmful activities.
               </p>
             </div>
@@ -91,8 +91,8 @@ export function AffiliateTermsOfService() {
             <div className="bg-red-50 border-2 border-red-600 p-6 shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]">
               <p className="text-red-900 font-black uppercase mb-3 text-sm">The following activities are strictly prohibited and will result in immediate account termination and forfeiture of all commissions:</p>
               <ul className="list-disc list-inside space-y-2 text-red-900 ml-4">
-                <li><strong className="text-black uppercase">Creating multiple accounts:</strong> Creating multiple Voyage accounts to generate additional referrals or commissions</li>
-                <li><strong className="text-black uppercase">Household referrals:</strong> Referring family members or individuals in the same household (determined at Voyage's discretion)</li>
+                <li><strong className="text-black uppercase">Creating multiple accounts:</strong> Creating multiple Cheap eSIMs accounts to generate additional referrals or commissions</li>
+                <li><strong className="text-black uppercase">Household referrals:</strong> Referring family members or individuals in the same household (determined at Cheap eSIMs' discretion)</li>
                 <li><strong className="text-black uppercase">Spamming referral links:</strong> Sending unsolicited emails, messages, or posting referral links in inappropriate places such as forums, comment sections, or social media without permission</li>
                 <li><strong className="text-black uppercase">Incentivizing signups:</strong> Offering payments, rewards, or incentives to users in exchange for using your referral code (e.g., "Use my code and I'll pay you $5")</li>
                 <li><strong className="text-black uppercase">Bots and automation:</strong> Using bots, scripts, automation tools, or any automated systems to generate referrals or simulate user activity</li>
@@ -143,17 +143,17 @@ export function AffiliateTermsOfService() {
                   <li><strong className="text-black uppercase">Purpose:</strong> The holding period prevents fraud, protects against order reversals, chargebacks, and refunds</li>
                   <li><strong className="text-black uppercase">Status:</strong> During the holding period, commissions appear as "pending" in your dashboard</li>
                   <li><strong className="text-black uppercase">Automatic transition:</strong> After the holding period expires, commissions automatically become "available" for payout</li>
-                  <li><strong className="text-black uppercase">Configuration:</strong> The holding period duration is configurable by Voyage and may be adjusted based on business needs</li>
+                  <li><strong className="text-black uppercase">Configuration:</strong> The holding period duration is configurable by Cheap eSIMs and may be adjusted based on business needs</li>
                 </ul>
               </div>
               <div className="bg-white border-2 border-black p-6">
                 <h4 className="text-black font-black uppercase mb-2">Payout Rules</h4>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 ml-4">
-                  <li><strong className="text-black uppercase">Minimum threshold:</strong> A minimum payout threshold may apply (configurable by Voyage, currently defaults to $0)</li>
+                  <li><strong className="text-black uppercase">Minimum threshold:</strong> A minimum payout threshold may apply (configurable by Cheap eSIMs, currently defaults to $0)</li>
                   <li><strong className="text-black uppercase">Available balance only:</strong> You can only request payouts for commissions in "available" status, not "pending" commissions</li>
                   <li><strong className="text-black uppercase">Payout methods:</strong> Payouts can be requested via PayPal, bank transfer (IBAN/SWIFT), or converted to Spare Change (store credit)</li>
-                  <li><strong className="text-black uppercase">Manual review:</strong> All payout requests are reviewed manually by Voyage staff before approval</li>
-                  <li><strong className="text-black uppercase">Fraud risk:</strong> Voyage reserves the right to decline or hold payout requests if fraud risk is detected or if your account is under investigation</li>
+                  <li><strong className="text-black uppercase">Manual review:</strong> All payout requests are reviewed manually by Cheap eSIMs staff before approval</li>
+                  <li><strong className="text-black uppercase">Fraud risk:</strong> Cheap eSIMs reserves the right to decline or hold payout requests if fraud risk is detected or if your account is under investigation</li>
                   <li><strong className="text-black uppercase">Valid information required:</strong> You must provide accurate and valid payout information. Invalid payment details will result in declined payout requests</li>
                   <li><strong className="text-black uppercase">Processing time:</strong> Approved payouts are typically processed within 3-5 business days, but may take longer depending on the payment method</li>
                   <li><strong className="text-black uppercase">One pending request:</strong> You can only have one pending payout request at a time</li>
@@ -173,7 +173,7 @@ export function AffiliateTermsOfService() {
               <ul className="list-disc list-inside space-y-2 text-purple-900 ml-4">
                 <li><strong className="text-black uppercase">Conversion is final:</strong> Converting commission to Spare Change is an irreversible transaction. Once converted, you cannot convert it back to cash or request a payout</li>
                 <li><strong className="text-black uppercase">Instant availability:</strong> Converted commission becomes instantly available as Spare Change (store credit) in your account</li>
-                <li><strong className="text-black uppercase">No cash value:</strong> Spare Change has no cash value and cannot be withdrawn or refunded. It can only be used to purchase eSIM plans and top-ups on the Voyage platform</li>
+                <li><strong className="text-black uppercase">No cash value:</strong> Spare Change has no cash value and cannot be withdrawn or refunded. It can only be used to purchase eSIM plans and top-ups on the Cheap eSIMs platform</li>
                 <li><strong className="text-black uppercase">Available balance only:</strong> You can only convert commissions that are in "available" status (have passed the holding period)</li>
                 <li><strong className="text-black uppercase">Partial conversion:</strong> You can convert any portion of your available commission balance to Spare Change, not necessarily the full amount</li>
                 <li><strong className="text-black uppercase">No expiration:</strong> Spare Change does not expire and remains in your account until used</li>
@@ -188,7 +188,7 @@ export function AffiliateTermsOfService() {
               8. Fraud Detection & Account Freeze
             </h3>
             <div className="bg-orange-50 border-2 border-orange-500 p-6">
-              <p className="text-black font-black uppercase mb-3 text-sm">Voyage employs both automated and manual fraud detection systems:</p>
+              <p className="text-black font-black uppercase mb-3 text-sm">Cheap eSIMs employs both automated and manual fraud detection systems:</p>
               <ul className="list-disc list-inside space-y-2 text-gray-800 ml-4">
                 <li><strong className="text-black uppercase">Automated checks:</strong> Our systems monitor for suspicious patterns, duplicate accounts, unusual referral patterns, and violations of these terms</li>
                 <li><strong className="text-black uppercase">Manual review:</strong> Our team may manually review affiliate accounts, referral patterns, and payout requests</li>
@@ -215,13 +215,13 @@ export function AffiliateTermsOfService() {
             </h3>
             <div className="bg-red-50 border-2 border-red-600 p-6 shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]">
               <ul className="list-disc list-inside space-y-2 text-red-900 ml-4">
-                <li><strong className="text-black uppercase">Voyage's discretion:</strong> Voyage may terminate your affiliate account at its sole discretion, with or without cause, at any time</li>
+                <li><strong className="text-black uppercase">Cheap eSIMs' discretion:</strong> Cheap eSIMs may terminate your affiliate account at its sole discretion, with or without cause, at any time</li>
                 <li><strong className="text-black uppercase">Instant termination:</strong> Fraud, rule violations, prohibited activities, or violations of these terms may result in immediate termination without notice</li>
                 <li><strong className="text-black uppercase">Commission forfeiture:</strong> Upon termination, you forfeit all unpaid commissions and pending payout requests. You will not receive payment for commissions that were pending or available at the time of termination</li>
                 <li><strong className="text-black uppercase">Loss of eligibility:</strong> Once terminated, you lose all payout eligibility and cannot convert remaining commissions to Spare Change</li>
                 <li><strong className="text-black uppercase">Referral link deactivation:</strong> Your referral code and referral link will be immediately deactivated and will no longer generate commissions</li>
-                <li><strong className="text-black uppercase">No reinstatement:</strong> Terminated accounts generally cannot be reinstated. Voyage's decision to terminate is final</li>
-                <li><strong className="text-black uppercase">Reapplication:</strong> You may not reapply for the affiliate program after termination without Voyage's explicit written permission</li>
+                <li><strong className="text-black uppercase">No reinstatement:</strong> Terminated accounts generally cannot be reinstated. Cheap eSIMs' decision to terminate is final</li>
+                <li><strong className="text-black uppercase">Reapplication:</strong> You may not reapply for the affiliate program after termination without Cheap eSIMs' explicit written permission</li>
               </ul>
             </div>
           </section>
@@ -237,9 +237,9 @@ export function AffiliateTermsOfService() {
                 <li><strong className="text-black uppercase">Appeal window:</strong> If you disagree with a decision regarding your affiliate account, payout request, or account freeze, you may appeal within 14 days of the decision</li>
                 <li><strong className="text-black uppercase">Appeal method:</strong> Appeals must be submitted through our support contact form at <Link href="/support/contact" className="text-primary font-bold hover:underline">/support/contact</Link> with the subject "Affiliate Appeal"</li>
                 <li><strong className="text-black uppercase">Required information:</strong> Your appeal must include your affiliate code, email address, a detailed explanation of why you believe the decision was incorrect, and any supporting evidence</li>
-                <li><strong className="text-black uppercase">Manual review:</strong> Appeals are reviewed manually by Voyage staff. The review process may take 5-10 business days</li>
+                <li><strong className="text-black uppercase">Manual review:</strong> Appeals are reviewed manually by Cheap eSIMs staff. The review process may take 5-10 business days</li>
                 <li><strong className="text-black uppercase">No guarantee:</strong> Submitting an appeal does not guarantee reversal of the decision</li>
-                <li><strong className="text-black uppercase">Final decision:</strong> Voyage's decision on appeals is final and binding. There is no further appeal process</li>
+                <li><strong className="text-black uppercase">Final decision:</strong> Cheap eSIMs' decision on appeals is final and binding. There is no further appeal process</li>
                 <li><strong className="text-black uppercase">One appeal per decision:</strong> You may only submit one appeal per decision or action</li>
               </ul>
             </div>
@@ -251,8 +251,8 @@ export function AffiliateTermsOfService() {
             <div className="text-gray-600 space-y-2 ml-4">
               <ul className="list-disc list-inside space-y-2">
                 <li><strong className="text-black uppercase">Your responsibility:</strong> You are solely responsible for declaring and paying all taxes on your affiliate earnings in your jurisdiction</li>
-                <li><strong className="text-black uppercase">Tax advice:</strong> Voyage does not provide tax advice. Consult with a qualified tax professional for guidance on reporting affiliate income</li>
-                <li><strong className="text-black uppercase">No tax withholding:</strong> Voyage does not withhold taxes from affiliate payouts unless required by law</li>
+                <li><strong className="text-black uppercase">Tax advice:</strong> Cheap eSIMs does not provide tax advice. Consult with a qualified tax professional for guidance on reporting affiliate income</li>
+                <li><strong className="text-black uppercase">No tax withholding:</strong> Cheap eSIMs does not withhold taxes from affiliate payouts unless required by law</li>
                 <li><strong className="text-black uppercase">Tax forms:</strong> You may be required to provide tax identification information depending on your location and payout amount</li>
                 <li><strong className="text-black uppercase">Record keeping:</strong> You should maintain records of all commission earnings and payout transactions for tax purposes</li>
               </ul>
@@ -264,10 +264,10 @@ export function AffiliateTermsOfService() {
             <h3 className="text-lg font-black text-black uppercase mb-3">12. Data Processing & Privacy</h3>
             <div className="text-gray-600 space-y-2 ml-4">
               <ul className="list-disc list-inside space-y-2">
-                <li><strong className="text-black uppercase">Privacy policy:</strong> All data processing related to the affiliate program is governed by Voyage's Privacy Policy</li>
-                <li><strong className="text-black uppercase">Data collection:</strong> Voyage collects and processes data necessary to operate the affiliate program, including referral tracking, commission calculations, and payout processing</li>
+                <li><strong className="text-black uppercase">Privacy policy:</strong> All data processing related to the affiliate program is governed by Cheap eSIMs' Privacy Policy</li>
+                <li><strong className="text-black uppercase">Data collection:</strong> Cheap eSIMs collects and processes data necessary to operate the affiliate program, including referral tracking, commission calculations, and payout processing</li>
                 <li><strong className="text-black uppercase">Data sharing:</strong> We may share affiliate data with payment processors, fraud detection services, and other service providers necessary to operate the program</li>
-                <li><strong className="text-black uppercase">Confidentiality:</strong> You agree to keep confidential any non-public information about Voyage's business, customers, or operations that you may learn through your participation in the program</li>
+                <li><strong className="text-black uppercase">Confidentiality:</strong> You agree to keep confidential any non-public information about Cheap eSIMs' business, customers, or operations that you may learn through your participation in the program</li>
               </ul>
             </div>
           </section>
@@ -277,7 +277,7 @@ export function AffiliateTermsOfService() {
             <h3 className="text-lg font-black text-black uppercase mb-3">13. Modifications to This Agreement</h3>
             <div className="text-gray-600 space-y-2 ml-4">
               <ul className="list-disc list-inside space-y-2">
-                <li><strong className="text-black uppercase">Right to modify:</strong> Voyage reserves the right to modify these Affiliate Terms of Service at any time, with or without notice</li>
+                <li><strong className="text-black uppercase">Right to modify:</strong> Cheap eSIMs reserves the right to modify these Affiliate Terms of Service at any time, with or without notice</li>
                 <li><strong className="text-black uppercase">Notification:</strong> We will attempt to notify affiliates of significant changes via email, but it is your responsibility to review these terms periodically</li>
                 <li><strong className="text-black uppercase">Continued participation:</strong> Your continued participation in the affiliate program after modifications are posted constitutes acceptance of the modified terms</li>
                 <li><strong className="text-black uppercase">Disagreement:</strong> If you do not agree to modified terms, you must terminate your participation in the affiliate program immediately</li>
@@ -301,7 +301,7 @@ export function AffiliateTermsOfService() {
 
         <div className="p-6 bg-gray-50 border-t-2 border-black">
           <p className="text-gray-500 font-mono text-xs uppercase font-bold text-center mb-6">
-            By participating in the Voyage Affiliate Program, you acknowledge that you have read, understood, and agree to be bound by these Affiliate Terms of Service. 
+            By participating in the Cheap eSIMs Affiliate Program, you acknowledge that you have read, understood, and agree to be bound by these Affiliate Terms of Service. 
             If you do not agree to these terms, please do not participate in the affiliate program.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

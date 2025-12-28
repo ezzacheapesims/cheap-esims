@@ -51,7 +51,7 @@ export function Troubleshooting() {
             <ul className="list-disc list-inside space-y-1 text-gray-600 ml-4">
               <li><strong className="text-black">iPhone:</strong> Settings → Cellular → [Your eSIM] → Remove Cellular Plan</li>
               <li><strong className="text-black">Android:</strong> Settings → SIM card manager → Remove eSIM</li>
-              <li>Then reinstall using the QR code or activation code from your Voyage account</li>
+              <li>Then reinstall using the QR code or activation code from your Cheap eSIMs account</li>
             </ul>
           </div>
 
@@ -103,7 +103,7 @@ export function Troubleshooting() {
               If scanning from a screen doesn't work:
             </p>
             <ul className="list-disc list-inside space-y-1 text-gray-600 ml-4">
-              <li>Download the QR code image from your Voyage account</li>
+              <li>Download the QR code image from your Cheap eSIMs account</li>
               <li>Print it on a white piece of paper</li>
               <li>Ensure the printed QR code is clear and not smudged</li>
               <li>Scan from the printed copy</li>
@@ -202,7 +202,7 @@ export function Troubleshooting() {
             <ul className="list-disc list-inside space-y-1 text-gray-600 ml-4">
               <li><strong className="text-black">iPhone:</strong> Settings → Cellular → View data usage per app</li>
               <li><strong className="text-black">Android:</strong> Settings → Network & Internet → Data usage</li>
-              <li>Review usage history in your Voyage account</li>
+              <li>Review usage history in your Cheap eSIMs account</li>
             </ul>
           </div>
 

@@ -109,7 +109,7 @@ function SupportContent() {
                   <h2 className="text-2xl font-black uppercase">Affiliate Terms of Service</h2>
                 </div>
                 <p className="text-gray-600 font-mono mb-6">
-                  Rules, guidelines, and payout conditions for Voyage affiliates. Learn about commission structure, referral rules, holding periods, and payout policies.
+                  Rules, guidelines, and payout conditions for Cheap eSIMs affiliates. Learn about commission structure, referral rules, holding periods, and payout policies.
                 </p>
                 <Link href="/support/affiliate-terms">
                   <Button className="w-full md:w-auto bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">

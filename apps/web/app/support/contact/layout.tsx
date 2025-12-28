@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Support - Voyage eSIM",
-  description: "Contact Voyage eSIM support team for help with orders, installation issues, or questions about our eSIM services.",
+  title: "Contact Support - Cheap eSIMs",
+  description: "Contact Cheap eSIMs support team for help with orders, installation issues, or questions about our eSIM services.",
   openGraph: {
-    title: "Contact Support - Voyage eSIM",
+    title: "Contact Support - Cheap eSIMs",
     description: "Contact our support team for assistance with your eSIM needs.",
   },
 };

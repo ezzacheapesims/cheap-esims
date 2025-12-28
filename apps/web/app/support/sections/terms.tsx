@@ -15,7 +15,7 @@ export function TermsOfService() {
              </p>
              <div className="hidden md:block w-1 h-1 bg-black rounded-full"></div>
              <p className="text-gray-600">
-               Please read these Terms of Service carefully before using Voyage eSIM services.
+               Please read these Terms of Service carefully before using Cheap eSIMs services.
              </p>
           </div>
         </div>
@@ -24,7 +24,7 @@ export function TermsOfService() {
           <section>
             <h3 className="text-lg font-black text-black uppercase mb-3 border-b border-black pb-1 inline-block">1. Definitions</h3>
             <div className="text-gray-600 space-y-2 ml-4">
-              <p><strong className="text-black uppercase">"Voyage"</strong> refers to our eSIM marketplace platform and services.</p>
+              <p><strong className="text-black uppercase">"Cheap eSIMs"</strong> refers to our eSIM marketplace platform and services.</p>
               <p><strong className="text-black uppercase">"eSIM"</strong> refers to the electronic SIM profile provided through our platform.</p>
               <p><strong className="text-black uppercase">"Service"</strong> refers to the eSIM data packages and related services we provide.</p>
               <p><strong className="text-black uppercase">"User"</strong> refers to any person or entity using our services.</p>
@@ -84,7 +84,7 @@ export function TermsOfService() {
           <section>
             <h3 className="text-lg font-black text-black uppercase mb-3 border-b border-black pb-1 inline-block">7. Liability Limitations</h3>
             <div className="text-gray-600 space-y-2 ml-4">
-              <p>• Voyage provides eSIM services "as is" without warranties of any kind.</p>
+              <p>• Cheap eSIMs provides eSIM services "as is" without warranties of any kind.</p>
               <p>• We are not responsible for network coverage, signal strength, or connectivity issues.</p>
               <p>• We are not liable for any damages resulting from the use or inability to use our services.</p>
               <p>• Our liability is limited to the amount you paid for the specific eSIM in question.</p>
@@ -124,7 +124,7 @@ export function TermsOfService() {
 
         <div className="p-6 bg-gray-50 border-t-2 border-black">
           <p className="text-gray-500 font-mono text-xs uppercase font-bold text-center">
-            By using Voyage services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+            By using Cheap eSIMs services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
           </p>
         </div>
       </CardContent>
