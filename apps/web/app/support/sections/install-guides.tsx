@@ -27,11 +27,11 @@ export function InstallGuides() {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <p className="text-gray-600 font-mono">
+        <p className="text-gray-600 font-mono font-bold">
           Follow these step-by-step guides to install your eSIM on your device. Installation usually takes less than 5 minutes.
         </p>
         <Link href="/support/device-check" className="inline-block mt-4">
-          <Button className="bg-primary text-black hover:bg-black hover:text-white border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
+          <Button className="bg-primary text-black hover:bg-black hover:text-white border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all w-full sm:w-auto">
             <Smartphone className="h-4 w-4 mr-2" />
             Check if your device supports eSIM
           </Button>
@@ -41,15 +41,15 @@ export function InstallGuides() {
       <Accordion type="single" collapsible className="w-full space-y-4">
         {/* iPhone Installation */}
         <AccordionItem value="iphone" className="border-2 border-black shadow-hard bg-white">
-          <AccordionTrigger className="px-6 py-4 hover:bg-secondary hover:no-underline [&[data-state=open]]:bg-secondary transition-colors">
-            <div className="flex items-center gap-3 text-black text-xl font-black uppercase">
-              <Smartphone className="h-5 w-5" />
-              iPhone Installation Guide
+          <AccordionTrigger className="text-black text-lg md:text-xl font-black uppercase px-6 py-4 hover:bg-secondary hover:no-underline [&[data-state=open]]:bg-secondary transition-colors">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Smartphone className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+              <span className="text-left">iPhone Installation Guide</span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6 pt-4">
             <Card className="bg-white border-2 border-black rounded-none shadow-hard-sm">
-              <CardContent className="p-6 space-y-8">
+              <CardContent className="p-4 sm:p-6 space-y-6 md:space-y-8">
                 
                 {/* Before You Begin */}
                 <div className="bg-blue-50 border-2 border-blue-500 rounded-none p-4">
@@ -67,9 +67,9 @@ export function InstallGuides() {
                   <div className="space-y-6">
                     
                     {/* Step 1 */}
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">1</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black text-sm sm:text-base">1</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Access Cellular Settings</h4>
                         <p className="text-gray-600 font-mono font-bold mb-2">
                           Open <strong className="text-black">Settings</strong> &gt; <strong className="text-black">Cellular</strong> (or <strong className="text-black">Mobile Data</strong>) &gt; <strong className="text-black">Add eSIM</strong>.
@@ -87,9 +87,9 @@ export function InstallGuides() {
                     </div>
 
                     {/* Step 2 */}
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">2</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black text-sm sm:text-base">2</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Scan QR Code</h4>
                         <p className="text-gray-600 font-mono font-bold mb-2">
                           Select <strong className="text-black">Use QR Code</strong> and scan the code provided in your Cheap eSIMs account.
@@ -118,9 +118,9 @@ export function InstallGuides() {
                     </div>
 
                     {/* Step 3 */}
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">3</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black text-sm sm:text-base">3</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Label Your eSIM</h4>
                         <p className="text-gray-600 font-mono font-bold mb-2">
                           Give your new eSIM a name like "Travel" or "Cheap eSIMs" to identify it easily.
@@ -129,9 +129,9 @@ export function InstallGuides() {
                     </div>
 
                     {/* Step 4 */}
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">4</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black text-sm sm:text-base">4</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Set Default Line Preferences</h4>
                         <ul className="list-disc list-inside space-y-1 ml-1 text-gray-600 font-mono font-bold mb-2">
                           <li><strong className="text-black">Default Line:</strong> Primary (for calls/SMS)</li>
@@ -150,9 +150,9 @@ export function InstallGuides() {
                     </div>
 
                     {/* Step 5 */}
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">5</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black text-sm sm:text-base">5</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Configure Network Settings</h4>
                         <p className="text-gray-600 font-mono font-bold mb-2">
                           Go to <strong className="text-black">Settings</strong> &gt; <strong className="text-black">Cellular</strong> &gt; Select your new eSIM:
@@ -185,14 +185,14 @@ export function InstallGuides() {
                   <div className="space-y-6">
                     <p className="text-gray-600 font-mono font-bold">If you cannot scan the QR code, enter details manually.</p>
                     
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">1</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm sm:text-base">1</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Enter Details Manually</h4>
                         <p className="text-gray-600 font-mono font-bold mb-2">
                           Go to <strong className="text-black">Settings</strong> &gt; <strong className="text-black">Cellular</strong> &gt; <strong className="text-black">Add eSIM</strong> &gt; <strong className="text-black">Enter Details Manually</strong>.
                         </p>
-                        <div className="mt-3 rounded-none overflow-hidden border-2 border-black max-w-sm">
+                        <div className="mt-3 rounded-none overflow-hidden border-2 border-black max-w-sm w-full">
                           <Image
                             src="/install-guides/enter-details-manually-esim-iphone-3bb03a24.webp"
                             alt="iPhone Enter Details Manually eSIM screen"
@@ -204,9 +204,9 @@ export function InstallGuides() {
                       </div>
                     </div>
 
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">2</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm sm:text-base">2</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Copy & Paste Info</h4>
                         <p className="text-gray-600 font-mono font-bold mb-3">
                           Copy the SM-DP+ Address and Activation Code from your Cheap eSIMs account:
@@ -250,9 +250,9 @@ export function InstallGuides() {
                       </div>
                     </div>
 
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">3</div>
-                      <div className="flex-1">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm sm:text-base">3</div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-black font-black uppercase mb-1">Finish Setup</h4>
                         <p className="text-gray-600 font-mono font-bold">
                           Follow the prompts to label your plan and configure network settings as shown in Method 1 (Steps 3-5).
@@ -292,15 +292,16 @@ export function InstallGuides() {
 
         {/* Android Installation */}
         <AccordionItem value="android" className="border-2 border-black shadow-hard bg-white">
-          <AccordionTrigger className="px-6 py-4 hover:bg-secondary hover:no-underline [&[data-state=open]]:bg-secondary transition-colors">
-            <div className="flex items-center gap-3 text-black text-xl font-black uppercase">
-              <Smartphone className="h-5 w-5" />
-              Android Installation Guide
+          <AccordionTrigger className="text-black text-lg md:text-xl font-black uppercase px-6 py-4 hover:bg-secondary hover:no-underline [&[data-state=open]]:bg-secondary transition-colors">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Smartphone className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+              <span className="text-left">Android Installation Guide <span className="hidden sm:inline">(Samsung, Google Pixel, etc.)</span></span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6 pt-4">
-            <div className="space-y-6">
-              <div className="space-y-6">
+            <Card className="bg-white border-2 border-black rounded-none shadow-hard-sm">
+              <CardContent className="p-4 sm:p-6 space-y-6">
+                <div className="space-y-4">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-mono border-2 border-black">
                     1
@@ -362,7 +363,8 @@ export function InstallGuides() {
                   </Button>
                 </Link>
               </div>
-            </div>
+              </CardContent>
+            </Card>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

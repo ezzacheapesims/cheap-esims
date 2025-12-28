@@ -24,36 +24,48 @@ function SupportContent() {
   }, [tabParam]);
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">Help Center</h1>
-          <p className="text-gray-500 font-mono font-bold uppercase text-sm">
-            Find answers, installation guides, and get support
+    <div className="min-h-screen py-6 md:py-10">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl md:text-4xl font-black uppercase text-black mb-2">HELP CENTER</h1>
+          <p className="text-sm md:text-base text-gray-600 font-mono uppercase">
+            FIND ANSWERS, INSTALLATION GUIDES, AND GET SUPPORT
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
-          <TabsList className="w-full flex flex-wrap justify-start gap-2 bg-transparent p-0 h-auto">
-            {[
-              { value: "install", icon: FileText, label: "Install Guides" },
-              { value: "troubleshooting", icon: Wrench, label: "Troubleshooting" },
-              { value: "device", icon: Smartphone, label: "Device Check" },
-              { value: "refund", icon: DollarSign, label: "Refund Policy" },
-              { value: "terms", icon: Scale, label: "Terms" },
-              { value: "affiliate-terms", icon: Users, label: "Affiliate Terms" },
-              { value: "contact", icon: Mail, label: "Contact" },
-            ].map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="flex items-center gap-2 border-2 border-transparent data-[state=active]:border-black data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:shadow-hard-sm rounded-none px-4 py-2 font-bold uppercase text-gray-500 hover:text-black transition-all bg-gray-100"
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden md:inline">{tab.label}</span>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="mb-6">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 bg-transparent p-0 h-auto">
+              <TabsTrigger value="install" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <FileText className="h-4 w-4 flex-shrink-0" />
+                <span>INSTALL GUIDES</span>
               </TabsTrigger>
-            ))}
-          </TabsList>
+              <TabsTrigger value="troubleshooting" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <Wrench className="h-4 w-4 flex-shrink-0" />
+                <span>TROUBLESHOOTING</span>
+              </TabsTrigger>
+              <TabsTrigger value="device" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <Smartphone className="h-4 w-4 flex-shrink-0" />
+                <span>DEVICE CHECK</span>
+              </TabsTrigger>
+              <TabsTrigger value="refund" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <DollarSign className="h-4 w-4 flex-shrink-0" />
+                <span>REFUND POLICY</span>
+              </TabsTrigger>
+              <TabsTrigger value="terms" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <Scale className="h-4 w-4 flex-shrink-0" />
+                <span>TERMS</span>
+              </TabsTrigger>
+              <TabsTrigger value="affiliate-terms" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none">
+                <Users className="h-4 w-4 flex-shrink-0" />
+                <span>AFFILIATE TERMS</span>
+              </TabsTrigger>
+              <TabsTrigger value="contact" className="flex items-center gap-2 text-xs sm:text-sm font-black uppercase whitespace-nowrap px-4 py-3 h-auto bg-gray-100 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-black data-[state=active]:border-2 data-[state=active]:border-black rounded-none col-span-3 sm:col-span-4 lg:col-span-6">
+                <Mail className="h-4 w-4 flex-shrink-0" />
+                <span>CONTACT</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <div className="bg-white border-2 border-black p-8 shadow-hard min-h-[400px]">
             <TabsContent value="install" className="mt-0">
@@ -132,11 +144,13 @@ function SupportContent() {
 export default function SupportPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen py-12">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">Help Center</h1>
-            <div className="h-6 w-48 bg-gray-200 animate-pulse"></div>
+      <div className="min-h-screen py-6 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-3xl md:text-4xl font-black uppercase text-black mb-2">HELP CENTER</h1>
+            <p className="text-sm md:text-base text-gray-600 font-mono uppercase">
+              FIND ANSWERS, INSTALLATION GUIDES, AND GET SUPPORT
+            </p>
           </div>
         </div>
       </div>

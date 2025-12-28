@@ -49,10 +49,10 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 space-y-12">
+    <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black mb-2">My Account</h1>
-        <p className="text-gray-500 font-mono uppercase text-sm font-bold">Manage your wallet, rewards & settings</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Account</h1>
+        <p className="text-[var(--voyage-muted)]">Manage your account settings</p>
       </div>
 
       {/* Spare Change Balance Card */}
@@ -81,9 +81,10 @@ export default function AccountPage() {
                     </p>
                 </div>
             </div>
-            <Link href="/account/spare-change">
-                <Button variant="outline" className="border-2 border-black rounded-none shadow-hard-sm hover:shadow-none hover:bg-black hover:text-white font-bold uppercase transition-all">
-                    View History <ArrowRight className="ml-2 h-4 w-4" />
+            <Link href="/account/spare-change" className="inline-block">
+                <Button variant="outline" className="border-[var(--voyage-border)] w-full sm:w-auto">
+                    View V-Cash Details
+                    <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
             </Link>
         </div>
@@ -95,18 +96,19 @@ export default function AccountPage() {
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
                     <div className="p-3 border-2 border-black bg-primary">
-                        <DollarSign className="h-6 w-6 text-black" />
+                        <DollarSign className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-black uppercase">Affiliate Program</h2>
+                    <h2 className="text-2xl font-black uppercase text-black">AFFILIATE PROGRAM</h2>
                 </div>
                 <p className="font-mono text-sm text-gray-600">
                     Earn <span className="font-black text-black bg-primary px-1">10% COMMISSION</span> on all referrals. Share your link and start earning real cash today.
                 </p>
             </div>
             <div className="mt-8">
-                <Link href="/account/affiliate">
-                    <Button className="w-full bg-black text-white hover:bg-primary hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none transition-all">
-                        Affiliate Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                <Link href="/account/affiliate" className="inline-block w-full">
+                    <Button className="bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-bold uppercase w-full">
+                        AFFILIATE DASHBOARD
+                        <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                 </Link>
             </div>
@@ -116,24 +118,24 @@ export default function AccountPage() {
         <div className="bg-white border-2 border-black p-8 shadow-hard hover:shadow-hard-lg transition-all flex flex-col justify-between">
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
-                    <div className="p-3 border-2 border-black bg-secondary">
+                    <div className="p-3 border-2 border-black bg-white">
                         <MessageSquare className="h-6 w-6 text-black" />
                     </div>
-                    <h2 className="text-2xl font-black uppercase">Support Tickets</h2>
+                    <h2 className="text-2xl font-black uppercase text-black">SUPPORT TICKETS</h2>
                 </div>
                 <p className="font-mono text-sm text-gray-600">
                     Need help? Track your existing requests or submit a new inquiry to our support team.
                 </p>
             </div>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-8 flex gap-3">
                 <Link href="/account/support" className="flex-1">
-                    <Button variant="outline" className="w-full border-2 border-black rounded-none font-bold uppercase hover:bg-secondary">
-                        My Tickets
+                    <Button variant="outline" className="border-2 border-black bg-white text-black hover:bg-gray-100 rounded-none font-bold uppercase w-full">
+                        MY TICKETS
                     </Button>
                 </Link>
                 <Link href="/support/contact" className="flex-1">
-                    <Button className="w-full bg-black text-white hover:bg-white hover:text-black border-2 border-black rounded-none font-bold uppercase shadow-hard-sm hover:shadow-none">
-                        New Ticket
+                    <Button className="bg-black text-white hover:bg-gray-800 border-2 border-black rounded-none font-bold uppercase w-full">
+                        NEW TICKET
                     </Button>
                 </Link>
             </div>

@@ -106,4 +106,13 @@
   .shadow-hard-lg {
     box-shadow: 8px 8px 0px 0px var(--foreground);
   }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }

@@ -6,6 +6,7 @@ import { calculateFinalPrice, formatDataSize, calculateGB } from "@/lib/plan-uti
 import { Button } from "@/components/ui/button";
 import { getPlanFlagLabels } from "@/lib/plan-flags";
 import { PlanFlags } from "./PlanFlags";
+import { FlagIcon } from "./FlagIcon";
 
 export interface Plan {
   packageCode: string;
@@ -75,10 +76,27 @@ export function PlanCard({ plan }: PlanCardProps) {
            
            {/* Plan Flags (IP type, FUP, etc.) - neutral variant for list page */}
            <PlanFlags plan={plan} variant="neutral" />
+           {/* Flags mini-list if multi-region */}
            {plan.locationNetworkList && plan.locationNetworkList.length > 1 && (
-             <p className="text-[10px] font-mono text-gray-500">
-               + {plan.locationNetworkList.length} Regions
-             </p>
+             <div className="flex -space-x-2 overflow-hidden py-1">
+               {plan.locationNetworkList.slice(0, 5).map((net, i) => {
+                 const locationCode = net.locationCode?.trim().toLowerCase().split('-')[0] || '';
+                 return (
+                   <div key={i} className="relative h-6 w-6 rounded-full border-2 border-[var(--voyage-card)] bg-[var(--voyage-bg)] overflow-hidden flex-shrink-0 shadow-sm">
+                     <FlagIcon 
+                       logoUrl={`https://flagcdn.com/w320/${locationCode}.png`}
+                       alt={net.locationCode || ''}
+                       className="h-full w-full object-cover"
+                     />
+                   </div>
+                 );
+               })}
+               {plan.locationNetworkList.length > 5 && (
+                 <div className="relative h-6 w-6 rounded-full border-2 border-[var(--voyage-card)] bg-[var(--voyage-bg-light)] flex items-center justify-center text-[8px] font-semibold text-[var(--voyage-muted)] flex-shrink-0">
+                   +{plan.locationNetworkList.length - 5}
+                 </div>
+               )}
+             </div>
            )}
         </div>
 

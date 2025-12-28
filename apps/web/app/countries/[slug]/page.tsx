@@ -30,7 +30,8 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
   
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [redirecting, setRedirecting] = useState(isCode);
+  const [redirecting, setRedirecting] = useState(true);
+  const [isRegion, setIsRegion] = useState(false);
   // Default to lowest price first so users see the cheapest option by default
   const [sortBy, setSortBy] = useState<"days" | "price" | "dataSize" | "name">("price");
   
@@ -41,19 +42,48 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
   }, []);
 
   useEffect(() => {
-    if (isCode) {
-      const properSlug = getSlugFromCode(slug.toUpperCase()) || slug.toLowerCase();
-      if (properSlug !== slug.toLowerCase()) {
-        router.replace(`/countries/${properSlug}`);
+    // Check if this is a region code (like EU-42) and redirect to /regions/
+    const checkAndRedirect = async () => {
+      try {
+        const locationsData = await safeFetch<any>(`${apiUrl}/countries`, { showToast: false });
+        const locationsArray = Array.isArray(locationsData) ? locationsData : (locationsData.locationList || []);
+        const location = locationsArray.find((loc: any) => 
+          loc.code.toUpperCase() === slug.toUpperCase()
+        );
+        
+        // If it's a region (type 2), redirect to /regions/
+        if (location && location.type === 2) {
+          setIsRegion(true);
+          router.replace(`/regions/${slug.toLowerCase()}`);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to check location type", e);
+      }
+      
+      setIsRegion(false);
+      // Otherwise, handle as country
+      if (isCode) {
+        const properSlug = getSlugFromCode(slug.toUpperCase()) || slug.toLowerCase();
+        if (properSlug !== slug.toLowerCase()) {
+          router.replace(`/countries/${properSlug}`);
+        } else {
+          setRedirecting(false);
+        }
       } else {
         setRedirecting(false);
       }
-    } else {
-      setRedirecting(false);
-    }
-  }, [slug, isCode, router]);
+    };
+    
+    checkAndRedirect();
+  }, [slug, isCode, router, apiUrl]);
   
   useEffect(() => {
+    // Don't fetch plans if redirecting or if it's a region
+    if (redirecting || isRegion) {
+      return;
+    }
+    
     const fetchPlans = async () => {
       try {
         // Backend still uses country code
@@ -75,7 +105,7 @@ export default function CountryPlansPageSlug({ params }: { params: { slug: strin
       }
     };
     fetchPlans();
-  }, [countryCode, apiUrl]);
+  }, [countryCode, apiUrl, redirecting, isRegion]);
 
   const visiblePlans = filterVisiblePlans(plans);
   

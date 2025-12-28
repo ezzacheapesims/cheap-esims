@@ -14,11 +14,14 @@ interface Country {
   code: string;
   name: string;
   locationLogo?: string;
+  type?: number; // 1 = country, 2 = region
 }
 
 export default function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
+  const [regions, setRegions] = useState<Country[]>([]);
   const [filtered, setFiltered] = useState<Country[]>([]);
+  const [filteredRegions, setFilteredRegions] = useState<Country[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -27,11 +30,23 @@ export default function Home() {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
         const data = await safeFetch<any>(`${apiUrl}/countries`, { showToast: false });
+        console.log('[HOME] Received countries data:', data);
+        // Handle both array and { locationList: [...] } formats
+        const locationArray = Array.isArray(data) ? data : (data.locationList || []);
+        console.log('[HOME] Locations array:', locationArray.slice(0, 3));
         
-        const countriesArray = Array.isArray(data) ? data : (data.locationList || []);
-        const sorted = (countriesArray || []).sort((a: Country, b: Country) => a.name.localeCompare(b.name));
-        setCountries(sorted);
-        setFiltered(sorted);
+        // Separate countries (type === 1) from regions (type === 2)
+        // Explicitly filter: countries must be type === 1, regions must be type === 2
+        const countriesList = locationArray.filter((item: Country) => item.type === 1); // Only countries
+        const regionsList = locationArray.filter((item: Country) => item.type === 2); // Only regions
+        
+        const sortedCountries = countriesList.sort((a: Country, b: Country) => a.name.localeCompare(b.name));
+        const sortedRegions = regionsList.sort((a: Country, b: Country) => a.name.localeCompare(b.name));
+        
+        setCountries(sortedCountries);
+        setRegions(sortedRegions);
+        setFiltered(sortedCountries);
+        setFilteredRegions(sortedRegions);
       } catch (error) {
         console.error("Failed to fetch countries", error);
       } finally {
@@ -65,13 +80,15 @@ export default function Home() {
   useEffect(() => {
     if (!search) {
       setFiltered(countries);
+      setFilteredRegions(regions);
     } else {
       const lower = search.toLowerCase();
       setFiltered(countries.filter(c => c.name.toLowerCase().includes(lower)));
+      setFilteredRegions(regions.filter(r => r.name.toLowerCase().includes(lower)));
     }
-  }, [search, countries]);
+  }, [search, countries, regions]);
 
-  const regions: Region[] = ["asia", "europe", "north-america", "south-america", "africa", "oceania", "global"];
+  const regionGroups: Region[] = ["asia", "europe", "north-america", "south-america", "africa", "oceania", "global"];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -101,7 +118,7 @@ export default function Home() {
 
             {/* Quick Region Links */}
             <div className="hidden lg:grid grid-cols-2 gap-4">
-                {regions.slice(0, 4).map(region => (
+                {regionGroups.slice(0, 4).map(region => (
                    <Link key={region} href={`/regions/${region}`} className="bg-white border-2 border-black p-4 shadow-hard hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-between group">
                       <div>
                          <span className="block text-xs font-mono text-gray-500 uppercase">Region</span>
@@ -125,7 +142,7 @@ export default function Home() {
                   </h2>
                </div>
                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                  {regions.map((region) => (
+                  {regionGroups.map((region) => (
                     <Link 
                       key={region} 
                       href={`/regions/${region}`}
@@ -138,12 +155,12 @@ export default function Home() {
             </div>
           )}
 
-          {/* Main Grid */}
+          {/* All Countries Grid (type 1 only) */}
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b-2 border-black pb-2">
                <h2 className="text-2xl font-black uppercase flex items-center gap-2">
                  <Globe className="h-6 w-6" /> 
-                 {search ? `Searching: "${search}"` : "All Destinations"}
+                 {search ? `Search Results` : "All Countries"}
                </h2>
                <span className="font-mono text-sm bg-black text-white px-2 py-1">
                  {filtered.length} AVAILABLE
@@ -161,18 +178,27 @@ export default function Home() {
                  {filtered.map((country) => (
                     <CountryCard key={country.code} country={country} />
                  ))}
-               </div>
-            )}
-            
-            {!loading && filtered.length === 0 && (
-               <div className="text-center py-20 border-2 border-dashed border-gray-300">
-                  <p className="font-bold text-gray-400 text-lg">No destinations found.</p>
-                  <Button variant="link" onClick={() => setSearch("")} className="text-primary font-bold text-xl">
-                    View All
-                  </Button>
+                 
+                 {filtered.length === 0 && !loading && (
+                    <div className="col-span-full text-center py-20 border-2 border-dashed border-gray-300">
+                      {search ? `No countries found matching "${search}"` : "No countries available"}
+                    </div>
+                 )}
                </div>
             )}
           </div>
+
+          {/* Regions List (type 2) */}
+          {!search && filteredRegions.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-2xl font-black uppercase">Regions</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 animate-in fade-in duration-1000">
+                {filteredRegions.map((region) => (
+                  <CountryCard key={region.code} country={region} />
+                ))}
+              </div>
+            </div>
+          )}
        </div>
     </div>
   );
