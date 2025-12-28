@@ -7,9 +7,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { QrCode, Signal, RefreshCw, Calendar, HardDrive, Download, Copy, CheckCircle2, AlertCircle } from "lucide-react";
+import { QrCode, Signal, RefreshCw, Calendar, HardDrive, Download, Copy, CheckCircle2, AlertCircle, ShoppingBag, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { safeFetch } from "@/lib/safe-fetch";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ExpiryCountdown } from "@/components/esim/expiry-countdown";
@@ -141,6 +143,8 @@ export default function MyEsimsPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 md:px-8 py-8">
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'My eSIMs' }]} />
+      
       <div className="flex items-center justify-between border-b-2 border-black pb-4">
         <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black">My eSIMs</h1>
         <Button 
@@ -167,6 +171,18 @@ export default function MyEsimsPage() {
            <RefreshCw className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Continue Shopping Link */}
+      <div className="bg-white border-2 border-black p-4 shadow-hard-sm">
+        <Link href="/" className="flex items-center gap-2 text-black hover:text-primary transition-colors group">
+          <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
+          <span className="font-black uppercase">Continue Shopping</span>
+          <ArrowRight className="h-4 w-4 ml-auto group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+
+      {/* Recently Viewed */}
+      <RecentlyViewed />
 
       {loading ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -180,6 +180,52 @@ export class EsimService {
     };
   }
 
+  // ---- SEARCH COUNTRIES AND PLANS ----
+  async search(query: string) {
+    const queryLower = query.toLowerCase();
+    const locations = await this.getLocations();
+    const allLocations = locations.locationList || [];
+    
+    // Search countries (type 1 only)
+    const matchingCountries = allLocations
+      .filter((loc: any) => loc.type === 1)
+      .filter((loc: any) => 
+        loc.name.toLowerCase().includes(queryLower) ||
+        loc.code.toLowerCase().includes(queryLower)
+      )
+      .slice(0, 10); // Limit to 10 countries
+    
+    // Search plans by name (search in popular countries first)
+    const popularCountryCodes = ['US', 'GB', 'FR', 'JP', 'AU', 'DE', 'IT', 'ES', 'TH', 'SG'];
+    const matchingPlans: any[] = [];
+    
+    for (const countryCode of popularCountryCodes) {
+      if (matchingPlans.length >= 10) break; // Limit to 10 plans total
+      
+      try {
+        const packages = await this.getPackages(countryCode);
+        const packageList = packages.packageList || [];
+        
+        const countryPlans = packageList
+          .filter((plan: any) => 
+            plan.name?.toLowerCase().includes(queryLower) ||
+            plan.packageCode?.toLowerCase().includes(queryLower)
+          )
+          .slice(0, 10 - matchingPlans.length);
+        
+        matchingPlans.push(...countryPlans);
+      } catch (error) {
+        // Skip countries that fail
+        continue;
+      }
+    }
+    
+    return {
+      countries: matchingCountries,
+      plans: matchingPlans,
+    };
+  }
+
   // ---- 2. GET PACKAGES FOR A COUNTRY ----
   async getPackages(locationCode: string) {
     const result = await this.esimAccess.packages.getPackagesByLocation(locationCode);

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DollarSign, ArrowRight, Wallet, MessageSquare } from "lucide-react";
+import { DollarSign, ArrowRight, Wallet, MessageSquare, ShoppingBag } from "lucide-react";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { safeFetch } from "@/lib/safe-fetch";
 
 interface SpareChangeBalance {
@@ -50,10 +52,24 @@ export default function AccountPage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Account' }]} />
+      
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Account</h1>
-        <p className="text-[var(--voyage-muted)]">Manage your account settings</p>
+        <h1 className="text-3xl font-black uppercase text-black mb-2">ACCOUNT</h1>
+        <p className="text-sm font-mono font-bold text-gray-600 uppercase">Manage your account settings</p>
       </div>
+
+      {/* Continue Shopping Link */}
+      <div className="bg-white border-2 border-black p-4 shadow-hard-sm">
+        <Link href="/" className="flex items-center gap-2 text-black hover:text-primary transition-colors group">
+          <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
+          <span className="font-black uppercase">Continue Shopping</span>
+          <ArrowRight className="h-4 w-4 ml-auto group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+
+      {/* Recently Viewed */}
+      <RecentlyViewed />
 
       {/* Spare Change Balance Card */}
       <div className="bg-white border-2 border-black p-8 shadow-hard relative overflow-hidden group hover:shadow-hard-lg transition-all">

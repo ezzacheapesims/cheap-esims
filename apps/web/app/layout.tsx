@@ -12,6 +12,7 @@ import { SignupTracker } from "@/components/SignupTracker";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { ErrorToastProvider } from "@/components/ui/error-toast-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { KeyboardNavigationProvider } from "@/components/KeyboardNavigationProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LiveChat } from "@/components/LiveChat";
@@ -33,37 +34,39 @@ export default function RootLayout({
       <ClerkProvider>
         <CurrencyProvider>
           <ErrorToastProvider>
-            <html lang="en">
-              <body className={`${inter.className} bg-background text-foreground min-h-screen antialiased flex flex-col`}>
-                {/* Google tag (gtag.js) */}
-                <Script
-                  src="https://www.googletagmanager.com/gtag/js?id=AW-17809762142"
-                  strategy="afterInteractive"
-                />
-                <Script id="google-analytics" strategy="afterInteractive">
-                  {`
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'AW-17809762142');
-                  `}
-                </Script>
-                
-                <Navbar />
-                
-                <main className="flex-1 w-full">
-                   <ReferralTracker />
-                   <SignedIn>
-                     <SignupTracker />
-                   </SignedIn>
-                   {children}
-                </main>
+            <KeyboardNavigationProvider>
+              <html lang="en">
+                <body className={`${inter.className} bg-background text-foreground min-h-screen antialiased flex flex-col`}>
+                  {/* Google tag (gtag.js) */}
+                  <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=AW-17809762142"
+                    strategy="afterInteractive"
+                  />
+                  <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', 'AW-17809762142');
+                    `}
+                  </Script>
+                  
+                  <Navbar />
+                  
+                  <main className="flex-1 w-full">
+                     <ReferralTracker />
+                     <SignedIn>
+                       <SignupTracker />
+                     </SignedIn>
+                     {children}
+                  </main>
 
-                <Footer />
-                <Toaster />
-                <LiveChat />
-              </body>
-            </html>
+                  <Footer />
+                  <Toaster />
+                  <LiveChat />
+                </body>
+              </html>
+            </KeyboardNavigationProvider>
           </ErrorToastProvider>
         </CurrencyProvider>
       </ClerkProvider>

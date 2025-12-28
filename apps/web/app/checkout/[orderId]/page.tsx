@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { safeFetch } from "@/lib/safe-fetch";
 import { formatCurrency } from "@/lib/utils";
@@ -94,11 +95,13 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
   return (
     <div className="min-h-screen bg-white py-8">
       <div className="max-w-4xl mx-auto px-4">
-        <Link href="/">
-          <Button variant="ghost" className="mb-6 pl-0 hover:pl-2 hover:bg-transparent text-gray-500 hover:text-black transition-all font-mono uppercase text-sm font-bold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
-          </Button>
-        </Link>
+        <Breadcrumbs 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Checkout', href: `/checkout/${orderId}` },
+          ]}
+          className="mb-6"
+        />
 
         <div className="bg-white border-2 border-black p-8 shadow-hard">
           <h1 className="text-3xl font-black uppercase tracking-tighter mb-6">Order Review</h1>

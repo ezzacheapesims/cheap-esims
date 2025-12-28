@@ -6,10 +6,12 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlanDetails } from "@/components/PlanDetails";
 import { PlanDetailsSkeleton } from "@/components/skeletons";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { safeFetch } from "@/lib/safe-fetch";
 import { useParams, useRouter } from "next/navigation";
 import { fetchDiscounts } from "@/lib/admin-discounts";
 import { getSlugFromCode } from "@/lib/country-slugs";
+import { addRecentlyViewed } from "@/lib/recently-viewed";
 
 export default function PlanPage() {
   const params = useParams();
@@ -31,6 +33,16 @@ export default function PlanPage() {
       try {
         const data = await safeFetch<any>(`${apiUrl}/plans/${id}`, { showToast: false });
         setPlan(data);
+        
+        // Add to recently viewed
+        if (data) {
+          addRecentlyViewed({
+            id: data.packageCode || id,
+            type: 'plan',
+            name: data.name || id,
+            href: `/plans/${id}`,
+          });
+        }
       } catch (error) {
         console.error("Failed to fetch plan:", error);
       } finally {
@@ -88,21 +100,13 @@ export default function PlanPage() {
 
   return (
     <div className="space-y-6">
-      {useBackNavigation ? (
-        <Button 
-          variant="ghost" 
-          className="pl-0 hover:pl-2 hover:bg-transparent text-gray-500 hover:text-black transition-all font-mono uppercase text-sm font-bold"
-          onClick={handleBackClick}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Plans
-        </Button>
-      ) : (
-        <Link href={backUrl}>
-          <Button variant="ghost" className="pl-0 hover:pl-2 hover:bg-transparent text-gray-500 hover:text-black transition-all font-mono uppercase text-sm font-bold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Plans
-          </Button>
-        </Link>
-      )}
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Plans', href: '/' },
+          { label: plan?.name || id },
+        ]}
+      />
       
       <PlanDetails plan={plan} />
     </div>
