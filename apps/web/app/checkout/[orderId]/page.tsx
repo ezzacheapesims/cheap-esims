@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { safeFetch } from "@/lib/safe-fetch";
-import { useCurrency } from "@/hooks/useCurrency";
+import { formatCurrency } from "@/lib/utils";
 
 interface Order {
   id: string;
@@ -28,7 +28,6 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [redirecting, setRedirecting] = useState(false);
-  const { formatCurrency } = useCurrency();
 
   useEffect(() => {
     const fetchOrder = async () => {

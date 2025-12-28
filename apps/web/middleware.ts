@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/support(.*)',
   '/device-check(.*)',
+  '/checkout(.*)', // Allow checkout routes for guest checkout
   '/api/csrf-token', // Allow CSRF token endpoint to be public
   '/.well-known(.*)', // Exclude .well-known routes (Chrome DevTools, etc.)
 ]);
