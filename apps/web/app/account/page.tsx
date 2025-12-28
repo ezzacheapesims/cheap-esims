@@ -60,13 +60,20 @@ export default function AccountPage() {
       </div>
 
       {/* Continue Shopping Link */}
-      <div className="bg-white border-2 border-black p-4 shadow-hard-sm">
-        <Link href="/" className="flex items-center gap-2 text-black hover:text-primary transition-colors group">
-          <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
-          <span className="font-black uppercase">Continue Shopping</span>
-          <ArrowRight className="h-4 w-4 ml-auto group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </div>
+      <Link href="/" className="block group">
+        <div className="bg-black text-white p-4 shadow-hard hover:bg-primary hover:text-black hover:shadow-hard-lg transition-all border-2 border-black flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="bg-white/10 group-hover:bg-black/10 p-2 rounded-none">
+              <ShoppingBag className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-black uppercase tracking-tighter text-lg">Continue Shopping</h3>
+              <p className="text-xs font-mono opacity-80 group-hover:opacity-100 uppercase">Browse more destinations</p>
+            </div>
+          </div>
+          <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
+        </div>
+      </Link>
 
       {/* Recently Viewed */}
       <RecentlyViewed />

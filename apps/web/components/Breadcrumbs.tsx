@@ -46,28 +46,28 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
   }
 
   return (
-    <nav className={`flex items-center gap-2 text-sm font-mono font-bold uppercase ${className}`} aria-label="Breadcrumb">
+    <nav className={`flex items-center gap-2 text-xs font-black uppercase tracking-tight ${className}`} aria-label="Breadcrumb">
       {breadcrumbs.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           {index === 0 ? (
             <Link
               href={item.href || '/'}
-              className="text-gray-600 hover:text-black transition-colors flex items-center gap-1"
+              className="text-gray-500 hover:text-primary transition-colors flex items-center gap-1 group"
             >
-              <Home className="h-3 w-3" />
+              <Home className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </Link>
           ) : (
             <>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="h-3 w-3 text-gray-400" />
               {item.href && index < breadcrumbs.length - 1 ? (
                 <Link
                   href={item.href}
-                  className="text-gray-600 hover:text-black transition-colors"
+                  className="text-gray-500 hover:text-black hover:underline decoration-2 underline-offset-4 transition-all"
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-black">{item.label}</span>
+                <span className="text-black bg-primary/20 px-2 py-0.5 border border-primary/30">{item.label}</span>
               )}
             </>
           )}
