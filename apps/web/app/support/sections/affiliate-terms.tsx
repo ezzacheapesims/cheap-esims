@@ -97,12 +97,12 @@ export function AffiliateTermsOfService() {
                 <li><strong className="text-black uppercase">Incentivizing signups:</strong> Offering payments, rewards, or incentives to users in exchange for using your referral code (e.g., "Use my code and I'll pay you $5")</li>
                 <li><strong className="text-black uppercase">Bots and automation:</strong> Using bots, scripts, automation tools, or any automated systems to generate referrals or simulate user activity</li>
                 <li><strong className="text-black uppercase">VPNs, proxies, and Tor:</strong> Using VPNs, proxies, Tor networks, or any IP masking services to create false referrals or bypass fraud detection</li>
-                <li><strong className="text-black uppercase">Paid traffic without approval:</strong> Purchasing ads or paid traffic to promote your referral link without explicit written approval from Voyage</li>
+                <li><strong className="text-black uppercase">Paid traffic without approval:</strong> Purchasing ads or paid traffic to promote your referral link without explicit written approval from Cheap eSIMs</li>
                 <li><strong className="text-black uppercase">Coupon/discount sites:</strong> Posting your referral code on coupon sites, discount aggregators, or code-sharing platforms</li>
-                <li><strong className="text-black uppercase">Misleading promotion:</strong> Sharing your referral code in misleading ways, such as claiming it provides discounts that don't exist or misrepresenting what Voyage offers</li>
+                <li><strong className="text-black uppercase">Misleading promotion:</strong> Sharing your referral code in misleading ways, such as claiming it provides discounts that don't exist or misrepresenting what Cheap eSIMs offers</li>
                 <li><strong className="text-black uppercase">Fake reviews or testimonials:</strong> Creating fake reviews, testimonials, or social media posts to promote your referral code</li>
-                <li><strong className="text-black uppercase">Trademark infringement:</strong> Using Voyage's trademarks, logos, or brand assets without permission</li>
-                <li><strong className="text-black uppercase">Identity deception:</strong> Impersonating Voyage staff, representatives, or official accounts</li>
+                <li><strong className="text-black uppercase">Trademark infringement:</strong> Using Cheap eSIMs' trademarks, logos, or brand assets without permission</li>
+                <li><strong className="text-black uppercase">Identity deception:</strong> Impersonating Cheap eSIMs staff, representatives, or official accounts</li>
               </ul>
               <p className="text-black font-black uppercase mt-4 text-xs">
                 Violation of any prohibited activity will result in immediate termination of your affiliate account, forfeiture of all unpaid commissions, and potential legal action.
