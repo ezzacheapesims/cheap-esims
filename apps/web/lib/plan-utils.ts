@@ -307,7 +307,12 @@ export function deduplicatePlans(plans: Plan[]): Plan[] {
   // For each group, prefer IIJ for Japan, nonhkip for others
   const deduplicated: Plan[] = [];
   
-  for (const [key, group] of planMap.entries()) {
+  // Convert Map entries to array for iteration compatibility
+  const entries = Array.from(planMap.entries());
+  
+  for (let i = 0; i < entries.length; i++) {
+    const [key, group] = entries[i];
+    
     if (group.length === 1) {
       // Only one plan, keep it
       deduplicated.push(group[0]);
