@@ -93,12 +93,39 @@ function formatPlanName(planDetails: PlanDetails | undefined, planId?: string): 
   if (planDetails?.name) {
     // Clean flags from plan name for display
     const flagInfo = getPlanFlagLabels({ name: planDetails.name });
-    return flagInfo.cleanedName || planDetails.name;
+    let name = flagInfo.cleanedName || planDetails.name;
+    
+    // Check if it's an unlimited plan (2GB + FUP1Mbps)
+    const isUnlimitedPlan = planDetails.volume && isDailyUnlimitedPlan({
+      volume: planDetails.volume,
+      name: planDetails.name,
+      duration: planDetails.duration || 0,
+      durationUnit: planDetails.durationUnit || 'day',
+    } as any);
+    
+    // Replace "2GB" with "Unlimited" for unlimited plans
+    if (isUnlimitedPlan) {
+      name = name
+        .replace(/\b2\s*gb\b/gi, 'Unlimited')
+        .replace(/\b2gb\b/gi, 'Unlimited')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    
+    return name;
   }
   
   if (planDetails) {
     const location = planDetails.locationCode || '';
-    const volume = planDetails.volume ? formatBytes(planDetails.volume) : '';
+    // Check if it's an unlimited plan
+    const isUnlimitedPlan = planDetails.volume && isDailyUnlimitedPlan({
+      volume: planDetails.volume,
+      name: planDetails.name || '',
+      duration: planDetails.duration || 0,
+      durationUnit: planDetails.durationUnit || 'day',
+    } as any);
+    
+    const volume = isUnlimitedPlan ? 'Unlimited' : (planDetails.volume ? formatBytes(planDetails.volume) : '');
     const duration = planDetails.duration ? `${planDetails.duration} ${planDetails.durationUnit || 'Days'}` : '';
     
     const parts = [location, volume, duration].filter(Boolean);
@@ -295,7 +322,14 @@ export default function MyEsimsPage() {
                         </div>
                         <div className="text-right">
                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">DATA</p>
-                           <p className="font-bold text-xl text-black">{formatBytes(esim.totalVolume)}</p>
+                           <p className="font-bold text-xl text-black">
+                             {esim.planDetails && isDailyUnlimitedPlan({
+                               volume: esim.planDetails.volume || 0,
+                               name: esim.planDetails.name || '',
+                               duration: esim.planDetails.duration || 0,
+                               durationUnit: esim.planDetails.durationUnit || 'day',
+                             } as any) ? 'Unlimited' : formatBytes(esim.totalVolume)}
+                           </p>
                         </div>
                     </div>
 

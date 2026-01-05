@@ -12,6 +12,8 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchDiscounts } from "@/lib/admin-discounts";
 import { getSlugFromCode } from "@/lib/country-slugs";
 import { addRecentlyViewed } from "@/lib/recently-viewed";
+import { isDailyUnlimitedPlan } from "@/lib/plan-utils";
+import { getPlanFlagLabels } from "@/lib/plan-flags";
 
 export default function PlanPage() {
   const params = useParams();
@@ -100,13 +102,32 @@ export default function PlanPage() {
     }
   };
 
+  // Format breadcrumb label - remove "2GB" and replace with "Unlimited" for unlimited plans
+  const getBreadcrumbLabel = () => {
+    if (!plan) return id;
+    
+    const isUnlimitedPlan = isDailyUnlimitedPlan(plan);
+    const flagInfo = getPlanFlagLabels(plan);
+    let name = flagInfo.cleanedName || plan.name;
+    
+    if (isUnlimitedPlan) {
+      name = name
+        .replace(/\b2\s*gb\b/gi, 'Unlimited')
+        .replace(/\b2gb\b/gi, 'Unlimited')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    
+    return name;
+  };
+
   return (
     <div className="space-y-6">
       <Breadcrumbs 
         items={[
           { label: 'Home', href: '/' },
           { label: 'Plans', href: '/' },
-          { label: plan?.name || id },
+          { label: getBreadcrumbLabel() },
         ]}
       />
       

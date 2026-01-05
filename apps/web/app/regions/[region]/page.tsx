@@ -10,7 +10,8 @@ import { safeFetch } from "@/lib/safe-fetch";
 import { getCountriesForRegion, REGION_NAMES, Region } from "@/lib/regions";
 import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { getDiscount, fetchDiscounts } from "@/lib/admin-discounts";
-import { calculateGB, calculateFinalPrice } from "@/lib/plan-utils";
+import { calculateGB, calculateFinalPrice, filterVisiblePlans, isDailyUnlimitedPlan, deduplicatePlans } from "@/lib/plan-utils";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 interface Country {
   code: string;
@@ -45,6 +46,7 @@ export default function RegionPage({ params }: { params: { region: string } }) {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [regionInfo, setRegionInfo] = useState<Country | null>(null);
+  const [activeTab, setActiveTab] = useState<"standard" | "unlimited">("standard");
   
   const { convert, formatCurrency } = useCurrency();
 
@@ -70,7 +72,10 @@ export default function RegionPage({ params }: { params: { region: string } }) {
           
           // Fetch plans for this region code
           const plansData = await safeFetch<Plan[]>(`${apiUrl}/countries/${regionCode}/plans`, { showToast: false });
-          setPlans(plansData || []);
+          const visiblePlans = filterVisiblePlans(plansData || []);
+          // Deduplicate plans: prefer IIJ versions when duplicates exist
+          const deduplicatedPlans = deduplicatePlans(visiblePlans);
+          setPlans(deduplicatedPlans);
         } catch (error) {
           console.error("Failed to fetch region plans", error);
         } finally {
@@ -182,11 +187,63 @@ export default function RegionPage({ params }: { params: { region: string } }) {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {plans.map((plan) => (
-                <PlanCard key={plan.packageCode} plan={plan} />
-              ))}
-            </div>
+            (() => {
+              // Separate plans into Standard and Unlimited
+              const standardPlans = plans.filter(plan => !isDailyUnlimitedPlan(plan));
+              const unlimitedPlans = plans.filter(plan => isDailyUnlimitedPlan(plan));
+              
+              return (
+                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "standard" | "unlimited")} className="space-y-6">
+                  {/* Tab Headers */}
+                  <div className="flex items-center justify-between border-b border-gray-200">
+                    <TabsList className="bg-transparent p-0 h-auto gap-0">
+                      <TabsTrigger 
+                        value="standard" 
+                        className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 font-semibold text-gray-600 data-[state=active]:text-black"
+                      >
+                        Standard
+                        <span className="ml-2 text-sm font-normal text-gray-500">
+                          ({standardPlans.length})
+                        </span>
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="unlimited" 
+                        className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-6 py-3 font-semibold text-gray-600 data-[state=active]:text-black"
+                      >
+                        Unlimited
+                        <span className="ml-2 text-sm font-normal text-gray-500">
+                          ({unlimitedPlans.length})
+                        </span>
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+
+                  {/* Standard Tab Content */}
+                  <TabsContent value="standard" className="mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {standardPlans.map((plan) => (
+                        <PlanCard key={plan.packageCode} plan={plan} />
+                      ))}
+                    </div>
+                  </TabsContent>
+
+                  {/* Unlimited Tab Content */}
+                  <TabsContent value="unlimited" className="mt-6">
+                    {unlimitedPlans.length === 0 ? (
+                      <div className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-sm">
+                        <p className="text-gray-500 font-medium">No unlimited plans available at this time.</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {unlimitedPlans.map((plan) => (
+                          <PlanCard key={plan.packageCode} plan={plan} />
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              );
+            })()
           )}
         </div>
       ) : regionSlug === "global" ? (

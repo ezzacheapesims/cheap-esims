@@ -10,7 +10,7 @@ import { getRegionForCountry, REGION_NAMES, Region } from "@/lib/regions";
 import { Button } from "@/components/ui/button";
 import { PlanCard, Plan } from "@/components/PlanCard";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { filterVisiblePlans } from "@/lib/plan-utils";
+import { filterVisiblePlans, deduplicatePlans } from "@/lib/plan-utils";
 import { HomeReviewsSection } from "@/components/HomeReviewsSection";
 
 interface Country {
@@ -71,8 +71,9 @@ export default function Home() {
           try {
             const data = await safeFetch<Plan[]>(`${apiUrl}/countries/${countryCode}/plans`, { showToast: false });
             if (Array.isArray(data) && data.length > 0) {
-              const visiblePlans = filterVisiblePlans(data).slice(0, 2);
-              allPlans.push(...visiblePlans);
+              const visiblePlans = filterVisiblePlans(data);
+              const deduplicatedPlans = deduplicatePlans(visiblePlans);
+              allPlans.push(...deduplicatedPlans.slice(0, 2));
             }
           } catch (error) {
             console.error(`Failed to fetch plans for ${countryCode}:`, error);

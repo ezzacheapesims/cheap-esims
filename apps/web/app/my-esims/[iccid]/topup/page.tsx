@@ -13,7 +13,7 @@ import { useCurrency } from "@/components/providers/CurrencyProvider";
 import { safeFetch } from "@/lib/safe-fetch";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Package } from "lucide-react";
-import { formatDataSize } from "@/lib/plan-utils";
+import { formatDataSize, isDailyUnlimitedPlan } from "@/lib/plan-utils";
 import { getPlanFlagLabels } from "@/lib/plan-flags";
 import { PlanFlags } from "@/components/PlanFlags";
 
@@ -150,12 +150,22 @@ export default function TopUpSelectionPage() {
           plans={options}
           renderItem={(plan) => {
             const { value: sizeValue, unit: sizeUnit } = formatDataSize(plan.volume);
+            const isUnlimitedPlan = isDailyUnlimitedPlan(plan); // 2GB + FUP1Mbps plans
             const priceUSD = plan.price || 0;
             const convertedPrice = convert(priceUSD);
             
             // Extract flags and get cleaned name
             const flagInfo = getPlanFlagLabels(plan);
-            const displayName = flagInfo.cleanedName || plan.name;
+            let displayName = flagInfo.cleanedName || plan.name;
+            
+            // Replace "2GB" with "Unlimited" for unlimited plans (2GB + FUP1Mbps)
+            if (isUnlimitedPlan) {
+              displayName = displayName
+                .replace(/\b2\s*gb\b/gi, 'Unlimited')
+                .replace(/\b2gb\b/gi, 'Unlimited')
+                .replace(/\s+/g, ' ')
+                .trim();
+            }
             
             return (
               <div key={plan.packageCode} className="group h-full flex flex-col bg-white border-2 border-black rounded-none p-6 shadow-hard hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 cursor-pointer relative overflow-hidden">
@@ -167,7 +177,7 @@ export default function TopUpSelectionPage() {
                          {plan.duration} {plan.durationUnit}s
                       </div>
                       <h3 className="text-3xl font-black text-black group-hover:text-primary transition-colors uppercase">
-                         {sizeValue} {sizeUnit}
+                         {isUnlimitedPlan ? "Unlimited" : `${sizeValue} ${sizeUnit}`}
                       </h3>
                    </div>
                    <div className="h-10 w-10 border-2 border-black flex items-center justify-center bg-white group-hover:bg-primary transition-colors">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Tag } from "lucide-react";
 import { useCurrency } from "./providers/CurrencyProvider";
 import { getDiscount } from "@/lib/admin-discounts";
-import { calculateFinalPrice, formatDataSize, calculateGB } from "@/lib/plan-utils";
+import { calculateFinalPrice, formatDataSize, calculateGB, isDailyUnlimitedPlan } from "@/lib/plan-utils";
 import { Button } from "@/components/ui/button";
 import { getPlanFlagLabels } from "@/lib/plan-flags";
 import { PlanFlags } from "./PlanFlags";
@@ -29,18 +29,39 @@ export function PlanCard({ plan }: PlanCardProps) {
   const { convert, formatCurrency } = useCurrency();
   const { value: sizeValue, unit: sizeUnit } = formatDataSize(plan.volume);
   const isUnlimited = plan.volume === -1;
+  const isUnlimitedPlan = isDailyUnlimitedPlan(plan); // 2GB + FUP1Mbps plans
   
   const sizeGB = calculateGB(plan.volume);
   const discountPercent = getDiscount(plan.packageCode, sizeGB);
   const basePriceUSD = plan.price || 0;
-  const finalPriceUSD = calculateFinalPrice(basePriceUSD, discountPercent);
+  
+  // For Unlimited/Day Pass plans: plan.price is daily price, total = daily × duration
+  // For regular plans: plan.price is total price
+  const dailyPriceUSD = isUnlimitedPlan ? basePriceUSD : (basePriceUSD / (plan.duration || 1));
+  const totalPriceUSD = isUnlimitedPlan ? (dailyPriceUSD * (plan.duration || 1)) : basePriceUSD;
+  
+  // Apply discount to daily price for Unlimited plans, then calculate total
+  // For regular plans, apply discount to total price
+  const discountedDailyPriceUSD = isUnlimitedPlan ? calculateFinalPrice(dailyPriceUSD, discountPercent) : dailyPriceUSD;
+  const finalPriceUSD = isUnlimitedPlan 
+    ? (discountedDailyPriceUSD * (plan.duration || 1))
+    : calculateFinalPrice(totalPriceUSD, discountPercent);
   const hasDiscount = discountPercent > 0;
   
   const convertedPrice = convert(finalPriceUSD);
 
   // Extract flags and get cleaned name
   const flagInfo = getPlanFlagLabels(plan);
-  const displayName = flagInfo.cleanedName || plan.name;
+  let displayName = flagInfo.cleanedName || plan.name;
+  
+  // Replace "2GB" with "Unlimited" for unlimited plans (2GB + FUP1Mbps)
+  if (isUnlimitedPlan) {
+    displayName = displayName
+      .replace(/\b2\s*gb\b/gi, 'Unlimited')
+      .replace(/\b2gb\b/gi, 'Unlimited')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   return (
     <Link href={`/plans/${plan.packageCode}`} className="block h-full group">
@@ -63,7 +84,7 @@ export function PlanCard({ plan }: PlanCardProps) {
            )}
 
            <h3 className="text-5xl font-black tracking-tighter text-black mb-1">
-              {isUnlimited ? "UL" : sizeValue}<span className="text-2xl ml-1">{sizeUnit}</span>
+              {isUnlimited || isUnlimitedPlan ? "Unlimited" : `${sizeValue} ${sizeUnit}`}
            </h3>
            <span className="text-xs font-bold uppercase text-gray-400 tracking-widest">
               {plan.duration} Days Validity

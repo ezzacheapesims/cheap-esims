@@ -285,8 +285,59 @@ export class EsimService {
       };
     }));
 
+    // Helper function to check if plan should go to Unlimited tab
+    // Requirements: 2GB and FUP1Mbps
+    const isUnlimitedPlan = (pkg: any): boolean => {
+      // Must be exactly 2GB (not unlimited -1)
+      if (pkg.volume === -1) {
+        return false;
+      }
+      const volumeGB = pkg.volume / (1024 * 1024 * 1024);
+      // Check if it's exactly 2GB (allow small tolerance for rounding)
+      if (volumeGB < 1.95 || volumeGB > 2.05) {
+        return false;
+      }
+      
+      // Must have FUP1Mbps flag
+      const nameLower = (pkg.name || '').toLowerCase();
+      const hasFUP1Mbps = nameLower.includes('fup1mbps') || 
+                         nameLower.includes('fup 1mbps') ||
+                         pkg.fup === true ||
+                         (pkg.fupSpeed && pkg.fupSpeed === 1) ||
+                         (typeof pkg.fup === 'string' && /fup1mbps?/i.test(pkg.fup));
+      
+      return hasFUP1Mbps;
+    };
+
+    // Filter out plans that don't meet our criteria:
+    // 1. Remove plans with volume <= 1.5GB (2GB = 2 * 1024 * 1024 * 1024 bytes)
+    // 2. Remove plans with duration = 1 day (EXCEPT 2GB + FUP1Mbps plans which go to Unlimited tab)
+    const filteredPackageList = packageList.filter((pkg: any) => {
+      // 2GB + FUP1Mbps plans are allowed (they will go to Unlimited tab)
+      if (isUnlimitedPlan(pkg)) {
+        return true; // Keep Unlimited plans
+      }
+      
+      // Check volume: must be >= 2GB (or unlimited -1)
+      if (pkg.volume !== -1) {
+        const volumeGB = pkg.volume / (1024 * 1024 * 1024);
+        if (volumeGB <= 1.5) {
+          return false; // 1.5GB or less, exclude
+        }
+      }
+      
+      // Check duration: must not be 1 day (unless it's 2GB + FUP1Mbps)
+      const duration = pkg.duration;
+      const durationUnit = pkg.durationUnit?.toLowerCase() || 'day';
+      if (duration === 1 && durationUnit === 'day') {
+        return false; // 1 day plan, exclude (unless 2GB + FUP1Mbps)
+      }
+      
+      return true; // Keep this plan
+    });
+
     return {
-      packageList,
+      packageList: filteredPackageList,
     };
   }
 

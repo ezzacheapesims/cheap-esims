@@ -284,6 +284,7 @@ model Order {
   refundAmountCents  Int?
   refundMethod       String?
   refundedAt         DateTime?
+  duration           Int?          // Selected duration for Unlimited/Day Pass plans
   EsimProfile        EsimProfile[]
   User               User          @relation(fields: [userId], references: [id])
 

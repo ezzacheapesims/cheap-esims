@@ -14,6 +14,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { formatCurrency } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { getPlanName } from "@/lib/admin-helpers";
+import { getPlanFlagLabels } from "@/lib/plan-flags";
+import { isDailyUnlimitedPlan } from "@/lib/plan-utils";
 
 interface Order {
   id: string;
@@ -23,6 +25,7 @@ interface Order {
   displayCurrency?: string;
   currency: string;
   status: string;
+  duration?: number; // Selected duration for Unlimited/Day Pass plans
   User?: {
     email: string;
     name: string | null;
@@ -45,6 +48,7 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
   const [email, setEmail] = useState("");
   const [updatingEmail, setUpdatingEmail] = useState(false);
   const [planName, setPlanName] = useState<string>("");
+  const [plan, setPlan] = useState<any>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -55,10 +59,36 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
         });
         setOrder(orderData);
         
-        // Fetch plan name
+        // Fetch plan details (full plan object for cleaning logic)
         if (orderData.planId) {
-          const name = await getPlanName(orderData.planId, apiUrl);
-          setPlanName(name);
+          try {
+            const planData = await safeFetch<any>(`${apiUrl}/plans/${orderData.planId}`, {
+              showToast: false,
+            });
+            setPlan(planData);
+            
+            // Apply name cleaning logic (same as PlanDetails and PlanCard)
+            const flagInfo = getPlanFlagLabels(planData);
+            let cleanedName = flagInfo.cleanedName || planData.name || orderData.planId;
+            
+            // Check if it's an Unlimited plan (2GB + FUP1Mbps)
+            const isUnlimitedPlan = isDailyUnlimitedPlan(planData);
+            
+            // Replace "2GB" with "Unlimited" for unlimited plans
+            if (isUnlimitedPlan) {
+              cleanedName = cleanedName
+                .replace(/\b2\s*gb\b/gi, 'Unlimited')
+                .replace(/\b2gb\b/gi, 'Unlimited')
+                .replace(/\s+/g, ' ')
+                .trim();
+            }
+            
+            setPlanName(cleanedName);
+          } catch (error) {
+            // Fallback to just fetching the name
+            const name = await getPlanName(orderData.planId, apiUrl);
+            setPlanName(name);
+          }
         }
         
         // Set email from logged-in user if available
@@ -440,6 +470,12 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
                       <span className="text-gray-600">Plan:</span>
                       <span className="font-medium text-gray-900">{planName || order.planId}</span>
                     </div>
+                    {plan && isDailyUnlimitedPlan(plan) && (order.duration || plan.duration) && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Duration:</span>
+                        <span className="font-medium text-gray-900">{order.duration || plan.duration} Days</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-gray-600">Order ID:</span>
                       <span className="font-medium text-gray-900">{order.id}</span>
@@ -618,6 +654,12 @@ export default function CheckoutPage({ params }: { params: { orderId: string } }
                     <span className="text-gray-600">Plan</span>
                     <span className="text-gray-900">{planName || order.planId}</span>
                   </div>
+                  {plan && isDailyUnlimitedPlan(plan) && (order.duration || plan.duration) && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Duration</span>
+                      <span className="text-gray-900">{order.duration || plan.duration} Days</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal</span>
                     <span className="text-gray-900">

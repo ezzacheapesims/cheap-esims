@@ -7,7 +7,7 @@ import { FlagIcon } from "./FlagIcon";
 import { useCurrency } from "./providers/CurrencyProvider";
 import { getStoredReferralCode } from "@/lib/referral";
 import { getDiscount, fetchDiscounts } from "@/lib/admin-discounts";
-import { calculateGB, calculateFinalPrice, formatDataSize } from "@/lib/plan-utils";
+import { calculateGB, calculateFinalPrice, formatDataSize, isDailyUnlimitedPlan } from "@/lib/plan-utils";
 import Link from "next/link";
 import { safeFetch } from "@/lib/safe-fetch";
 import { useUser } from "@clerk/nextjs";
@@ -29,6 +29,8 @@ export function PlanDetails({ plan }: { plan: any }) {
   const { user, isLoaded: userLoaded } = useUser();
   const router = useRouter();
   const { value: sizeValue, unit: sizeUnit } = formatDataSize(plan.volume);
+  const isUnlimitedPlan = isDailyUnlimitedPlan(plan); // 2GB + FUP1Mbps plans
+  const [selectedDays, setSelectedDays] = useState<number>(plan.duration || 1);
   const [showDeviceWarning, setShowDeviceWarning] = useState(false);
   const [deviceCompatibility, setDeviceCompatibility] = useState<any>(null);
   const [proceedWithCheckout, setProceedWithCheckout] = useState(false);
@@ -44,15 +46,50 @@ export function PlanDetails({ plan }: { plan: any }) {
     return getDiscount(plan.packageCode, planGB);
   }, [plan.packageCode, planGB]);
   
+  // For Unlimited/Day Pass plans: plan.price is daily price, total = daily × duration
+  // For regular plans: plan.price is total price
   const basePriceUSD = plan.price || 0;
-  const finalPriceUSD = useMemo(() => calculateFinalPrice(basePriceUSD, discountPercent), [basePriceUSD, discountPercent]);
+  const dailyPriceUSD = isUnlimitedPlan ? basePriceUSD : (basePriceUSD / (plan.duration || 1));
+  const totalPriceUSD = isUnlimitedPlan ? (dailyPriceUSD * (plan.duration || 1)) : basePriceUSD;
+  
+  // Apply discount to daily price for Unlimited plans, then calculate total
+  // For regular plans, apply discount to total price
+  const discountedDailyPriceUSD = useMemo(() => {
+    if (isUnlimitedPlan) {
+      return calculateFinalPrice(dailyPriceUSD, discountPercent);
+    }
+    return dailyPriceUSD; // Not used for regular plans
+  }, [isUnlimitedPlan, dailyPriceUSD, discountPercent]);
+  
+  const finalPriceUSD = useMemo(() => {
+    if (isUnlimitedPlan) {
+      // For Unlimited: apply discount to daily price, then multiply by selected days
+      // Total cost = Days Selected × Daily Plan Price (after discount)
+      return discountedDailyPriceUSD * selectedDays;
+    } else {
+      // For regular: apply discount to total price
+      return calculateFinalPrice(totalPriceUSD, discountPercent);
+    }
+  }, [isUnlimitedPlan, discountedDailyPriceUSD, selectedDays, totalPriceUSD, discountPercent]);
+  
   // Calculate converted price directly - convert function from hook should be stable
   const convertedPrice = convert(finalPriceUSD);
   const priceUSDCents = useMemo(() => Math.round(finalPriceUSD * 100), [finalPriceUSD]);
 
   // Extract flags and get cleaned name
   const flagInfo = useMemo(() => getPlanFlagLabels(plan), [plan]);
-  const displayName = useMemo(() => flagInfo.cleanedName || plan.name, [flagInfo.cleanedName, plan.name]);
+  const displayName = useMemo(() => {
+    let name = flagInfo.cleanedName || plan.name;
+    // Replace "2GB" with "Unlimited" for unlimited plans (2GB + FUP1Mbps)
+    if (isUnlimitedPlan) {
+      name = name
+        .replace(/\b2\s*gb\b/gi, 'Unlimited')
+        .replace(/\b2gb\b/gi, 'Unlimited')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    return name;
+  }, [flagInfo.cleanedName, plan.name, isUnlimitedPlan]);
 
   useEffect(() => {
     fetchDiscounts().catch(console.error);
@@ -144,6 +181,8 @@ export function PlanDetails({ plan }: { plan: any }) {
         paymentMethod: paymentMethod,
         // Include email in request body for pending order creation
         email: user?.primaryEmailAddress?.emailAddress || undefined,
+        // For Unlimited/Day Pass plans, include selected duration
+        ...(isUnlimitedPlan && { duration: selectedDays }),
       };
 
       const data = await safeFetch<{ url?: string; success?: boolean; orderId?: string; message?: string }>(
@@ -209,11 +248,42 @@ export function PlanDetails({ plan }: { plan: any }) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div className="border border-gray-200 p-4 text-center rounded-xl bg-gray-50">
                     <div className="text-xs font-bold text-gray-500 uppercase mb-1">Total Data</div>
-                    <div className="text-3xl font-bold text-black">{sizeValue} {sizeUnit}</div>
+                    <div className="text-3xl font-bold text-black">{isUnlimitedPlan ? "Unlimited" : `${sizeValue} ${sizeUnit}`}</div>
                 </div>
                 <div className="border border-gray-200 p-4 text-center rounded-xl bg-gray-50">
                     <div className="text-xs font-bold text-gray-500 uppercase mb-1">Duration</div>
-                    <div className="text-3xl font-bold text-black">{plan.duration} Days</div>
+                    {isUnlimitedPlan ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <input
+                                type="number"
+                                min="1"
+                                max="365"
+                                value={selectedDays}
+                                onChange={(e) => {
+                                    const days = Math.max(1, Math.min(365, parseInt(e.target.value) || 1));
+                                    setSelectedDays(days);
+                                }}
+                                className="text-3xl font-bold text-black text-center w-24 border-2 border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:border-primary"
+                            />
+                            <div className="flex gap-1 flex-wrap justify-center mt-1">
+                                {[7, 14, 30].map((days) => (
+                                    <button
+                                        key={days}
+                                        onClick={() => setSelectedDays(days)}
+                                        className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors ${
+                                            selectedDays === days
+                                                ? 'bg-primary text-black'
+                                                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        {days}d
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="text-3xl font-bold text-black">{plan.duration} Days</div>
+                    )}
                 </div>
                 <div className="border border-gray-200 p-4 text-center rounded-xl bg-gray-50">
                     <div className="text-xs font-bold text-gray-500 uppercase mb-1">Speed</div>
@@ -290,19 +360,25 @@ export function PlanDetails({ plan }: { plan: any }) {
                  </div>
                  <div className="flex justify-between">
                      <span className="text-gray-500">Data:</span>
-                     <span className="font-bold text-gray-900">{sizeValue} {sizeUnit}</span>
+                     <span className="font-bold text-gray-900">{isUnlimitedPlan ? "Unlimited" : `${sizeValue} ${sizeUnit}`}</span>
                  </div>
                  <div className="flex justify-between">
                      <span className="text-gray-500">Validity:</span>
-                     <span className="font-bold text-gray-900">{plan.duration} Days</span>
+                     <span className="font-bold text-gray-900">{isUnlimitedPlan ? selectedDays : plan.duration} Days</span>
                  </div>
              </div>
 
              <div className="border-t border-gray-200 pt-4 mb-6">
+                 {isUnlimitedPlan && (
+                     <div className="flex justify-between text-gray-500 text-xs mb-2">
+                         <span>Daily Price:</span>
+                         <span>{formatCurrency(convert(discountedDailyPriceUSD))}/day</span>
+                     </div>
+                 )}
                  {discountPercent > 0 && (
                      <div className="flex justify-between text-gray-400 text-sm mb-1 line-through">
                          <span>Original Price:</span>
-                         <span>{formatCurrency(convert(basePriceUSD))}</span>
+                         <span>{formatCurrency(convert(isUnlimitedPlan ? (dailyPriceUSD * selectedDays) : basePriceUSD))}</span>
                      </div>
                  )}
                  <div className="flex justify-between items-end">

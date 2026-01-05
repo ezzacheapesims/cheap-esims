@@ -101,7 +101,7 @@ export default function AdminDiscountsPage() {
           countryName: selectedCountry.name,
         }));
 
-        // Apply filtering: only plans >= 100MB
+        // Apply filtering: only plans >= 2GB and not 1 day
         const filteredPlans = filterVisiblePlans(plansWithCountry);
         
         setCountryPlans(filteredPlans);
@@ -423,7 +423,7 @@ export default function AdminDiscountsPage() {
             <div>
               <h2 className="text-xl font-black text-black uppercase">{selectedCountry.name}</h2>
               <p className="text-sm text-gray-600 font-mono">
-                Plans: 100MB+ (displays as MB if &lt; 1GB, GB if &gt;= 1GB)
+                Plans: 2GB+ (excludes 1 day plans)
               </p>
             </div>
           </div>
@@ -590,7 +590,7 @@ export default function AdminDiscountsPage() {
               {searchQuery ? (
                 <>No plans found matching "{searchQuery}"</>
               ) : (
-                <>No plans available for {selectedCountry.name}. Plans must be &gt;= 100MB.</>
+                <>No plans available for {selectedCountry.name}. Plans must be &gt;= 2GB and not 1 day.</>
               )}
             </div>
           )}

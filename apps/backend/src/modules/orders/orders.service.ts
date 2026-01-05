@@ -35,7 +35,7 @@ export class OrdersService {
   ) {}
   private readonly logger = new Logger(OrdersService.name);
 
-  async createStripeCheckout({ planCode, amount, currency, planName, displayCurrency, referralCode, email }: {
+  async createStripeCheckout({ planCode, amount, currency, planName, displayCurrency, referralCode, email, duration }: {
     planCode: string;
     amount: number;
     currency: string;
@@ -43,6 +43,7 @@ export class OrdersService {
     displayCurrency?: string;
     referralCode?: string;
     email?: string;
+    duration?: number; // Selected duration for Unlimited/Day Pass plans
   }) {
     try {
       // amount is in USD (final price after discounts, calculated by frontend)
@@ -152,6 +153,7 @@ export class OrdersService {
           status: 'pending',
           paymentMethod: 'stripe',
           esimOrderNo: `PENDING-${orderId}`,
+          duration: duration || undefined, // Store selected duration for Unlimited/Day Pass plans
         },
       });
 
@@ -334,7 +336,7 @@ export class OrdersService {
     }
   }
 
-  async createSpareChangeOrder({ planCode, amount, currency, planName, displayCurrency, referralCode, email }: {
+  async createSpareChangeOrder({ planCode, amount, currency, planName, displayCurrency, referralCode, email, duration }: {
     planCode: string;
     amount: number;
     currency: string;
@@ -342,6 +344,7 @@ export class OrdersService {
     displayCurrency?: string;
     referralCode?: string;
     email: string;
+    duration?: number; // Selected duration for Unlimited/Day Pass plans
   }) {
     this.logger.log(`[SPARE_CHANGE CHECKOUT] Received from frontend: amount=${amount} USD, email=${email}, planCode=${planCode}`);
 
@@ -407,6 +410,7 @@ export class OrdersService {
         paymentMethod: 'spare-change',
         paymentRef: `spare-change_${orderId}`,
         esimOrderNo: `PENDING-${orderId}`,
+        duration: duration || undefined, // Store selected duration for Unlimited/Day Pass plans
       },
     });
 
@@ -662,13 +666,23 @@ export class OrdersService {
     // Provider expects their original cost price, not our selling price
     const amountInProviderUnits = await this.getProviderPriceInUnits(planCode, order.amountCents ?? 0);
     
+    // For Unlimited/Day Pass plans, pass periodNum (selected duration) to eSIM Access API
+    // If order.duration is set, it means user selected a custom duration (e.g., 8 days)
+    const packageInfo: any = {
+      packageCode: planCode,
+      count: 1,
+      price: amountInProviderUnits, // Provider expects price in their format
+    };
+    
+    // Add periodNum if duration is specified (for Unlimited/Day Pass plans)
+    if (order.duration) {
+      packageInfo.periodNum = order.duration;
+      this.logger.log(`[ESIM][ORDER] Adding periodNum=${order.duration} for Unlimited/Day Pass plan`);
+    }
+    
     const body = {
       transactionId,
-      packageInfoList: [{ 
-        packageCode: planCode, 
-        count: 1,
-        price: amountInProviderUnits, // Provider expects price in their format
-      }],
+      packageInfoList: [packageInfo],
       amount: amountInProviderUnits,
     };
 

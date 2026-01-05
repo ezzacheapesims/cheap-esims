@@ -30,6 +30,7 @@ export class OrdersController {
       referralCode?: string;
       paymentMethod?: 'stripe' | 'spare-change';
       email?: string;
+      duration?: number; // Selected duration for Unlimited/Day Pass plans
     },
     @Req() req: any,
   ) {
