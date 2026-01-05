@@ -46,7 +46,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
   }
 
   return (
-    <nav className={`flex items-center gap-2 text-xs font-black uppercase tracking-tight ${className}`} aria-label="Breadcrumb">
+    <nav className={`flex items-center gap-2 text-sm font-medium ${className}`} aria-label="Breadcrumb">
       {breadcrumbs.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           {index === 0 ? (
@@ -62,12 +62,12 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
               {item.href && index < breadcrumbs.length - 1 ? (
                 <Link
                   href={item.href}
-                  className="text-gray-500 hover:text-black hover:underline decoration-2 underline-offset-4 transition-all"
+                  className="text-gray-500 hover:text-gray-900 transition-colors"
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-black bg-primary/20 px-2 py-0.5 border border-primary/30">{item.label}</span>
+                <span className="text-gray-900 font-semibold">{item.label}</span>
               )}
             </>
           )}

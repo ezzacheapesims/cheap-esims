@@ -205,12 +205,78 @@ export class OrdersController {
   @RateLimit({ limit: 10, window: 60 })
   async createCheckoutForOrder(
     @Param('id') orderId: string,
-    @Body() body: { referralCode?: string },
+    @Body() body: { referralCode?: string; email?: string },
   ) {
     try {
-      return await this.ordersService.createStripeCheckoutForOrder(orderId, body.referralCode);
+      return await this.ordersService.createStripeCheckoutForOrder(orderId, body.referralCode, body.email);
     } catch (error) {
       console.error('[CREATE_CHECKOUT_FOR_ORDER_ERROR]', error);
+      throw error;
+    }
+  }
+
+  @Post(':id/email')
+  @RateLimit({ limit: 10, window: 60 })
+  async updateOrderEmail(
+    @Param('id') orderId: string,
+    @Body() body: { email: string },
+  ) {
+    try {
+      if (!body.email || !body.email.trim()) {
+        throw new BadRequestException('Email is required');
+      }
+      return await this.ordersService.updateOrderEmail(orderId, body.email.trim());
+    } catch (error) {
+      console.error('[UPDATE_ORDER_EMAIL_ERROR]', error);
+      throw error;
+    }
+  }
+
+  @Post(':id/email-preview')
+  @RateLimit({ limit: 10, window: 60 })
+  async getEmailPreview(
+    @Param('id') orderId: string,
+    @Body() body: { amount: number; currency: string },
+  ) {
+    try {
+      return await this.ordersService.getEmailPreview(orderId, body.amount, body.currency);
+    } catch (error) {
+      console.error('[GET_EMAIL_PREVIEW_ERROR]', error);
+      throw error;
+    }
+  }
+
+  @Post(':id/validate-promo')
+  @RateLimit({ limit: 10, window: 60 })
+  async validatePromo(
+    @Param('id') orderId: string,
+    @Body() body: { promoCode: string },
+  ) {
+    try {
+      if (!body.promoCode || !body.promoCode.trim()) {
+        throw new BadRequestException('Promo code is required');
+      }
+      return await this.ordersService.validateAndApplyPromo(orderId, body.promoCode.trim());
+    } catch (error) {
+      console.error('[VALIDATE_PROMO_ERROR]', error);
+      throw error;
+    }
+  }
+
+  @Post(':id/remove-promo')
+  @RateLimit({ limit: 10, window: 60 })
+  async removePromo(
+    @Param('id') orderId: string,
+    @Body() body: { originalAmount?: number; originalDisplayAmount?: number },
+  ) {
+    try {
+      return await this.ordersService.removePromo(
+        orderId,
+        body.originalAmount,
+        body.originalDisplayAmount,
+      );
+    } catch (error) {
+      console.error('[REMOVE_PROMO_ERROR]', error);
       throw error;
     }
   }

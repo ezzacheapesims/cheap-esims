@@ -180,7 +180,7 @@ export class OrdersService {
   /**
    * Create Stripe checkout session for an existing order
    */
-  async createStripeCheckoutForOrder(orderId: string, referralCode?: string) {
+  async createStripeCheckoutForOrder(orderId: string, referralCode?: string, email?: string) {
     try {
       this.logger.log(`[CHECKOUT] Creating Stripe session for order: ${orderId}`);
       
@@ -198,16 +198,51 @@ export class OrdersService {
         throw new BadRequestException(`Order ${orderId} is not in pending status`);
       }
 
+      // Update email if provided (for guest checkout)
+      if (email && email.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(email.trim())) {
+          // Update order email if it's a guest order
+          const userEmail = order.User.email;
+          const isGuestEmail = userEmail === `guest-${order.User.id}@cheap-esims.com` || userEmail.startsWith('guest-');
+          
+          if (isGuestEmail) {
+            const user = await this.prisma.user.upsert({
+              where: { email: email.trim() },
+              create: {
+                id: crypto.randomUUID(),
+                email: email.trim(),
+                name: null,
+              },
+              update: {},
+            });
+            
+            await this.prisma.order.update({
+              where: { id: orderId },
+              data: { userId: user.id },
+            });
+            
+            this.logger.log(`[CHECKOUT] Updated order ${orderId} email to ${email.trim()}`);
+          }
+        }
+      }
+
       // Validate Stripe is configured
       if (!this.stripe?.stripe) {
         this.logger.error('[CHECKOUT] Stripe is not configured. STRIPE_SECRET is missing.');
         throw new BadRequestException('Payment system is not configured. Please contact support.');
       }
 
+      // Get updated order with user
+      const updatedOrder = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        include: { User: true },
+      });
+
       // Get amounts
-      const amountUSD = order.amountCents / 100;
-      const targetCurrency = (order.displayCurrency || order.currency || 'USD').toUpperCase();
-      const displayAmount = (order.displayAmountCents || order.amountCents) / 100;
+      const amountUSD = updatedOrder.amountCents / 100;
+      const targetCurrency = (updatedOrder.displayCurrency || updatedOrder.currency || 'USD').toUpperCase();
+      const displayAmount = (updatedOrder.displayAmountCents || updatedOrder.amountCents) / 100;
 
       // Convert to target currency for Stripe
       let convertedAmount = amountUSD;
@@ -243,12 +278,20 @@ export class OrdersService {
       const webUrl = this.config.get('WEB_URL') || 'http://localhost:3000';
 
       // Get plan name from order (we stored planCode in planId)
-      const planName = order.planId; // This is actually the planCode
+      const planName = updatedOrder.planId; // This is actually the planCode
+
+      // Determine customer email - use provided email, or order user email if not a guest
+      const customerEmail = email?.trim() || (
+        updatedOrder.User.email !== `guest-${updatedOrder.User.id}@cheap-esims.com` && 
+        !updatedOrder.User.email.startsWith('guest-') 
+          ? updatedOrder.User.email 
+          : undefined
+      );
 
       const session = await this.stripe.stripe.checkout.sessions.create({
         mode: 'payment',
         payment_method_types: ['card'],
-        customer_email: order.User.email !== `guest-${order.User.id}@cheap-esims.com` && !order.User.email.startsWith('guest-') ? order.User.email : undefined,
+        customer_email: customerEmail,
 
         line_items: [
           {
@@ -1725,5 +1768,284 @@ export class OrdersService {
       } catch (error) {
         this.logger.error(`[AFFILIATE] Failed to add commission for order:`, error);
       }
+  }
+
+  /**
+   * Update order email (for guest checkout)
+   */
+  async updateOrderEmail(orderId: string, email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        include: { User: true },
+      });
+
+      if (!order) {
+        throw new NotFoundException(`Order ${orderId} not found`);
+      }
+
+      if (order.status !== 'pending') {
+        throw new BadRequestException('Cannot update email for non-pending order');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new BadRequestException('Invalid email format');
+      }
+
+      // Update or create user with the email
+      const user = await this.prisma.user.upsert({
+        where: { email },
+        create: {
+          id: crypto.randomUUID(),
+          email,
+          name: null,
+        },
+        update: {},
+      });
+
+      // Update order to use the new user
+      await this.prisma.order.update({
+        where: { id: orderId },
+        data: { userId: user.id },
+      });
+
+      this.logger.log(`[ORDER] Updated email for order ${orderId} to ${email}`);
+      return { success: true, message: 'Email updated successfully' };
+    } catch (error) {
+      this.logger.error(`[ORDER] Failed to update email for order ${orderId}:`, error);
+      throw error;
     }
+  }
+
+  /**
+   * Get email preview for order confirmation
+   */
+  async getEmailPreview(orderId: string, amount: number, currency: string): Promise<{
+    subject: string;
+    html: string;
+    text: string;
+  }> {
+    try {
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        include: { User: true },
+      });
+
+      if (!order) {
+        throw new NotFoundException(`Order ${orderId} not found`);
+      }
+
+      // Generate email preview using email service
+      if (!this.emailService) {
+        throw new BadRequestException('Email service not available');
+      }
+
+      const appUrl = this.config.get('WEB_URL') || 'http://localhost:3000';
+      const formattedAmount = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency.toUpperCase(),
+        minimumFractionDigits: 2,
+      }).format(amount);
+
+      // Create preview variables
+      const variables = {
+        user: {
+          name: order.User.name || 'Customer',
+          email: order.User.email,
+        },
+        order: {
+          id: order.id,
+          planId: order.planId,
+          amount: formattedAmount,
+          currency: currency.toUpperCase(),
+          status: order.status,
+        },
+        appUrl,
+      };
+
+      // Get email template (we'll use order-confirmation template)
+      const subject = `Order confirmed — Cheap eSIMs`;
+      
+      // For preview, we'll generate a simple HTML preview
+      // In production, you'd use the actual email template rendering
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1>Order Confirmation</h1>
+          <p>Hello ${variables.user.name},</p>
+          <p>Thank you for your order!</p>
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>Order Details</h2>
+            <p><strong>Order ID:</strong> ${order.id}</p>
+            <p><strong>Plan:</strong> ${order.planId}</p>
+            <p><strong>Amount:</strong> ${formattedAmount}</p>
+            <p><strong>Status:</strong> ${order.status}</p>
+          </div>
+          <p>Your eSIM will be sent to this email address once payment is confirmed.</p>
+          <p>Thank you for choosing Cheap eSIMs!</p>
+        </div>
+      `;
+
+      const text = `
+Order Confirmation
+
+Hello ${variables.user.name},
+
+Thank you for your order!
+
+Order Details:
+- Order ID: ${order.id}
+- Plan: ${order.planId}
+- Amount: ${formattedAmount}
+- Status: ${order.status}
+
+Your eSIM will be sent to this email address once payment is confirmed.
+
+Thank you for choosing Cheap eSIMs!
+      `;
+
+      return { subject, html, text };
+    } catch (error) {
+      this.logger.error(`[ORDER] Failed to get email preview for order ${orderId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate and apply promo code to order
+   */
+  async validateAndApplyPromo(orderId: string, promoCode: string): Promise<{
+    valid: boolean;
+    promoCode: string;
+    discountPercent: number;
+    originalAmount: number;
+    originalDisplayAmount: number;
+    discountedAmount: number;
+    displayAmount: number;
+    displayCurrency: string;
+  }> {
+    try {
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (!order) {
+        throw new NotFoundException(`Order ${orderId} not found`);
+      }
+
+      if (order.status !== 'pending') {
+        throw new BadRequestException('Cannot apply promo code to non-pending order');
+      }
+
+      // Check if promo code already applied (stored in metadata or separate field)
+      // For now, we'll check if there's a promo code in the order metadata
+      // In a full implementation, you'd have a promo codes table
+      
+      // Simple promo code validation (can be extended with a promo codes table)
+      // For now, we'll use a simple hardcoded list or check against admin discounts
+      const promoCodeUpper = promoCode.toUpperCase();
+      
+      // Get discounts from admin settings
+      let discountPercent = 0;
+      if (this.adminSettingsService) {
+        const discounts = await this.adminSettingsService.getDiscounts();
+        // Check if promo code matches any discount key
+        if (discounts.global[promoCodeUpper] !== undefined) {
+          discountPercent = discounts.global[promoCodeUpper];
+        } else if (discounts.individual[promoCodeUpper] !== undefined) {
+          discountPercent = discounts.individual[promoCodeUpper];
+        }
+      }
+
+      // If no discount found, check hardcoded promo codes (for demo)
+      // In production, you'd query a promo codes table
+      if (discountPercent === 0) {
+        const hardcodedPromos: Record<string, number> = {
+          'WELCOME10': 10,
+          'SAVE20': 20,
+          'FIRST15': 15,
+        };
+        discountPercent = hardcodedPromos[promoCodeUpper] || 0;
+      }
+
+      if (discountPercent === 0) {
+        throw new BadRequestException('Invalid or expired promo code');
+      }
+
+      // Calculate discounted amounts
+      const originalAmount = order.amountCents;
+      const originalDisplayAmount = order.displayAmountCents || order.amountCents;
+      const discountedAmount = Math.round(originalAmount * (1 - discountPercent / 100));
+      const discountedDisplayAmount = Math.round(originalDisplayAmount * (1 - discountPercent / 100));
+
+      // Update order with discounted amounts
+      await this.prisma.order.update({
+        where: { id: orderId },
+        data: {
+          amountCents: discountedAmount,
+          displayAmountCents: discountedDisplayAmount,
+        },
+      });
+
+      this.logger.log(`[ORDER] Applied promo code ${promoCode} (${discountPercent}%) to order ${orderId}`);
+
+      return {
+        valid: true,
+        promoCode: promoCodeUpper,
+        discountPercent,
+        originalAmount,
+        originalDisplayAmount,
+        discountedAmount,
+        displayAmount: discountedDisplayAmount,
+        displayCurrency: order.displayCurrency || order.currency || 'USD',
+      };
+    } catch (error) {
+      this.logger.error(`[ORDER] Failed to validate promo code for order ${orderId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Remove promo code and restore original price
+   * Note: This requires the frontend to pass original amounts since we don't store them
+   * For a production system, you'd want to store promo applications in a separate table
+   */
+  async removePromo(orderId: string, originalAmount?: number, originalDisplayAmount?: number): Promise<{ success: boolean; message: string }> {
+    try {
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (!order) {
+        throw new NotFoundException(`Order ${orderId} not found`);
+      }
+
+      if (order.status !== 'pending') {
+        throw new BadRequestException('Cannot remove promo code from non-pending order');
+      }
+
+      // If original amounts provided, restore them
+      // Otherwise, we can't restore (frontend should handle this)
+      if (originalAmount !== undefined && originalDisplayAmount !== undefined) {
+        await this.prisma.order.update({
+          where: { id: orderId },
+          data: {
+            amountCents: originalAmount,
+            displayAmountCents: originalDisplayAmount,
+          },
+        });
+
+        this.logger.log(`[ORDER] Removed promo code from order ${orderId}, restored original amounts`);
+        return { success: true, message: 'Promo code removed and original price restored' };
+      }
+
+      // If no original amounts provided, we can't restore
+      // Frontend should handle this by passing original amounts from localStorage
+      throw new BadRequestException('Original amounts required to remove promo code. Please refresh the page.');
+    } catch (error) {
+      this.logger.error(`[ORDER] Failed to remove promo code for order ${orderId}:`, error);
+      throw error;
+    }
+  }
 }
