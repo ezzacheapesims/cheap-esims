@@ -20,6 +20,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0"
+    "@prisma/client": "^5.22.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.16"
   }
 }

@@ -438,14 +438,16 @@ model SpareChangeTransaction {
 
 model Review {
   id        String   @id
-  planId    String
-  userId    String
-  userName  String
+  planId    String?
+  userId    String?
+  userName  String?
   rating    Int      // 1-5
-  comment   String   @db.VarChar(1000)
+  comment   String?  @db.VarChar(1000)
+  language  String?  @default("en")
+  source    String?  @default("purchase") // purchase, survey, support
   verified  Boolean  @default(false) // true if user has purchased this plan
   createdAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([planId])
   @@index([userId])
