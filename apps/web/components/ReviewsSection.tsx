@@ -35,6 +35,7 @@ export function ReviewsSection({ planId }: ReviewsSectionProps) {
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [language, setLanguage] = useState("en");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -61,8 +62,10 @@ export function ReviewsSection({ planId }: ReviewsSectionProps) {
       return;
     }
 
-    if (!comment.trim() || comment.trim().length < 10) {
-      toast({ title: "Invalid comment", description: "Comment must be at least 10 characters long.", variant: "destructive" });
+    // Comment is optional - star-only reviews are valid
+    // Only validate length if comment is provided
+    if (comment.trim() && comment.trim().length < 2) {
+      toast({ title: "Invalid comment", description: "Comment must be at least 2 characters if provided.", variant: "destructive" });
       return;
     }
 
@@ -80,7 +83,8 @@ export function ReviewsSection({ planId }: ReviewsSectionProps) {
           planId,
           userName,
           rating,
-          comment: comment.trim(),
+          comment: comment.trim() || undefined,
+          language: comment.trim() ? language : undefined,
         }),
       });
 
@@ -88,6 +92,7 @@ export function ReviewsSection({ planId }: ReviewsSectionProps) {
       setShowReviewDialog(false);
       setComment("");
       setRating(5);
+      setLanguage("en");
       
       // Refresh reviews
       const data = await safeFetch<Review[]>(`${apiUrl}/reviews/plan/${planId}`, { showToast: false });
@@ -168,21 +173,47 @@ export function ReviewsSection({ planId }: ReviewsSectionProps) {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-bold uppercase mb-2 block">Comment</label>
+                  <label className="text-sm font-bold uppercase mb-2 block">
+                    Comment <span className="text-gray-500 font-normal normal-case">(optional)</span>
+                  </label>
                   <Textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder="Share your experience with this plan..."
+                    placeholder="Share your experience with this plan... (optional)"
                     className="min-h-[120px] border-2 border-black rounded-none font-mono"
                     maxLength={1000}
                   />
                   <p className="text-xs text-gray-500 mt-1 font-mono">
-                    {comment.length}/1000 characters
+                    {comment.length}/1000 characters - Star-only reviews are welcome!
                   </p>
+                </div>
+                <div>
+                  <label className="text-sm font-bold uppercase mb-2 block">
+                    Language <span className="text-gray-500 font-normal normal-case">(optional)</span>
+                  </label>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="w-full px-4 py-2 border-2 border-black rounded-none font-mono text-sm"
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ja">Japanese</option>
+                    <option value="ar">Arabic</option>
+                    <option value="th">Thai</option>
+                    <option value="id">Indonesian</option>
+                    <option value="vi">Vietnamese</option>
+                    <option value="tl">Filipino</option>
+                    <option value="ms">Malay</option>
+                    <option value="de">German</option>
+                    <option value="fr">French</option>
+                    <option value="pl">Polish</option>
+                  </select>
                 </div>
                 <Button
                   onClick={handleSubmitReview}
-                  disabled={submitting || !comment.trim()}
+                  disabled={submitting}
                   className="w-full bg-primary hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase"
                 >
                   {submitting ? "Submitting..." : "Submit Review"}

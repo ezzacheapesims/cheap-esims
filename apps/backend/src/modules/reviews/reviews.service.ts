@@ -34,6 +34,7 @@ export class ReviewsService {
     }
 
     // Check if user has already reviewed this plan (only if authenticated and plan specific)
+    // Skip this check if userId is null/undefined (anonymous reviews)
     if (data.userId && data.planId) {
       const existingReview = await this.prisma.review.findFirst({
         where: {
@@ -60,26 +61,86 @@ export class ReviewsService {
       hasPurchased = !!order;
     }
 
-    // Sanitize inputs
-    const sanitizedComment = data.comment ? sanitizeInput(data.comment) : undefined;
-    const sanitizedUserName = data.userName ? sanitizeInput(data.userName) : undefined;
+    // Sanitize inputs - ensure empty strings become null
+    const sanitizedComment = data.comment && data.comment.trim().length > 0 
+      ? sanitizeInput(data.comment.trim()) 
+      : null;
+    const sanitizedUserName = data.userName && data.userName.trim().length > 0
+      ? sanitizeInput(data.userName.trim())
+      : null;
 
-    const review = await this.prisma.review.create({
-      data: {
-        id: crypto.randomUUID(),
+    try {
+      const review = await this.prisma.review.create({
+        data: {
+          id: crypto.randomUUID(),
+          planId: (data.planId && typeof data.planId === 'string' && data.planId.trim().length > 0) ? data.planId.trim() : null,
+          userId: (data.userId && typeof data.userId === 'string' && data.userId.trim().length > 0) ? data.userId.trim() : null,
+          userName: sanitizedUserName,
+          rating: data.rating,
+          comment: sanitizedComment,
+          language: (data.language && typeof data.language === 'string' && data.language.trim().length > 0) ? data.language.trim() : 'en',
+          source: (data.source && typeof data.source === 'string' && data.source.trim().length > 0) ? data.source.trim() : 'purchase',
+          verified: !!hasPurchased,
+        },
+      });
+
+      this.logger.log(`Review created: ${review.id} for plan ${data.planId || 'global'} by user ${data.userId || 'anonymous'}`);
+      return review;
+    } catch (error: any) {
+      this.logger.error('Failed to create review:', error);
+      this.logger.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        meta: error.meta,
+        stack: error.stack,
+      });
+      this.logger.error('Review data being sent:', {
         planId: data.planId,
         userId: data.userId,
         userName: sanitizedUserName,
         rating: data.rating,
-        comment: sanitizedComment,
-        language: data.language || 'en',
-        source: data.source || 'purchase',
-        verified: !!hasPurchased,
-      },
-    });
-
-    this.logger.log(`Review created: ${review.id} for plan ${data.planId || 'global'} by user ${data.userId || 'anonymous'}`);
-    return review;
+        commentLength: data.comment?.length || 0,
+        language: data.language,
+        source: data.source,
+        hasPurchased,
+      });
+      
+      // Handle Prisma foreign key constraint errors
+      if (error.code === 'P2003') {
+        this.logger.error('Foreign key constraint violation - userId or planId does not exist');
+        // If userId doesn't exist, set it to null and retry (for anonymous reviews)
+        if (error.meta?.field_name?.includes('userId')) {
+          this.logger.warn('Retrying with userId set to null');
+          try {
+            const review = await this.prisma.review.create({
+              data: {
+                id: crypto.randomUUID(),
+                planId: (data.planId && typeof data.planId === 'string' && data.planId.trim().length > 0) ? data.planId.trim() : null,
+                userId: null, // Force null if foreign key fails
+                userName: sanitizedUserName,
+                rating: data.rating,
+                comment: sanitizedComment,
+                language: (data.language && typeof data.language === 'string' && data.language.trim().length > 0) ? data.language.trim() : 'en',
+                source: (data.source && typeof data.source === 'string' && data.source.trim().length > 0) ? data.source.trim() : 'purchase',
+                verified: false, // Can't verify if user doesn't exist
+              },
+            });
+            this.logger.log(`Review created (retry): ${review.id}`);
+            return review;
+          } catch (retryError: any) {
+            this.logger.error('Retry also failed:', retryError);
+            throw new BadRequestException('Failed to create review: Invalid user or plan reference');
+          }
+        }
+      }
+      
+      // Re-throw Prisma errors as-is so the exception filter can handle them
+      // For other errors, wrap in BadRequestException
+      if (error.code && error.code.startsWith('P')) {
+        throw error; // Prisma error - let exception filter handle it
+      }
+      throw new BadRequestException(`Failed to create review: ${error.message || 'Unknown error'}`);
+    }
   }
 
   async getReviewsByPlanId(planId: string) {

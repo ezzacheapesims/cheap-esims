@@ -29,6 +29,7 @@ export function HomeReviewsSection() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [planId, setPlanId] = useState("");
+  const [language, setLanguage] = useState("en");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -59,8 +60,10 @@ export function HomeReviewsSection() {
       return;
     }
 
-    if (!comment.trim() || comment.trim().length < 10) {
-      toast({ title: "Invalid comment", description: "Comment must be at least 10 characters long.", variant: "destructive" });
+    // Comment is optional - star-only reviews are valid
+    // Only validate length if comment is provided
+    if (comment.trim() && comment.trim().length < 2) {
+      toast({ title: "Invalid comment", description: "Comment must be at least 2 characters if provided.", variant: "destructive" });
       return;
     }
 
@@ -73,6 +76,7 @@ export function HomeReviewsSection() {
       setComment("");
       setPlanId("");
       setRating(5);
+      setLanguage("en");
       setSubmitting(false);
     }, 1000);
   };
@@ -154,21 +158,47 @@ export function HomeReviewsSection() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-semibold mb-2 block text-gray-700">Comment</label>
+                    <label className="text-sm font-semibold mb-2 block text-gray-700">
+                      Comment <span className="text-gray-400 font-normal">(optional)</span>
+                    </label>
                     <Textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      placeholder="Share your experience with this plan..."
+                      placeholder="Share your experience with this plan... (optional)"
                       className="min-h-[120px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
                       maxLength={1000}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      {comment.length}/1000 characters
+                      {comment.length}/1000 characters - Star-only reviews are welcome!
                     </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block text-gray-700">
+                      Language <span className="text-gray-400 font-normal">(optional)</span>
+                    </label>
+                    <select
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="zh">Chinese</option>
+                      <option value="ja">Japanese</option>
+                      <option value="ar">Arabic</option>
+                      <option value="th">Thai</option>
+                      <option value="id">Indonesian</option>
+                      <option value="vi">Vietnamese</option>
+                      <option value="tl">Filipino</option>
+                      <option value="ms">Malay</option>
+                      <option value="de">German</option>
+                      <option value="fr">French</option>
+                      <option value="pl">Polish</option>
+                    </select>
                   </div>
                   <Button
                     onClick={handleSubmitReview}
-                    disabled={submitting || !comment.trim() || !planId.trim()}
+                    disabled={submitting || !planId.trim()}
                     className="w-full bg-primary hover:bg-primary-dark text-black font-bold rounded-lg"
                   >
                     {submitting ? "Submitting..." : "Submit Review"}

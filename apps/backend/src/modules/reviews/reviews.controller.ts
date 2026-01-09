@@ -18,43 +18,22 @@ export class ReviewsController {
 
   @Post()
   @UseGuards(RateLimitGuard, CsrfGuard)
-  @RateLimit({ limit: 5, window: 3600 }) // 5 reviews per hour
+  @RateLimit({ limit: 20, window: 3600 }) // 20 reviews per hour
   async createReview(
     @Body() body: { planId?: string; userName?: string; rating: number; comment?: string; language?: string; source?: string },
     @Headers('x-user-email') userEmail: string | undefined,
   ) {
-    let userId: string | undefined;
-
+    // Allow anonymous reviews - userEmail is optional
+    let userId: string | null = null;
     if (userEmail) {
+      // Try to get userId from email, but allow reviews even if user doesn't exist in DB yet
       userId = await getUserIdFromEmail(this.prisma, userEmail);
+      // userId will be null if user doesn't exist, which is fine - review will be anonymous
     }
-    // If no userEmail, userId stays undefined (anonymous review allowed if logic permits)
-    // But getUserIdFromEmail might throw if user not found? No, it returns string | null/undefined usually?
-    // Looking at imports: getUserIdFromEmail.
-    // The previous code threw BadRequest if userEmail not present.
-    // If I want to allow anonymous reviews from frontend without login, I should allow it.
-    // But usually we want verified purchase reviews mostly.
-    // I'll keep the login requirement for USER SUBMITTED reviews for now to avoid spam.
-    // But the DTO allows optional.
-
-    if (!userEmail) {
-         // Allow anonymous for now if no auth header? Or enforce auth?
-         // User said "Do NOT require text for a review."
-         // Users usually need to be logged in to leave a review for an order.
-         // So I will keep the check for userEmail for PUBLIC submission endpoint.
-         throw new BadRequestException('User email required');
-    }
-
-     if (!userId && userEmail) {
-        userId = await getUserIdFromEmail(this.prisma, userEmail);
-        if (!userId) {
-             throw new BadRequestException('User not found');
-        }
-     }
 
     return this.reviewsService.createReview({
-      planId: body.planId,
-      userId,
+      planId: body.planId || undefined,
+      userId: userId || undefined, // null from getUserIdFromEmail becomes undefined
       userName: body.userName,
       rating: body.rating,
       comment: body.comment,
