@@ -5,6 +5,7 @@ import { Star, Globe, ChevronRight, User } from "lucide-react";
 import Link from "next/link";
 import { generateReviews, ReviewData, isMediumOrLongReview } from "@/lib/mock-reviews";
 import { safeFetch } from "@/lib/safe-fetch";
+import { decodeHtmlEntities } from "@/lib/utils";
 
 interface PlanTrustReviewsProps {
   planId: string;
@@ -30,16 +31,18 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        // Fetch real review count
+        // Use the same data source as /reviews page
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+        
+        // Fetch real review count
         const countData = await safeFetch<{ count: number }>(`${apiUrl}/reviews/count`, { showToast: false });
         const realCount = countData?.count || 0;
         
-        // Generate mock reviews (base count)
-        const mockCount = 3242;
-        const allMockReviews = generateReviews(mockCount);
+        // Generate mock reviews (same as reviews page)
+        const BASE_MOCK_COUNT = 3242;
+        const mockReviews = generateReviews(BASE_MOCK_COUNT);
         
-        // Fetch real reviews
+        // Fetch real reviews (same as reviews page)
         let realReviews: ReviewData[] = [];
         try {
           const apiData = await safeFetch<ApiReview[]>(`${apiUrl}/reviews/all`, { showToast: false });
@@ -57,38 +60,45 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
           console.error("Failed to fetch real reviews:", error);
         }
         
-        // Prioritize real reviews, then merge with mock reviews
-        // Filter for medium/long reviews only and sort by date (newest first)
-        const realMediumLong = realReviews
-          .filter(r => isMediumOrLongReview(r))
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        // Merge and sort by date (same as reviews page)
+        const allReviews = [...realReviews, ...mockReviews].sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
         
-        const mockMediumLong = allMockReviews
-          .filter(r => isMediumOrLongReview(r))
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        // Filter for medium/long reviews only
+        const mediumLongReviews = allReviews.filter(r => isMediumOrLongReview(r));
         
-        // Combine all and sort by date again to ensure latest are first
-        // Real reviews will naturally be more recent, but we want absolute latest
-        const allMediumLong = [...realMediumLong, ...mockMediumLong]
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        // Select 3 reviews with diverse usernames
+        // Strategy: Take latest reviews but ensure different authors
+        const selectedReviews: ReviewData[] = [];
+        const seenAuthors = new Set<string>();
         
-        // Get latest 3 medium/long reviews
-        const mediumLongReviews = allMediumLong.slice(0, 3);
+        // First, prioritize real reviews (they're more recent and have real usernames)
+        for (const review of mediumLongReviews) {
+          if (selectedReviews.length >= 3) break;
+          
+          const authorKey = review.author?.toLowerCase() || 'anonymous';
+          
+          // If we haven't seen this author yet, or we need more reviews
+          if (!seenAuthors.has(authorKey) || selectedReviews.length < 2) {
+            selectedReviews.push(review);
+            seenAuthors.add(authorKey);
+          }
+        }
         
-        // Debug logging
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[PlanTrustReviews] Real medium/long:', realMediumLong.length);
-          console.log('[PlanTrustReviews] Mock medium/long:', mockMediumLong.length);
-          console.log('[PlanTrustReviews] Selected reviews:', mediumLongReviews.map(r => ({ 
-            id: r.id.substring(0, 10), 
-            date: r.date, 
-            commentLength: r.comment?.length || 0 
-          })));
+        // If we still need more reviews, fill with any medium/long reviews (even if same author)
+        if (selectedReviews.length < 3) {
+          for (const review of mediumLongReviews) {
+            if (selectedReviews.length >= 3) break;
+            if (!selectedReviews.find(r => r.id === review.id)) {
+              selectedReviews.push(review);
+            }
+          }
         }
         
         // Update total count (real + mock)
-        setTotalCount(realCount + mockCount);
-        setReviews(mediumLongReviews);
+        setTotalCount(realCount + BASE_MOCK_COUNT);
+        setReviews(selectedReviews.slice(0, 3));
       } catch (error) {
         console.error("Failed to load reviews:", error);
         // Fallback to mock reviews
@@ -165,7 +175,7 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
                  )}
                </div>
                <p className="text-sm text-gray-600 leading-relaxed">
-                 "{review.comment}"
+                 "{decodeHtmlEntities(review.comment || '')}"
                </p>
             </div>
          ))}

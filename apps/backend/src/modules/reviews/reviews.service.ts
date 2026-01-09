@@ -60,6 +60,9 @@ export class ReviewsService {
         },
       });
       hasPurchased = !!order;
+      this.logger.log(`Review verification check: planId=${data.planId}, userId=${data.userId}, hasPurchased=${hasPurchased}, orderFound=${!!order}`);
+    } else {
+      this.logger.log(`Review verification skipped: planId=${data.planId || 'none'}, userId=${data.userId || 'none'}`);
     }
     // If no planId provided (from /reviews page), never mark as verified
 
@@ -86,7 +89,7 @@ export class ReviewsService {
         },
       });
 
-      this.logger.log(`Review created: ${review.id} for plan ${data.planId || 'global'} by user ${data.userId || 'anonymous'}`);
+      this.logger.log(`Review created: ${review.id} for plan ${data.planId || 'global'} by user ${data.userId || 'anonymous'}, verified=${review.verified}, hasPurchased=${hasPurchased}`);
       return review;
     } catch (error: any) {
       this.logger.error('Failed to create review:', error);

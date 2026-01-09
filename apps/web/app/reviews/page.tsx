@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Star, CheckCircle2, Globe, MessageSquare, Filter } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { generateReviews, ReviewData } from "@/lib/mock-reviews";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -400,7 +400,7 @@ function ReviewCard({ review }: { review: ReviewData }) {
       {review.comment ? (
         <div className="space-y-2">
           <p className="text-gray-800 leading-relaxed text-sm md:text-base">
-            {review.comment}
+            {decodeHtmlEntities(review.comment)}
           </p>
           {review.language && review.language !== 'en' && (
             <div className="flex items-center text-xs text-gray-400 mt-2">
