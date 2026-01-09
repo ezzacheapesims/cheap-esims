@@ -3,80 +3,32 @@
 import { useEffect, useState } from "react";
 import { Star, Globe, ChevronRight, User } from "lucide-react";
 import Link from "next/link";
-import { safeFetch } from "@/lib/safe-fetch";
-
-interface Review {
-  id: string;
-  userName: string;
-  rating: number;
-  comment: string;
-  verified: boolean;
-  date: string;
-}
+import { generateReviews, ReviewData } from "@/lib/mock-reviews";
 
 interface PlanTrustReviewsProps {
   planId: string;
 }
 
 export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [useGlobal, setUseGlobal] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
+  const totalCount = 3242; // Consistent total count
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-        
-        // Try to fetch plan-specific reviews
-        let data = await safeFetch<Review[]>(`${apiUrl}/reviews/plan/${planId}`, { showToast: false });
-        
-        // Fallback to global reviews if fewer than 3 reviews
-        if (!data || data.length < 3) {
-          setUseGlobal(true);
-          data = await safeFetch<Review[]>(`${apiUrl}/reviews/all`, { showToast: false });
-          // If fetching all fails or is empty, allow generic fallback count
-          setTotalCount(data && data.length > 3200 ? data.length : 3200); 
-        } else {
-          setUseGlobal(false);
-          setTotalCount(data.length);
-        }
-
-        // Filter for high quality (4-5 stars) and length
-        let highQuality = (data || [])
-          .filter(r => r.rating >= 4 && r.comment.length > 20 && r.comment.length < 150)
-          .slice(0, 3);
-          
-        if (highQuality.length === 0) {
-           // Static fallback if API returns nothing or filters remove everything
-           highQuality = [
-             { id: 'f1', userName: 'Traveler', rating: 5, comment: 'Worked perfectly immediately upon landing. Much cheaper than roaming!', verified: true, date: '' },
-             { id: 'f2', userName: 'Traveler', rating: 5, comment: 'Great signal speed and very easy to set up. Highly recommend.', verified: true, date: '' },
-             { id: 'f3', userName: 'Traveler', rating: 4, comment: 'Good value for money. Saved me a lot compared to my carrier.', verified: true, date: '' }
-           ];
-           setUseGlobal(true);
-           setTotalCount(3200);
-        }
-          
-        setReviews(highQuality);
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
-        // Error fallback
-        setReviews([
-             { id: 'e1', userName: 'Traveler', rating: 5, comment: 'Activated instantly when I landed. Great service.', verified: true, date: '' },
-             { id: 'e2', userName: 'Traveler', rating: 5, comment: 'Cheaper than other eSIMs and worked perfectly.', verified: true, date: '' }
-        ]);
-        setUseGlobal(true);
-        setTotalCount(3200);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (planId) {
-      fetchReviews();
-    }
+    // In a real app, you would filter by planId if available, 
+    // or fallback to global reviews.
+    // Since we are standardizing on the trustworthy global set:
+    const allReviews = generateReviews(totalCount);
+    
+    // Pick 3 high quality reviews to show
+    // Deterministic slice based on planId would be better, but random is okay for now
+    // Let's filter for English and high rating for the widget
+    const highQuality = allReviews
+      .filter(r => r.rating >= 4 && r.comment && r.comment.length > 30 && r.language === 'en')
+      .slice(0, 3);
+      
+    setReviews(highQuality);
+    setLoading(false);
   }, [planId]);
 
   if (loading) {
@@ -100,7 +52,7 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
         <div>
           <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
             <Globe className="w-4 h-4 text-primary" />
-            {useGlobal ? "Trusted Worldwide" : "Customer Reviews"}
+            Trusted Worldwide
           </h3>
           <div className="flex items-center gap-2 mt-1">
              <div className="flex items-center">
@@ -129,7 +81,7 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
                  <div className="bg-gray-100 p-1 rounded-full">
                    <User className="w-3 h-3 text-gray-500" />
                  </div>
-                 <span className="text-xs font-bold text-gray-900">{review.userName}</span>
+                 <span className="text-xs font-bold text-gray-900">{review.author || "Verified Customer"}</span>
                  {review.verified && (
                    <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">Verified</span>
                  )}

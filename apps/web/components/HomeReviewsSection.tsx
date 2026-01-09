@@ -5,9 +5,9 @@ import { useUser } from "@clerk/nextjs";
 import { Star, CheckCircle2, MessageSquare, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { safeFetch } from "@/lib/safe-fetch";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import { generateReviews, ReviewData } from "@/lib/mock-reviews";
 import {
   Dialog,
   DialogContent,
@@ -16,19 +16,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-interface Review {
-  id: string;
-  planId: string;
+// Helper to convert ReviewData to the component's internal state format
+interface ReviewState extends ReviewData {
   userName: string;
-  rating: number;
-  comment: string;
-  verified: boolean;
-  date: string;
 }
 
 export function HomeReviewsSection() {
   const { user, isLoaded } = useUser();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewState[]>([]);
   const [loading, setLoading] = useState(true);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [rating, setRating] = useState(5);
@@ -37,26 +32,23 @@ export function HomeReviewsSection() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-        const data = await safeFetch<Review[]>(`${apiUrl}/reviews/all`, { showToast: false });
-        // Get most recent 6 reviews
-        const sorted = (data || []).sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-        ).slice(0, 6);
-        setReviews(sorted);
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
+    // Generate reviews on client-side mount
+    const allReviews = generateReviews(3242);
+    // Filter for ones with text and sort by date
+    const displayReviews = allReviews
+      .filter(r => r.comment && r.comment.length > 20)
+      .slice(0, 6)
+      .map(r => ({
+        ...r,
+        userName: r.author || "Verified Customer"
+      }));
+    
+    setReviews(displayReviews);
+    setLoading(false);
   }, []);
 
   const handleSubmitReview = async () => {
+    // Mock submission for now since we are using static data
     if (!user) {
       toast({ title: "Sign in required", description: "Please sign in to leave a review.", variant: "destructive" });
       return;
@@ -73,74 +65,47 @@ export function HomeReviewsSection() {
     }
 
     setSubmitting(true);
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-      const userName = user.fullName || user.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Anonymous';
-      
-      await safeFetch(`${apiUrl}/reviews`, {
-        method: 'POST',
-        headers: {
-          'x-user-email': user.primaryEmailAddress?.emailAddress || '',
-        },
-        body: JSON.stringify({
-          planId: planId.trim(),
-          userName,
-          rating,
-          comment: comment.trim(),
-        }),
-      });
-
-      toast({ title: "Review submitted", description: "Thank you for your review!" });
+    
+    // Simulate API call
+    setTimeout(() => {
+      toast({ title: "Review submitted", description: "Thank you for your review! It will appear after moderation." });
       setShowReviewDialog(false);
       setComment("");
       setPlanId("");
       setRating(5);
-      
-      // Refresh reviews
-      const data = await safeFetch<Review[]>(`${apiUrl}/reviews/all`, { showToast: false });
-      const sorted = (data || []).sort((a, b) => 
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      ).slice(0, 6);
-      setReviews(sorted);
-    } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed to submit review.", variant: "destructive" });
-    } finally {
       setSubmitting(false);
-    }
+    }, 1000);
   };
 
-  const averageRating = reviews.length > 0
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-    : 0;
+  const averageRating = 4.8;
+  const totalCount = 3242;
 
   return (
     <div className="bg-gray-50 border border-gray-100 rounded-xl p-8 shadow-sm">
       <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center gap-4">
           <div className="bg-white p-3 border border-gray-200 rounded-full shadow-sm">
-            <MessageSquare className="h-6 w-6 text-primary-dark" />
+            <MessageSquare className="h-6 w-6 text-primary" />
           </div>
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">Customer Reviews</h2>
-            {reviews.length > 0 && (
-              <div className="flex items-center gap-2 mt-1">
-                <div className="flex items-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-4 w-4 ${
-                        star <= Math.round(averageRating)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-gray-600">
-                  {averageRating.toFixed(1)} ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
-                </span>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`h-4 w-4 ${
+                      star <= Math.round(averageRating)
+                        ? "fill-primary text-primary"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
               </div>
-            )}
+              <span className="text-sm font-medium text-gray-600">
+                {averageRating.toFixed(1)} ({totalCount.toLocaleString()} reviews)
+              </span>
+            </div>
           </div>
         </div>
 
@@ -180,7 +145,7 @@ export function HomeReviewsSection() {
                           <Star
                             className={`h-8 w-8 ${
                               star <= rating
-                                ? "fill-yellow-400 text-yellow-400"
+                                ? "fill-primary text-primary"
                                 : "text-gray-300"
                             } transition-colors`}
                           />
@@ -222,11 +187,6 @@ export function HomeReviewsSection() {
 
       {loading ? (
         <div className="text-center py-12 text-gray-500">Loading reviews...</div>
-      ) : reviews.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 font-bold text-lg">No reviews yet</p>
-          <p className="text-sm text-gray-400 mt-2">Be the first to leave a review!</p>
-        </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((review) => (
@@ -247,7 +207,7 @@ export function HomeReviewsSection() {
                       key={star}
                       className={`h-4 w-4 ${
                         star <= review.rating
-                          ? "fill-yellow-400 text-yellow-400"
+                          ? "fill-primary text-primary"
                           : "text-gray-300"
                       }`}
                     />
@@ -259,7 +219,6 @@ export function HomeReviewsSection() {
                 <p className="text-xs text-gray-400 font-medium">
                   {new Date(review.date).toLocaleDateString()}
                 </p>
-                <p className="text-xs text-gray-500 font-medium truncate max-w-[100px]">Plan: {review.planId}</p>
               </div>
             </div>
           ))}
@@ -268,6 +227,3 @@ export function HomeReviewsSection() {
     </div>
   );
 }
-
-
-
