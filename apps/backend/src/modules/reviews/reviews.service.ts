@@ -48,23 +48,8 @@ export class ReviewsService {
       }
     }
 
-    // Check if user has purchased this plan (for verified badge)
-    // Only mark as verified if planId is provided (from My eSIMs page) AND user purchased it
-    let hasPurchased = false;
-    if (data.planId && data.userId) {
-      const order = await this.prisma.order.findFirst({
-        where: {
-          userId: data.userId,
-          planId: data.planId,
-          status: 'paid',
-        },
-      });
-      hasPurchased = !!order;
-      this.logger.log(`Review verification check: planId=${data.planId}, userId=${data.userId}, hasPurchased=${hasPurchased}, orderFound=${!!order}`);
-    } else {
-      this.logger.log(`Review verification skipped: planId=${data.planId || 'none'}, userId=${data.userId || 'none'}`);
-    }
-    // If no planId provided (from /reviews page), never mark as verified
+    // All reviews are marked as verified
+    const hasPurchased = true;
 
     // Sanitize inputs - ensure empty strings become null
     const sanitizedComment = data.comment && data.comment.trim().length > 0 
@@ -127,7 +112,7 @@ export class ReviewsService {
                 comment: sanitizedComment,
                 language: (data.language && typeof data.language === 'string' && data.language.trim().length > 0) ? data.language.trim() : 'en',
                 source: (data.source && typeof data.source === 'string' && data.source.trim().length > 0) ? data.source.trim() : 'purchase',
-                verified: false, // Can't verify if user doesn't exist
+                verified: true, // All reviews are verified
               },
             });
             this.logger.log(`Review created (retry): ${review.id}`);
@@ -188,32 +173,18 @@ export class ReviewsService {
       },
     });
 
-    // Remove verified from 40% of reviews deterministically based on review ID
-    // This ensures consistent results across API calls
-    return reviews.map((review) => {
-      // Use a simple hash of the review ID to deterministically decide
-      // This ensures the same review always gets the same verified status
-      const hash = review.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const shouldRemoveVerified = (hash % 100) < 40; // 40% will have verified removed
-      
-      // Only remove verified if the review doesn't have a planId (from /reviews page)
-      // Reviews with planId should keep their verified status (they're from My eSIMs)
-      const shouldShowVerified = review.planId 
-        ? review.verified // Keep verified if it has planId (from My eSIMs)
-        : (shouldRemoveVerified ? false : review.verified); // Remove from 40% if no planId
-      
-      return {
-        id: review.id,
-        planId: review.planId,
-        userName: review.userName || 'Anonymous',
-        rating: review.rating,
-        comment: review.comment,
-        language: review.language,
-        source: review.source,
-        verified: shouldShowVerified,
-        date: review.createdAt.toISOString(),
-      };
-    });
+    // All reviews show verified purchase tag
+    return reviews.map((review) => ({
+      id: review.id,
+      planId: review.planId,
+      userName: review.userName || 'Anonymous',
+      rating: review.rating,
+      comment: review.comment,
+      language: review.language,
+      source: review.source,
+      verified: true, // All reviews show verified
+      date: review.createdAt.toISOString(),
+    }));
   }
 
   async getReviewStats() {
@@ -248,6 +219,35 @@ export class ReviewsService {
   async getTotalReviewCount(): Promise<number> {
     // Return total count of real reviews (mock reviews are generated client-side)
     return this.prisma.review.count();
+  }
+
+  async getRealReviewsForAdmin() {
+    // Get only real reviews from database (for admin dashboard)
+    const reviews = await this.prisma.review.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        User: {
+          select: {
+            id: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return reviews.map((review) => ({
+      id: review.id,
+      planId: review.planId,
+      userId: review.userId,
+      userName: review.userName || 'Anonymous',
+      userEmail: review.User?.email || null,
+      rating: review.rating,
+      comment: review.comment,
+      language: review.language,
+      source: review.source,
+      verified: review.verified,
+      date: review.createdAt.toISOString(),
+    }));
   }
 
   async seedReviews(count: number = 3200) {

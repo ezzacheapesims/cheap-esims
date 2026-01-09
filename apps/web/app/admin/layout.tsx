@@ -188,6 +188,7 @@ export default function AdminLayout({
         { href: "/admin/discounts", label: "Discounts", icon: Percent },
         { href: "/admin/pricing", label: "Pricing", icon: CreditCard },
         { href: "/admin/support", label: "Support Tickets", icon: MessageSquare },
+        { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
         { href: "/admin/settings", label: "Settings", icon: Settings },
         { href: "/admin/emails", label: "Email Logs", icon: Mail },
         { href: "/admin/logs", label: "Logs", icon: FileText },

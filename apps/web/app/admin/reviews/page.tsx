@@ -12,10 +12,14 @@ import { useRouter } from "next/navigation";
 
 interface Review {
   id: string;
-  planId: string;
+  planId: string | null;
+  userId: string | null;
   userName: string;
+  userEmail: string | null;
   rating: number;
-  comment: string;
+  comment: string | null;
+  language: string | null;
+  source: string | null;
   verified: boolean;
   date: string;
 }
@@ -122,8 +126,15 @@ export default function AdminReviewsPage() {
                         <Star key={star} className={`h-4 w-4 ${star <= review.rating ? "fill-current" : "text-gray-300"}`} />
                       ))}
                     </div>
-                    <p className="text-gray-700 mt-2 font-mono text-sm">{review.comment}</p>
-                    <p className="text-xs text-gray-500 font-mono uppercase">Plan: {review.planId}</p>
+                    {review.comment && (
+                      <p className="text-gray-700 mt-2 font-mono text-sm">{review.comment}</p>
+                    )}
+                    <div className="flex gap-4 text-xs text-gray-500 font-mono uppercase mt-2">
+                      {review.planId && <span>Plan: {review.planId}</span>}
+                      {review.userEmail && <span>Email: {review.userEmail}</span>}
+                      {review.language && <span>Lang: {review.language}</span>}
+                      {review.source && <span>Source: {review.source}</span>}
+                    </div>
                   </div>
                   <Button
                     variant="destructive"
@@ -143,6 +154,7 @@ export default function AdminReviewsPage() {
     </div>
   );
 }
+
 
 
 

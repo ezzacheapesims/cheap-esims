@@ -49,46 +49,19 @@ export default function ReviewsPage() {
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch and merge real reviews with generated ones
+  // Only show mock reviews (real reviews are hidden from public)
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-        
-        // Fetch real review count
-        const countData = await safeFetch<{ count: number }>(`${apiUrl}/reviews/count`, { showToast: false });
-        const realCount = countData?.count || 0;
-        
-        // Generate mock reviews (base count)
+        // Generate mock reviews only (real reviews are admin-only)
         const mockReviews = generateReviews(BASE_MOCK_COUNT);
         
-        // Fetch real reviews from API
-        let realReviews: ReviewData[] = [];
-        try {
-          const apiData = await safeFetch<ApiReview[]>(`${apiUrl}/reviews/all`, { showToast: false });
-          
-          // Convert API format to ReviewData format
-          realReviews = (apiData || []).map((review): ReviewData => ({
-            id: review.id,
-            rating: review.rating,
-            date: review.date, // Use actual date from database
-            comment: review.comment || undefined,
-            language: review.language || undefined,
-            source: (review.source as 'purchase' | 'survey' | 'support') || 'purchase',
-            verified: review.verified,
-            author: review.userName || 'Anonymous'
-          }));
-        } catch (error) {
-          console.error("Failed to fetch real reviews:", error);
-          // Continue with just mock reviews if API fails
-        }
-        
-        // Merge and sort by date (newest first)
-        const allReviews = [...realReviews, ...mockReviews].sort((a, b) => {
+        // Sort by date (newest first)
+        const sortedReviews = mockReviews.sort((a, b) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
         
-        setReviews(allReviews);
+        setReviews(sortedReviews);
       } catch (error) {
         console.error("Failed to load reviews:", error);
         // Fallback to mock reviews only
@@ -99,7 +72,7 @@ export default function ReviewsPage() {
     
     loadReviews();
     
-    // Refresh every 30 seconds to get latest reviews
+    // Refresh every 30 seconds
     const interval = setInterval(loadReviews, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -159,29 +132,13 @@ export default function ReviewsPage() {
         }),
       });
 
-      toast({ title: "Review submitted", description: "Thank you for your review!" });
+      toast({ title: "Review submitted", description: "Thank you for your review! It will be reviewed by our team." });
       setShowReviewDialog(false);
       setComment("");
       setRating(5);
       
-      // Reload reviews to include the new one
-      const apiData = await safeFetch<ApiReview[]>(`${apiUrl}/reviews/all`, { showToast: false });
-      const realReviews = (apiData || []).map((review): ReviewData => ({
-        id: review.id,
-        rating: review.rating,
-        date: review.date,
-        comment: review.comment || undefined,
-        language: review.language || undefined,
-        source: (review.source as 'purchase' | 'survey' | 'support') || 'purchase',
-        verified: review.verified,
-        author: review.userName || 'Anonymous'
-      }));
-      
-      const mockReviews = generateReviews(BASE_MOCK_COUNT);
-      const allReviews = [...realReviews, ...mockReviews].sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
-      setReviews(allReviews);
+      // Real reviews are admin-only, so we don't reload them here
+      // Just keep showing mock reviews
       setVisibleCount(ITEMS_PER_PAGE); // Reset to show from top
     } catch (error: any) {
       console.error("Review submission error:", error);

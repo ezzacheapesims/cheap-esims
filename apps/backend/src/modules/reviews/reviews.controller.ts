@@ -77,8 +77,8 @@ export class AdminReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Get()
-  async getAllReviews() {
-    return this.reviewsService.getAllReviews();
+  async getRealReviews() {
+    return this.reviewsService.getRealReviewsForAdmin();
   }
 
   @Delete(':id')

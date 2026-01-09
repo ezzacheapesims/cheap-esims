@@ -51,7 +51,24 @@ const SHORT_REVIEWS_EN = [
   "perfect for travel",
   "exactly as described",
   "highly recommend",
-  "great experience"
+  "great experience",
+  "blazing fast speeds",
+  "support team is amazing",
+  "lightning quick connection",
+  "customer service responded instantly",
+  "incredibly fast data speeds",
+  "support helped me right away",
+  "super fast internet everywhere",
+  "excellent customer support",
+  "speed exceeded my expectations",
+  "support was very helpful",
+  "connection speed is impressive",
+  "great service and fast response",
+  "support answered within minutes",
+  "really fast and reliable",
+  "outstanding customer service",
+  "speed was consistently excellent",
+  "support team is top notch"
 ];
 
 const SHORT_REVIEWS_ES = [
@@ -116,7 +133,22 @@ const SHORT_REVIEWS_ZH = [
   "网速快",
   "没有问题",
   "很满意",
-  "会再买"
+  "会再买",
+  "网速超快",
+  "客服很棒",
+  "连接速度很快",
+  "客服回复及时",
+  "数据速度惊人",
+  "支持团队很给力",
+  "网速非常快",
+  "客户服务优秀",
+  "速度超出预期",
+  "支持帮助及时",
+  "连接速度稳定",
+  "服务态度很好",
+  "网速一直很快",
+  "客服专业负责",
+  "速度表现优异"
 ];
 
 const SHORT_REVIEWS_JA = [
@@ -129,7 +161,22 @@ const SHORT_REVIEWS_JA = [
   "インターネット速い",
   "完璧",
   "満足している",
-  "また使います"
+  "また使います",
+  "速度が非常に速い",
+  "サポートが素晴らしい",
+  "接続が超高速",
+  "カスタマーサービスが迅速",
+  "データ速度が驚くほど速い",
+  "サポートチームが優秀",
+  "インターネットが超速い",
+  "カスタマーサポートが優れている",
+  "速度が期待以上",
+  "サポートがすぐに対応",
+  "接続速度が安定",
+  "サービス品質が高い",
+  "速度が常に速い",
+  "サポートが専門的",
+  "速度パフォーマンスが優秀"
 ];
 
 const SHORT_REVIEWS_TH = [
@@ -142,7 +189,22 @@ const SHORT_REVIEWS_TH = [
   "อินเทอร์เน็ตเร็ว",
   "ไม่มีปัญหา",
   "พอใจมาก",
-  "จะซื้ออีก"
+  "จะซื้ออีก",
+  "ความเร็วสุดยอด",
+  "ทีมสนับสนุนยอดเยี่ยม",
+  "การเชื่อมต่อเร็วมาก",
+  "บริการลูกค้าตอบกลับทันที",
+  "ความเร็วข้อมูลน่าทึ่ง",
+  "ทีมช่วยเหลือดีมาก",
+  "อินเทอร์เน็ตเร็วมาก",
+  "บริการลูกค้าดีเยี่ยม",
+  "ความเร็วเกินคาด",
+  "สนับสนุนช่วยเหลือทันที",
+  "ความเร็วเชื่อมต่อเสถียร",
+  "คุณภาพบริการดี",
+  "ความเร็วสม่ำเสมอ",
+  "ทีมสนับสนุนมืออาชีพ",
+  "ประสิทธิภาพความเร็วดีมาก"
 ];
 
 const SHORT_REVIEWS_TL = [
@@ -155,7 +217,22 @@ const SHORT_REVIEWS_TL = [
   "Mabilis ang internet",
   "Walang problema",
   "Nasiyahan ako",
-  "Bibili ulit ako"
+  "Bibili ulit ako",
+  "Napakabilis ng bilis",
+  "Napakagaling ng support team",
+  "Mabilis na koneksyon",
+  "Mabilis na tumugon ang customer service",
+  "Kahanga-hanga ang bilis ng data",
+  "Napakagaling ng support",
+  "Napakabilis ng internet",
+  "Mahusay na customer support",
+  "Lumampas sa inaasahan ang bilis",
+  "Mabilis na tumulong ang support",
+  "Matatag na bilis ng koneksyon",
+  "Mahusay na kalidad ng serbisyo",
+  "Palaging mabilis ang bilis",
+  "Propesyonal na support team",
+  "Napakahusay ng performance ng bilis"
 ];
 
 const SHORT_REVIEWS_ID = [
@@ -168,7 +245,22 @@ const SHORT_REVIEWS_ID = [
   "Internet cepat",
   "Tidak ada masalah",
   "Sangat puas",
-  "Akan beli lagi"
+  "Akan beli lagi",
+  "Kecepatan sangat tinggi",
+  "Tim support luar biasa",
+  "Koneksi super cepat",
+  "Customer service merespons cepat",
+  "Kecepatan data menakjubkan",
+  "Support membantu dengan baik",
+  "Internet sangat cepat",
+  "Customer support sangat baik",
+  "Kecepatan melebihi ekspektasi",
+  "Support membantu segera",
+  "Kecepatan koneksi stabil",
+  "Kualitas layanan sangat baik",
+  "Kecepatan selalu cepat",
+  "Tim support profesional",
+  "Performansi kecepatan sangat baik"
 ];
 
 const SHORT_REVIEWS_VI = [
@@ -181,7 +273,22 @@ const SHORT_REVIEWS_VI = [
   "Internet nhanh",
   "Không có vấn đề",
   "Rất hài lòng",
-  "Sẽ mua lại"
+  "Sẽ mua lại",
+  "Tốc độ cực nhanh",
+  "Đội hỗ trợ tuyệt vời",
+  "Kết nối siêu nhanh",
+  "Dịch vụ khách hàng phản hồi ngay",
+  "Tốc độ dữ liệu đáng kinh ngạc",
+  "Hỗ trợ giúp đỡ ngay lập tức",
+  "Internet rất nhanh",
+  "Hỗ trợ khách hàng xuất sắc",
+  "Tốc độ vượt quá mong đợi",
+  "Hỗ trợ giúp đỡ ngay",
+  "Tốc độ kết nối ổn định",
+  "Chất lượng dịch vụ tốt",
+  "Tốc độ luôn nhanh",
+  "Đội hỗ trợ chuyên nghiệp",
+  "Hiệu suất tốc độ rất tốt"
 ];
 
 const SHORT_REVIEWS_MS = [
@@ -194,7 +301,22 @@ const SHORT_REVIEWS_MS = [
   "Internet pantas",
   "Tiada masalah",
   "Sangat puas hati",
-  "Akan beli lagi"
+  "Akan beli lagi",
+  "Kelajuan sangat tinggi",
+  "Pasukan sokongan hebat",
+  "Sambungan super pantas",
+  "Perkhidmatan pelanggan responsif",
+  "Kelajuan data menakjubkan",
+  "Sokongan membantu dengan baik",
+  "Internet sangat pantas",
+  "Sokongan pelanggan cemerlang",
+  "Kelajuan melebihi jangkaan",
+  "Sokongan membantu segera",
+  "Kelajuan sambungan stabil",
+  "Kualiti perkhidmatan sangat baik",
+  "Kelajuan sentiasa pantas",
+  "Pasukan sokongan profesional",
+  "Prestasi kelajuan sangat baik"
 ];
 
 const SHORT_REVIEWS_AR = [
@@ -207,7 +329,22 @@ const SHORT_REVIEWS_AR = [
   "إنترنت سريع",
   "لا توجد مشاكل",
   "راضٍ جداً",
-  "سأشتري مرة أخرى"
+  "سأشتري مرة أخرى",
+  "السرعة مذهلة",
+  "فريق الدعم رائع",
+  "الاتصال سريع جداً",
+  "خدمة العملاء تستجيب فوراً",
+  "سرعة البيانات مدهشة",
+  "الدعم يساعد على الفور",
+  "الإنترنت سريع جداً",
+  "دعم العملاء ممتاز",
+  "السرعة تجاوزت التوقعات",
+  "الدعم يساعد فوراً",
+  "سرعة الاتصال مستقرة",
+  "جودة الخدمة ممتازة",
+  "السرعة دائماً سريعة",
+  "فريق الدعم محترف",
+  "أداء السرعة ممتاز جداً"
 ];
 
 const LOW_RATING_REVIEWS_EN = [
@@ -425,7 +562,23 @@ const LONG_REVIEWS_EN = [
   "this is my second time using this service and it's been consistent both times reliable, affordable, and exactly what I need for travel",
   "the data speeds were fast enough for everything I needed including streaming music, using social media, and video calls",
   "I appreciated that I could activate it before leaving home so I had internet as soon as I landed no waiting at the airport",
-  "great value for money especially compared to what my carrier charges for international roaming saved me over $100 on this trip alone"
+  "great value for money especially compared to what my carrier charges for international roaming saved me over $100 on this trip alone",
+  "the internet speed was absolutely incredible I was streaming 4K videos without any buffering even in remote mountain areas",
+  "customer support team is phenomenal they helped me troubleshoot a minor issue at 2am and resolved it within 15 minutes",
+  "connection speeds are consistently fast I did multiple video calls for work and the quality was crystal clear throughout",
+  "support responded to my email within 30 minutes and provided step-by-step guidance that solved my activation problem immediately",
+  "the service quality is outstanding I've used many eSIM providers and this one has the fastest speeds and most reliable connection",
+  "data speeds are lightning fast I downloaded large files in seconds and streamed HD content without any interruptions",
+  "customer service is top tier they're knowledgeable, friendly, and always ready to help with any questions or concerns",
+  "the connection speed exceeded all my expectations I was able to work remotely with video calls and file transfers seamlessly",
+  "support team went above and beyond when I had questions they provided detailed explanations and made sure I understood everything",
+  "internet speeds are consistently excellent I never experienced slowdowns even during peak hours in busy tourist areas",
+  "the customer support experience was amazing they responded quickly and helped me set everything up perfectly on my first try",
+  "data speeds are impressively fast I could stream music, browse social media, and use navigation apps simultaneously without lag",
+  "service quality is exceptional the connection is always stable and fast making it perfect for both work and leisure activities",
+  "support staff is incredibly helpful and professional they answered all my questions and made the whole process stress-free",
+  "the speed is remarkable I was able to upload photos and videos instantly and video calls were smooth and clear",
+  "customer service is outstanding they're available 24/7 and always provide quick, accurate solutions to any issues that arise"
 ];
 
 // Medium length reviews (between short and long)
@@ -449,7 +602,26 @@ const MEDIUM_REVIEWS_EN = [
   "the price point is really competitive compared to other eSIM providers I've tried",
   "signal strength was impressive even in areas where my phone normally struggles",
   "simple installation process that even someone not tech-savvy could handle easily",
-  "reliable connection throughout my entire vacation never had to worry about losing internet access"
+  "reliable connection throughout my entire vacation never had to worry about losing internet access",
+  "connection speeds are blazing fast I streamed movies and made video calls without any quality issues",
+  "customer support is excellent they responded within minutes and helped me resolve my question immediately",
+  "data speeds are consistently impressive I never experienced any slowdowns even during heavy usage",
+  "support team is fantastic they provided clear instructions and made sure everything worked perfectly",
+  "internet speed is outstanding I downloaded large files quickly and streamed content without buffering",
+  "customer service is top notch they're professional, friendly, and always ready to assist",
+  "connection speed exceeded my expectations I could do everything I needed without any delays",
+  "support responded quickly to my inquiry and provided helpful solutions that worked right away",
+  "data speeds are excellent I used multiple apps simultaneously and everything loaded instantly",
+  "service quality is remarkable the connection is fast, stable, and reliable everywhere I went",
+  "customer support is outstanding they helped me understand the setup process and answered all questions",
+  "internet speeds are consistently fast I streamed videos and made calls without any interruptions",
+  "support team is very responsive they got back to me quickly and solved my issue efficiently",
+  "connection speed is impressive I was able to work remotely with video conferences and file sharing",
+  "data speeds are great I never had to wait for pages to load or videos to buffer",
+  "customer service is excellent they're knowledgeable and always provide helpful guidance",
+  "internet speed is fantastic I could do everything I needed without experiencing any lag",
+  "support staff is amazing they made the entire process easy and stress-free",
+  "connection speeds are consistently excellent making it perfect for all my online activities"
 ];
 
 const MEDIUM_REVIEWS_ES = [
@@ -472,7 +644,26 @@ const MEDIUM_REVIEWS_ES = [
   "el precio es realmente competitivo comparado con otros proveedores de eSIM que he probado",
   "la fuerza de la señal fue impresionante incluso en áreas donde mi teléfono normalmente tiene problemas",
   "proceso de instalación simple que incluso alguien no experto en tecnología podría manejar fácilmente",
-  "conexión confiable durante todas mis vacaciones nunca tuve que preocuparme por perder el acceso a internet"
+  "conexión confiable durante todas mis vacaciones nunca tuve que preocuparme por perder el acceso a internet",
+  "las velocidades de conexión son extremadamente rápidas transmití películas e hice videollamadas sin problemas de calidad",
+  "el soporte al cliente es excelente respondieron en minutos y me ayudaron a resolver mi pregunta inmediatamente",
+  "las velocidades de datos son consistentemente impresionantes nunca experimenté ralentizaciones ni siquiera con uso intenso",
+  "el equipo de soporte es fantástico proporcionaron instrucciones claras y se aseguraron de que todo funcionara perfectamente",
+  "la velocidad de internet es sobresaliente descargué archivos grandes rápidamente y transmití contenido sin buffering",
+  "el servicio al cliente es de primera clase son profesionales, amigables y siempre listos para ayudar",
+  "la velocidad de conexión superó mis expectativas pude hacer todo lo que necesitaba sin retrasos",
+  "el soporte respondió rápidamente a mi consulta y proporcionó soluciones útiles que funcionaron de inmediato",
+  "las velocidades de datos son excelentes usé múltiples aplicaciones simultáneamente y todo se cargó instantáneamente",
+  "la calidad del servicio es notable la conexión es rápida, estable y confiable en todas partes donde fui",
+  "el soporte al cliente es sobresaliente me ayudaron a entender el proceso de configuración y respondieron todas las preguntas",
+  "las velocidades de internet son consistentemente rápidas transmití videos e hice llamadas sin interrupciones",
+  "el equipo de soporte es muy receptivo me respondieron rápidamente y resolvieron mi problema de manera eficiente",
+  "la velocidad de conexión es impresionante pude trabajar remotamente con videoconferencias y compartir archivos",
+  "las velocidades de datos son geniales nunca tuve que esperar a que las páginas se cargaran o los videos se bufferizaran",
+  "el servicio al cliente es excelente son conocedores y siempre proporcionan orientación útil",
+  "la velocidad de internet es fantástica pude hacer todo lo que necesitaba sin experimentar ningún retraso",
+  "el personal de soporte es increíble hicieron todo el proceso fácil y sin estrés",
+  "las velocidades de conexión son consistentemente excelentes perfectas para todas mis actividades en línea"
 ];
 
 const LONG_REVIEWS_ES = [
@@ -493,7 +684,23 @@ const LONG_REVIEWS_ES = [
   "funcionó bien tanto en áreas urbanas como rurales me sorprendió lo fuerte que era la señal incluso en el campo",
   "no soy muy experto en tecnología pero el proceso de instalación fue sencillo las instrucciones fueron claras y fáciles de seguir",
   "la conexión fue estable durante todo mi viaje sin desconexiones aleatorias ni períodos lentos incluso durante horas pico de uso",
-  "esta es la segunda vez que uso este servicio y ha sido consistente ambas veces confiable, asequible y exactamente lo que necesito para viajar"
+  "esta es la segunda vez que uso este servicio y ha sido consistente ambas veces confiable, asequible y exactamente lo que necesito para viajar",
+  "la velocidad de internet es increíble pude transmitir videos en alta calidad sin interrupciones incluso en zonas remotas",
+  "el equipo de soporte al cliente es excepcional me ayudaron a resolver un problema menor en minutos y fueron muy amables",
+  "las velocidades de conexión son consistentemente rápidas hice varias videollamadas de trabajo y la calidad fue perfecta",
+  "el soporte respondió a mi correo en menos de 30 minutos y me dio instrucciones claras que solucionaron mi problema de inmediato",
+  "la calidad del servicio es sobresaliente he usado muchos proveedores de eSIM y este tiene las velocidades más rápidas",
+  "las velocidades de datos son impresionantes descargué archivos grandes en segundos y transmití contenido HD sin problemas",
+  "el servicio al cliente es de primera clase son conocedores, amigables y siempre dispuestos a ayudar con cualquier pregunta",
+  "la velocidad de conexión superó todas mis expectativas pude trabajar remotamente con videollamadas y transferencias de archivos",
+  "el equipo de soporte fue más allá cuando tuve preguntas proporcionaron explicaciones detalladas y se aseguraron de que entendiera todo",
+  "las velocidades de internet son consistentemente excelentes nunca experimenté ralentizaciones ni siquiera en horas pico",
+  "la experiencia de soporte al cliente fue increíble respondieron rápidamente y me ayudaron a configurar todo perfectamente",
+  "las velocidades de datos son notablemente rápidas pude transmitir música, navegar en redes sociales y usar aplicaciones de navegación simultáneamente",
+  "la calidad del servicio es excepcional la conexión es siempre estable y rápida perfecta para trabajo y actividades de ocio",
+  "el personal de soporte es increíblemente útil y profesional respondieron todas mis preguntas y hicieron todo el proceso sin estrés",
+  "la velocidad es notable pude subir fotos y videos instantáneamente y las videollamadas fueron fluidas y claras",
+  "el servicio al cliente es sobresaliente están disponibles 24/7 y siempre proporcionan soluciones rápidas y precisas"
 ];
 
 // Helper to get random item from array
