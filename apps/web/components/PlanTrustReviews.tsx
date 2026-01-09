@@ -69,26 +69,38 @@ export function PlanTrustReviews({ planId }: PlanTrustReviewsProps) {
         const mediumLongReviews = allReviews.filter(r => isMediumOrLongReview(r));
         
         // Select 3 reviews with diverse usernames
-        // Strategy: Take latest reviews but ensure different authors
+        // Strategy: Randomize selection from top 20 latest reviews to show variety
+        const topReviews = mediumLongReviews.slice(0, 20); // Get top 20 latest
         const selectedReviews: ReviewData[] = [];
         const seenAuthors = new Set<string>();
         
-        // First, prioritize real reviews (they're more recent and have real usernames)
-        for (const review of mediumLongReviews) {
+        // Shuffle the top reviews to get variety (but keep real reviews prioritized)
+        const realTopReviews = topReviews.filter(r => !r.id.startsWith('mock-'));
+        const mockTopReviews = topReviews.filter(r => r.id.startsWith('mock-'));
+        
+        // Combine: real reviews first, then shuffled mock reviews
+        const shuffledMock = [...mockTopReviews].sort(() => Math.random() - 0.5);
+        const pool = [...realTopReviews, ...shuffledMock];
+        
+        // Select 3 reviews ensuring diverse authors
+        for (const review of pool) {
           if (selectedReviews.length >= 3) break;
           
           const authorKey = review.author?.toLowerCase() || 'anonymous';
           
-          // If we haven't seen this author yet, or we need more reviews
-          if (!seenAuthors.has(authorKey) || selectedReviews.length < 2) {
+          // Prefer reviews with different authors
+          if (!seenAuthors.has(authorKey)) {
             selectedReviews.push(review);
             seenAuthors.add(authorKey);
+          } else if (selectedReviews.length < 2) {
+            // Allow one duplicate author if we need more reviews
+            selectedReviews.push(review);
           }
         }
         
-        // If we still need more reviews, fill with any medium/long reviews (even if same author)
+        // If we still need more reviews, fill with any from the pool
         if (selectedReviews.length < 3) {
-          for (const review of mediumLongReviews) {
+          for (const review of pool) {
             if (selectedReviews.length >= 3) break;
             if (!selectedReviews.find(r => r.id === review.id)) {
               selectedReviews.push(review);
