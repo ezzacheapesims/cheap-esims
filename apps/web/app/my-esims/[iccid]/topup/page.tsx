@@ -101,35 +101,40 @@ export default function TopUpSelectionPage() {
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Back Button */}
-      <Link href={`/my-esims/${iccid}`} className="inline-flex items-center text-gray-500 hover:text-black transition-colors mb-4 font-mono uppercase text-xs font-bold">
+      <Link href={`/my-esims/${iccid}`} className="inline-flex items-center text-gray-500 hover:text-black transition-colors mb-4 text-sm font-medium">
         <ArrowLeft className="h-4 w-4 mr-2" /> Back to eSIM Details
       </Link>
 
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-black text-black uppercase tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black">
             Top-Up {profile?.planDetails?.name || 'eSIM'}
           </h1>
           {iccid && (
-            <p className="text-sm text-gray-500 mt-1 font-mono font-bold">
+            <p className="text-sm text-gray-500 mt-2 font-mono">
               {iccid}
             </p>
           )}
         </div>
-        <Button variant="outline" size="icon" onClick={fetchData} className="border-2 border-black rounded-none hover:bg-black hover:text-white transition-all">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          onClick={fetchData} 
+          className="border border-gray-200 rounded-full shadow-sm hover:shadow-md hover:bg-gray-50 transition-all"
+        >
            <RefreshCw className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Header Card */}
-      <div className="bg-white border-2 border-black rounded-none p-8 shadow-hard relative overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-5">
               <Wifi className="h-64 w-64 text-black" />
           </div>
           
           <div className="relative z-10">
-              <h2 className="text-4xl font-black uppercase tracking-tighter text-black mb-2">Select a Top-Up Plan</h2>
-              <p className="text-gray-600 font-mono font-bold uppercase">Add more data to your existing eSIM. Instant activation.</p>
+              <h2 className="text-3xl font-bold tracking-tight text-black mb-2">Select a Top-Up Plan</h2>
+              <p className="text-gray-600 text-base">Add more data to your existing eSIM. Instant activation.</p>
           </div>
       </div>
 
@@ -170,50 +175,50 @@ export default function TopUpSelectionPage() {
             }
             
             return (
-              <div key={plan.packageCode} className="group h-full flex flex-col bg-white border-2 border-black rounded-none p-6 shadow-hard hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 cursor-pointer relative overflow-hidden">
+              <div key={plan.packageCode} className="group h-full flex flex-col bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer relative overflow-hidden">
                 
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                    <div className="flex flex-col">
-                      <div className="inline-block px-2 py-1 border border-black font-mono text-xs uppercase font-bold mb-2 bg-gray-100">
+                      <div className="inline-block px-3 py-1 border border-gray-200 text-xs font-medium mb-2 bg-gray-50 rounded-full text-gray-600">
                          {plan.duration} {plan.durationUnit}s
                       </div>
-                      <h3 className="text-3xl font-black text-black group-hover:text-primary transition-colors uppercase">
+                      <h3 className="text-3xl font-bold text-black group-hover:text-primary transition-colors">
                          {isUnlimitedPlan ? "Unlimited" : `${sizeValue} ${sizeUnit}`}
                       </h3>
                    </div>
-                   <div className="h-10 w-10 border-2 border-black flex items-center justify-center bg-white group-hover:bg-primary transition-colors">
-                      <Signal className="h-5 w-5 text-black" />
+                   <div className="h-10 w-10 border border-gray-200 flex items-center justify-center bg-gray-50 group-hover:bg-primary transition-colors rounded-xl">
+                      <Signal className="h-5 w-5 text-gray-600 group-hover:text-black" />
                    </div>
                 </div>
 
                 {/* Content */}
                 <div className="flex-grow space-y-4">
-                   <div className="text-sm font-bold uppercase line-clamp-2 min-h-[2.5rem] text-black">
+                   <div className="text-sm font-semibold line-clamp-2 min-h-[2.5rem] text-black">
                       {displayName}
                    </div>
                    
                    {/* Plan Flags (IP type, FUP, etc.) - neutral variant for list page */}
                    <PlanFlags plan={plan} variant="neutral" />
                    
-                   <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-gray-600">
-                      <Globe className="h-3 w-3 text-black" />
+                   <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <Globe className="h-3 w-3 text-gray-400" />
                       <span>{plan.location} Region</span>
                    </div>
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 pt-4 border-t-2 border-black flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between">
                    <div className="flex flex-col">
-                      <span className="text-xs font-mono font-bold uppercase text-gray-500">Price</span>
-                      <span className="text-2xl text-black font-black">
+                      <span className="text-xs text-gray-500 font-medium">Price</span>
+                      <span className="text-2xl text-black font-bold">
                         {formatCurrency(convertedPrice)}
                       </span>
                    </div>
                    <Button 
                       size="sm" 
                       onClick={() => handleCheckout(plan)}
-                      className="bg-primary hover:bg-black hover:text-white text-black font-black uppercase border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all rounded-none h-10 px-6"
+                      className="bg-black hover:bg-gray-800 text-white font-bold border border-transparent shadow-md hover:shadow-lg transition-all rounded-xl h-10 px-6"
                    >
                       Top Up <ArrowRight className="ml-2 h-4 w-4" />
                    </Button>
