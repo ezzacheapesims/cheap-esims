@@ -7,12 +7,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { QrCode, Signal, RefreshCw, Calendar, HardDrive, Download, Copy, CheckCircle2, AlertCircle, ShoppingBag, ArrowRight, Star } from "lucide-react";
+import { QrCode, Signal, RefreshCw, Calendar, HardDrive, Download, Copy, CheckCircle2, AlertCircle, ShoppingBag, ArrowRight, Star, Smartphone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { RecentlyViewed } from "@/components/RecentlyViewed";
 import { safeFetch } from "@/lib/safe-fetch";
+import { generateEsimInstallLink, isMobileDevice } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ExpiryCountdown } from "@/components/esim/expiry-countdown";
 import { getTimeRemaining, getUrgencyLevel } from "@/lib/format-expiry";
@@ -415,6 +416,27 @@ export default function MyEsimsPage() {
               <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100">
                 Scan this QR code with your device settings to install the eSIM profile.
               </p>
+              
+              {/* Mobile Install Button */}
+              {(() => {
+                const isMobile = isMobileDevice();
+                const installLink = generateEsimInstallLink(selectedEsim.ac);
+                const canInstall = isMobile && installLink;
+                
+                return canInstall ? (
+                  <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-gray-600 font-medium text-center">
+                      If you're viewing this on the phone you want to install the eSIM on, tap below.
+                    </p>
+                    <a href={installLink} className="block w-full">
+                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base py-6 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                        <Smartphone className="h-5 w-5" />
+                        Install eSIM on this device
+                      </Button>
+                    </a>
+                  </div>
+                ) : null;
+              })()}
               
               <div className="bg-white p-4 border border-gray-200 rounded-2xl flex items-center justify-center shadow-inner">
                 <Image

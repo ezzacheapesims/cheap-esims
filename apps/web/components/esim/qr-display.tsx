@@ -17,6 +17,8 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { toPng } from "html-to-image";
 import { saveAs } from "file-saver";
+import { generateEsimInstallLink, isMobileDevice } from "@/lib/utils";
+import { Smartphone as SmartphoneIcon } from "lucide-react";
 
 interface QRDisplayProps {
   qrCodeUrl: string | null;
@@ -319,9 +321,12 @@ export function QRDisplay({
   };
 
   const isMobile = typeof window !== "undefined" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
   const isExpired = esimStatus === "UNUSED_EXPIRED";
   const isAlreadyInstalled = smdpStatus === "DOWNLOADED" || smdpStatus === "INSTALLED";
+  
+  const isMobileDeviceForInstall = isMobileDevice();
+  const installLink = generateEsimInstallLink(activationCode);
+  const canInstall = isMobileDeviceForInstall && installLink && !isExpired && !isAlreadyInstalled;
 
   if (isExpired) {
     return (
@@ -449,6 +454,40 @@ export function QRDisplay({
               >
                 Check compatibility →
               </a>
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Install Button */}
+      {canInstall && installLink && (
+        <div className="mb-6 space-y-3">
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+            <p className="text-sm text-gray-600 font-medium mb-3 text-center">
+              If you're viewing this on the phone you want to install the eSIM on, tap below.
+            </p>
+            <a
+              href={installLink}
+              className="block w-full"
+            >
+              <Button
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base py-6 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+              >
+                <SmartphoneIcon className="h-5 w-5" />
+                Install eSIM on this device
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Error message if activation code is missing */}
+      {isMobileDeviceForInstall && !activationCode && !qrError && qrCodeUrl && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+          <div className="flex items-center gap-2 text-yellow-800">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-sm font-bold">
+              Activation code unavailable. Please contact support or use the QR code below.
             </span>
           </div>
         </div>

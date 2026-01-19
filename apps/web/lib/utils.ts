@@ -58,3 +58,65 @@ export function formatCurrency(amount: number, currencyCode: string = "USD"): st
   }).format(amount);
 }
 
+/**
+ * Detects the device type based on user agent
+ * @returns 'ios' | 'android' | 'desktop' | null
+ */
+export function detectDeviceType(): 'ios' | 'android' | 'desktop' | null {
+  if (typeof window === 'undefined') return null;
+  
+  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+  
+  // iOS detection
+  if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+    return 'ios';
+  }
+  
+  // Android detection
+  if (/android/i.test(userAgent)) {
+    return 'android';
+  }
+  
+  // Default to desktop
+  return 'desktop';
+}
+
+/**
+ * Checks if the current device is mobile (iOS or Android)
+ */
+export function isMobileDevice(): boolean {
+  const deviceType = detectDeviceType();
+  return deviceType === 'ios' || deviceType === 'android';
+}
+
+/**
+ * Generates a universal link for eSIM installation based on device type
+ * @param activationCode - The LPA activation code (e.g., "LPA:1$rsp.example.com$ACTIVATION_CODE")
+ * @returns The universal link URL or null if activation code is invalid
+ * 
+ * iOS format: https://esimsetup.apple.com/esim_qrcode_provisioning?carddata={encoded}
+ * Android format: https://esimsetup.android.com/esim_qrcode_provisioning?carddata={encoded}
+ */
+export function generateEsimInstallLink(activationCode: string | null | undefined): string | null {
+  if (!activationCode) return null;
+  
+  // Validate that it's a proper LPA format
+  if (!activationCode.startsWith('LPA:1$')) {
+    return null;
+  }
+  
+  const deviceType = detectDeviceType();
+  
+  // URL encode the activation code for the carddata parameter
+  const encodedCarddata = encodeURIComponent(activationCode);
+  
+  if (deviceType === 'ios') {
+    return `https://esimsetup.apple.com/esim_qrcode_provisioning?carddata=${encodedCarddata}`;
+  } else if (deviceType === 'android') {
+    return `https://esimsetup.android.com/esim_qrcode_provisioning?carddata=${encodedCarddata}`;
+  }
+  
+  // For desktop or unknown devices, return null (should not show install button)
+  return null;
+}
+
