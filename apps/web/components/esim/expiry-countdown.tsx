@@ -25,6 +25,7 @@ interface ExpiryCountdownProps {
   className?: string;
   iccid?: string;
   onExpired?: () => void;
+  userEmail?: string; // Optional prop to pass user email directly
 }
 
 export function ExpiryCountdown({
@@ -32,6 +33,7 @@ export function ExpiryCountdown({
   className,
   iccid,
   onExpired,
+  userEmail: propUserEmail,
 }: ExpiryCountdownProps) {
   const { user } = useUser();
   const [now, setNow] = useState(Date.now());
@@ -81,11 +83,11 @@ export function ExpiryCountdown({
   const handleSync = async () => {
     if (!iccid || isSyncing) return;
 
-    // Get user email from Clerk, URL params, or localStorage (for guest access)
+    // Get user email from prop, Clerk, URL params, or localStorage (for guest access)
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
     const storedEmail = localStorage.getItem('guest_checkout_email');
-    const userEmail = user?.primaryEmailAddress?.emailAddress || emailParam || storedEmail;
+    const userEmail = propUserEmail || user?.primaryEmailAddress?.emailAddress || emailParam || storedEmail;
 
     if (!userEmail) {
       console.error("Sync error: User email required");

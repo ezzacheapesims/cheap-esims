@@ -124,6 +124,9 @@ export class EsimController {
       } catch (e) {}
     }
 
+    // Get user email from order if available
+    const userEmail = (profile as any).Order?.User?.email || (profile as any).User?.email || null;
+
     // Serialize Date and BigInt fields for JSON response
     return {
       ...profile,
@@ -131,6 +134,7 @@ export class EsimController {
       totalVolume: profile.totalVolume ? profile.totalVolume.toString() : null,
       orderUsage: profile.orderUsage ? profile.orderUsage.toString() : null,
       planDetails,
+      userEmail, // Include user email for frontend use
     };
   }
 

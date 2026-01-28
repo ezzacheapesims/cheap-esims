@@ -1025,7 +1025,11 @@ export class OrdersService {
     return this.prisma.esimProfile.findFirst({
       where: { iccid },
       include: {
-        Order: true,
+        Order: {
+          include: {
+            User: true,
+          },
+        },
         User: true,
       },
     });

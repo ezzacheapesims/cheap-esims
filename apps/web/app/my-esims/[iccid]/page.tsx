@@ -259,6 +259,7 @@ export default function EsimDetailPage() {
               expiry={profile.expiredTime} 
               iccid={profile.iccid}
               onExpired={fetchData}
+              userEmail={user?.primaryEmailAddress?.emailAddress || undefined}
               className="text-xl md:text-2xl font-bold text-gray-900 !text-gray-900"
             />
          </div>
